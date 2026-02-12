@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>월별 예산 관리</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; padding: 10px; max-width: 480px; margin: 0 auto; }
+.container { background: white; border-radius: 8px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+h1 { font-size: 18px; margin-bottom: 12px; color: #333; text-align: center; }
+.button-group { display: flex; gap: 8px; margin-bottom: 8px; }
+button { flex: 1; padding: 8px 12px; border: none; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; }
+.btn-success { background: #10b981; color: white; }
+.btn-warning { background: #f59e0b; color: white; }
+.btn-primary { background: #3b82f6; color: white; }
+.tabs { display: flex; gap: 4px; margin-bottom: 12px; border-bottom: 2px solid #e5e7eb; }
+.tab { flex: 1; padding: 10px 8px; border: none; background: none; cursor: pointer; font-size: 13px; font-weight: 500; color: #666; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+.tab.active { color: #2563eb; border-bottom-color: #2563eb; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.ledger-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 12px; }
+.ledger-table thead { background: #f8f9fa; border-top: 2px solid #333; border-bottom: 1px solid #ddd; }
+.ledger-table th { padding: 8px 6px; text-align: center; font-weight: 600; color: #333; font-size: 12px; }
+.ledger-table tbody tr { border-bottom: 1px solid #e5e7eb; }
+.ledger-table td { padding: 6px; }
+.label-cell { padding-left: 8px; color: #666; font-size: 12px; }
+.editable-label { cursor: text; border-bottom: 1px dashed #d1d5db; display: inline-block; min-width: 60px; padding: 2px; }
+.ledger-table input[type="number"] { width: 100%; padding: 4px 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; text-align: right; }
+.ledger-table input[type="text"] { width: 100%; padding: 4px 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px; text-align: right; }
+.total-row { background: #f8f9fa; font-weight: 600; border-top: 2px solid #333; }
+.total-row td { padding: 10px 8px; }
+.subtotal-row { background: #fef3c7; font-weight: 600; }
+.amount-cell { text-align: right; font-family: 'Courier New', monospace; font-size: 13px; }
+.positive { color: #059669; }
+.negative { color: #dc2626; }
+.expense-section { margin-bottom: 16px; }
+.expense-block-title { background: #f1f5f9; padding: 8px 10px; font-weight: 600; font-size: 13px; color: #475569; border-left: 3px solid #3b82f6; margin-bottom: 8px; }
+.daily-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+.daily-item { border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px; background: #fafafa; }
+.daily-item label { display: block; font-size: 11px; color: #666; margin-bottom: 4px; }
+.daily-item input { width: 100%; padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; text-align: center; }
+.daily-summary { background: #f8f9fa; padding: 12px; border-radius: 6px; margin-bottom: 12px; border: 1px solid #e5e7eb; }
+.daily-summary-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
+.daily-total { background: #3b82f6; color: white; padding: 12px; border-radius: 6px; text-align: center; }
+.summary-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.summary-table tr { border-bottom: 1px solid #e5e7eb; cursor: pointer; }
+.summary-table tr:hover { background: #f9fafb; }
+.summary-table td { padding: 10px 8px; }
+.summary-table .final-row { background: #fef3c7; border-top: 2px solid #333; cursor: default; }
+.summary-table .final-row:hover { background: #fef3c7; }
+.detail-row { background: #f9fafb; display: none; }
+.detail-row td { padding: 8px 16px; font-size: 12px; color: #666; }
+.detail-item { display: flex; justify-content: space-between; padding: 4px 0; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; }
+.modal-content { background: white; margin: 50px auto; padding: 20px; max-width: 400px; border-radius: 8px; max-height: 80vh; overflow-y: auto; }
+.modal-header { display: flex; justify-content: space-between; margin-bottom: 16px; }
+.saved-item { background: #f8f9fa; padding: 12px; margin-bottom: 8px; border-radius: 6px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.saved-item:hover { background: #e5e7eb; }
+.btn-small { padding: 4px 8px; font-size: 11px; margin-left: 8px; }
+.btn-delete { background: #ef4444; color: white; }
+.input-wrapper { display: flex; align-items: center; gap: 4px; }
+.increment-btns { display: flex; flex-direction: column; gap: 2px; }
+.increment-btn { width: 24px; height: 16px; background: #e5e7eb; border: none; border-radius: 3px; cursor: pointer; font-size: 10px; line-height: 1; padding: 0; color: #666; }
+.increment-btn:active { background: #d1d5db; }
+.unit-label { font-size: 11px; color: #3b82f6; cursor: pointer; border-bottom: 1px dashed #3b82f6; padding: 2px 4px; float: right; }
+.unit-label:hover { background: #eff6ff; }
+.delete-row-btn { width: 20px; height: 20px; background: transparent; color: #999; border: 1px solid #ddd; border-radius: 50%; cursor: pointer; font-size: 12px; line-height: 1; padding: 0; margin-right: 6px; }
+.delete-row-btn:hover { background: #f3f4f6; color: #666; border-color: #999; }
+.delete-row-btn:active { background: #e5e7eb; }
+.add-row-btn { width: 22px; height: 20px; background: transparent; color: #999; border: 1px solid #ddd; border-radius: 50%; cursor: pointer; font-size: 14px; line-height: 1; padding: 0; }
+.add-row-btn:hover { background: #f3f4f6; color: #666; border-color: #999; }
+.add-row-btn:active { background: #e5e7eb; }
+.row-controls { display: flex; align-items: center; padding-left: 4px; }
+.header-with-add { display: flex; align-items: center; gap: 6px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>💰 월별 예산 관리</h1>
+<div class="button-group">
+<button class="btn-primary" onclick="saveData()">📁 데이터 저장</button>
+<button class="btn-primary" onclick="showSavedList()">📋 저장목록</button>
+<button class="btn-warning" onclick="resetToDefault()">🔄 초기화</button>
+</div>
+<div class="tabs">
+<button class="tab active" onclick="showTab('income')">수익</button>
+<button class="tab" onclick="showTab('saving')">저축</button>
+<button class="tab" onclick="showTab('expense')">지출</button>
+<button class="tab" onclick="showTab('settlement')">최종정산</button>
+<button class="tab" onclick="showTab('daily')">일일생활비</button>
+</div>
+
+<div id="income-tab" class="tab-content active">
+<table class="ledger-table">
+<thead><tr><th style="width:10%;"><div class="header-with-add"><button class="add-row-btn" onclick="addRow('income')">+</button></div></th><th style="width:50%;">항목</th><th style="width:40%;">금액 <span class="unit-label" id="incomeUnit" onclick="changeUnit('income')">단위(1만)원</span></th></tr></thead>
+<tbody id="incomeRows">
+<tr><td><div class="row-controls"><button class="delete-row-btn" onclick="deleteRow(this,'income')">×</button></div></td><td class="label-cell"><span class="editable-label" id="incomeLabel1" contenteditable="true">이월</span></td><td><div class="input-wrapper"><input type="text" id="income1" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('income1','income')">▲</button><button class="increment-btn" onclick="decrementValue('income1','income')">▼</button></div></div></td></tr>
+<tr><td><div class="row-controls"><button class="delete-row-btn" onclick="deleteRow(this,'income')">×</button></div></td><td class="label-cell"><span class="editable-label" id="incomeLabel2" contenteditable="true">급여</span></td><td><div class="input-wrapper"><input type="text" id="income2" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('income2','income')">▲</button><button class="increment-btn" onclick="decrementValue('income2','income')">▼</button></div></div></td></tr>
+<tr><td><div class="row-controls"><button class="delete-row-btn" onclick="deleteRow(this,'income')">×</button></div></td><td class="label-cell"><span class="editable-label" id="incomeLabel3" contenteditable="true">기타</span></td><td><div class="input-wrapper"><input type="text" id="income3" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('income3','income')">▲</button><button class="increment-btn" onclick="decrementValue('income3','income')">▼</button></div></div></td></tr>
+</tbody>
+<tfoot><tr class="total-row"><td></td><td style="text-align:center;">합계</td><td class="amount-cell positive" id="incomeTotal">0</td></tr></tfoot>
+</table>
+</div>
+
+<div id="saving-tab" class="tab-content">
+<table class="ledger-table">
+<thead><tr><th style="width:10%;"><div class="header-with-add"><button class="add-row-btn" onclick="addRow('saving')">+</button></div></th><th style="width:50%;">항목</th><th style="width:40%;">금액 <span class="unit-label" id="savingUnit" onclick="changeUnit('saving')">단위(1만)원</span></th></tr></thead>
+<tbody id="savingRows">
+<tr><td><div class="row-controls"><button class="delete-row-btn" onclick="deleteRow(this,'saving')">×</button></div></td><td class="label-cell"><span class="editable-label" contenteditable="true">청약</span></td><td><div class="input-wrapper"><input type="text" id="saving1" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('saving1','saving')">▲</button><button class="increment-btn" onclick="decrementValue('saving1','saving')">▼</button></div></div></td></tr>
+<tr><td><div class="row-controls"><button class="delete-row-btn" onclick="deleteRow(this,'saving')">×</button></div></td><td class="label-cell"><span class="editable-label" contenteditable="true">적금</span></td><td><div class="input-wrapper"><input type="text" id="saving2" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('saving2','saving')">▲</button><button class="increment-btn" onclick="decrementValue('saving2','saving')">▼</button></div></div></td></tr>
+</tbody>
+<tfoot><tr class="total-row"><td></td><td style="text-align:center;">합계</td><td class="amount-cell negative" id="savingTotal">0</td></tr></tfoot>
+</table>
+</div>
+
+<div id="expense-tab" class="tab-content">
+<div id="expenseBlocksContainer"></div>
+<div style="text-align:right;margin-top:16px;margin-bottom:8px;">
+<button class="add-row-btn" onclick="addExpenseBlock()" style="width:auto;padding:6px 12px;font-size:12px;background:#e5e7eb;color:#666;">➕ 지출 블록 추가</button>
+</div>
+<table class="ledger-table">
+<tfoot><tr class="total-row"><td style="text-align:center;">지출 합계</td><td class="amount-cell negative" id="expenseTotal">0</td></tr></tfoot>
+</table>
+</div>
+
+<div id="settlement-tab" class="tab-content">
+<div style="text-align:right;margin-bottom:8px;">
+<button onclick="refreshSettlement()" style="background:#3b82f6;color:white;padding:6px 12px;border:none;border-radius:6px;font-size:12px;cursor:pointer;transition:all 0.3s;">🔄 최신 내역 반영</button>
+</div>
+<table class="summary-table">
+<tr onclick="toggleDetail('incomeDetail')"><td>💰 총 수익</td><td class="amount-cell positive" id="summaryIncome">0</td></tr>
+<tr class="detail-row" id="incomeDetail"><td colspan="2"><div id="incomeDetailContent"></div></td></tr>
+<tr onclick="toggleDetail('savingDetail')"><td>💎 총 저축</td><td class="amount-cell negative" id="summarySaving">0</td></tr>
+<tr class="detail-row" id="savingDetail"><td colspan="2"><div id="savingDetailContent"></div></td></tr>
+<tr onclick="toggleDetail('expenseDetail')"><td>💳 총 지출</td><td class="amount-cell negative" id="summaryExpense">0</td></tr>
+<tr class="detail-row" id="expenseDetail"><td colspan="2"><div id="expenseDetailContent"></div></td></tr>
+<tr class="final-row"><td>💵 최종 잔액</td><td class="amount-cell" id="finalBalance">0</td></tr>
+</table>
+</div>
+
+<div id="daily-tab" class="tab-content">
+<div class="daily-grid">
+<div class="daily-item">
+<label><span class="editable-label" id="weekdayLabel" contenteditable="true">평일 일수</span></label>
+<input type="text" id="weekday" value="16" oninput="formatInput(this);calc()">
+<label style="margin-top:8px;"><span class="editable-label" id="weekdayAmountLabel" contenteditable="true">평일 금액</span></label>
+<input type="text" id="weekdayAmount" value="20,000" oninput="formatInput(this);calc()">
+</div>
+<div class="daily-item">
+<label><span class="editable-label" id="middayLabel" contenteditable="true">토요일 일수</span></label>
+<input type="text" id="midday" value="4" oninput="formatInput(this);calc()">
+<label style="margin-top:8px;"><span class="editable-label" id="middayAmountLabel" contenteditable="true">토요일 금액</span></label>
+<input type="text" id="middayAmount" value="60,000" oninput="formatInput(this);calc()">
+</div>
+<div class="daily-item">
+<label><span class="editable-label" id="lastdayLabel" contenteditable="true">빨간날 일수</span></label>
+<input type="text" id="lastday" value="8" oninput="formatInput(this);calc()">
+<label style="margin-top:8px;"><span class="editable-label" id="lastdayAmountLabel" contenteditable="true">빨간날 금액</span></label>
+<input type="text" id="lastdayAmount" value="65,000" oninput="formatInput(this);calc()">
+</div>
+</div>
+<div class="daily-summary">
+<div class="daily-summary-row"><span>총 일수</span><span id="totalDays">0일</span></div>
+<div class="daily-summary-row"><span>하루 평균</span><span id="avgDaily">0원</span></div>
+<div class="daily-summary-row"><span>평일 <span id="wd">4</span>일 × <span id="wa">80,000</span>원</span><span id="wt">320,000원</span></div>
+<div class="daily-summary-row"><span>토요일 <span id="md">8</span>일 × <span id="ma">60,000</span>원</span><span id="mt">480,000원</span></div>
+<div class="daily-summary-row"><span>빨간날 <span id="ld">16</span>일 × <span id="la">20,000</span>원</span><span id="lt">320,000원</span></div>
+</div>
+<div class="daily-total">
+<div style="font-size:12px;opacity:0.9;margin-bottom:4px;">💰 총 일일생활비</div>
+<div style="font-size:20px;font-weight:700;" id="dailyTotal">0원</div>
+</div>
+</div>
+</div>
+
+<div id="modal" class="modal" onclick="if(event.target==this) this.style.display='none'">
+<div class="modal-content">
+<div class="modal-header"><h2>저장 목록</h2><span class="modal-close" onclick="document.getElementById('modal').style.display='none'">&times;</span></div>
+<div id="savedListContent"></div>
+</div>
+</div>
+
+<script>
+let units={income:10000,saving:10000,expense1:10000,expense2:10000,expense3:10000,expense4:10000};
+let rowCounters={income:3,saving:2,expense1:3,expense2:3,expense3:3,expense4:3};
+let expenseBlockCounter=3;
+function initExpenseBlocks(){
+let container=document.getElementById('expenseBlocksContainer');
+if(!container)return;
+container.innerHTML=`
+<div class="expense-section">
+<div class="expense-block-title">
+<button class="delete-row-btn delete-block-btn" style="margin-right:8px;">×</button>
+<span id="blockTitle1" contenteditable="true">생필비</span>
+</div>
+<table class="ledger-table">
+<thead><tr><th style="width:10%;"><button class="add-row-btn" onclick="addExpenseRow(1)">+</button></th><th style="width:50%;">항목</th><th style="width:40%;">금액 <span class="unit-label" id="expense1Unit" onclick="changeUnit('expense1')">단위(1만)원</span></th></tr></thead>
+<tbody id="expense1Rows">
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense1')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">식비</span></td><td><div class="input-wrapper"><input type="text" id="expense1_1" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense1_1','expense1')">▲</button><button class="increment-btn" onclick="decrementValue('expense1_1','expense1')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense1')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">생필품</span></td><td><div class="input-wrapper"><input type="text" id="expense1_2" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense1_2','expense1')">▲</button><button class="increment-btn" onclick="decrementValue('expense1_2','expense1')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense1')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">교통/유류비</span></td><td><div class="input-wrapper"><input type="text" id="expense1_3" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense1_3','expense1')">▲</button><button class="increment-btn" onclick="decrementValue('expense1_3','expense1')">▼</button></div></div></td></tr>
+</tbody>
+<tfoot><tr class="subtotal-row"><td></td><td style="text-align:center;">소계</td><td class="amount-cell" id="sub1">0</td></tr></tfoot>
+</table>
+</div>
+<div class="expense-section">
+<div class="expense-block-title">
+<button class="delete-row-btn delete-block-btn" style="margin-right:8px;">×</button>
+<span id="blockTitle2" contenteditable="true">가정/경조지출</span>
+</div>
+<table class="ledger-table">
+<thead><tr><th style="width:10%;"><button class="add-row-btn" onclick="addExpenseRow(2)">+</button></th><th style="width:50%;">항목</th><th style="width:40%;">금액 <span class="unit-label" id="expense2Unit" onclick="changeUnit('expense2')">단위(1만)원</span></th></tr></thead>
+<tbody id="expense2Rows">
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense2')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">교육·병원</span></td><td><div class="input-wrapper"><input type="text" id="expense2_1" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense2_1','expense2')">▲</button><button class="increment-btn" onclick="decrementValue('expense2_1','expense2')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense2')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">가족용돈·외식</span></td><td><div class="input-wrapper"><input type="text" id="expense2_2" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense2_2','expense2')">▲</button><button class="increment-btn" onclick="decrementValue('expense2_2','expense2')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense2')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">보험·경조사비</span></td><td><div class="input-wrapper"><input type="text" id="expense2_3" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense2_3','expense2')">▲</button><button class="increment-btn" onclick="decrementValue('expense2_3','expense2')">▼</button></div></div></td></tr>
+</tbody>
+<tfoot><tr class="subtotal-row"><td></td><td style="text-align:center;">소계</td><td class="amount-cell" id="sub2">0</td></tr></tfoot>
+</table>
+</div>
+<div class="expense-section">
+<div class="expense-block-title">
+<button class="delete-row-btn delete-block-btn" style="margin-right:8px;">×</button>
+<span id="blockTitle3" contenteditable="true">개인소비</span>
+</div>
+<table class="ledger-table">
+<thead><tr><th style="width:10%;"><button class="add-row-btn" onclick="addExpenseRow(3)">+</button></th><th style="width:50%;">항목</th><th style="width:40%;">금액 <span class="unit-label" id="expense3Unit" onclick="changeUnit('expense3')">단위(1만)원</span></th></tr></thead>
+<tbody id="expense3Rows">
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense3')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">패션·뷰티</span></td><td><div class="input-wrapper"><input type="text" id="expense3_1" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense3_1','expense3')">▲</button><button class="increment-btn" onclick="decrementValue('expense3_1','expense3')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense3')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">취미·쇼핑</span></td><td><div class="input-wrapper"><input type="text" id="expense3_2" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense3_2','expense3')">▲</button><button class="increment-btn" onclick="decrementValue('expense3_2','expense3')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense3')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">카페·간식</span></td><td><div class="input-wrapper"><input type="text" id="expense3_3" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense3_3','expense3')">▲</button><button class="increment-btn" onclick="decrementValue('expense3_3','expense3')">▼</button></div></div></td></tr>
+</tbody>
+<tfoot><tr class="subtotal-row"><td></td><td style="text-align:center;">소계</td><td class="amount-cell" id="sub3">0</td></tr></tfoot>
+</table>
+</div>
+`;
+expenseBlockCounter=3;
+rowCounters.expense1=3;
+rowCounters.expense2=3;
+rowCounters.expense3=3;
+document.querySelectorAll('.delete-block-btn').forEach(btn=>{
+btn.addEventListener('click',function(){deleteBlock(this);});
+});
+}
+function addExpenseBlock(){
+expenseBlockCounter++;
+let blockNum=expenseBlockCounter;
+units['expense'+blockNum]=10000;
+rowCounters['expense'+blockNum]=0;
+let container=document.getElementById('expenseBlocksContainer');
+let div=document.createElement('div');
+div.className='expense-section';
+div.innerHTML=`
+<div class="expense-block-title">
+<button class="delete-row-btn" onclick="deleteBlock(this)" style="margin-right:8px;">×</button>
+<span id="blockTitle${blockNum}" contenteditable="true">새 지출 블록</span>
+</div>
+<table class="ledger-table">
+<thead><tr><th style="width:10%;"><button class="add-row-btn" onclick="addExpenseRow(${blockNum})">+</button></th><th style="width:50%;">항목</th><th style="width:40%;">금액 <span class="unit-label" id="expense${blockNum}Unit" onclick="changeUnit('expense${blockNum}')">단위(1만)원</span></th></tr></thead>
+<tbody id="expense${blockNum}Rows">
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense${blockNum}')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">새 항목</span></td><td><div class="input-wrapper"><input type="text" id="expense${blockNum}_1" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense${blockNum}_1','expense${blockNum}')">▲</button><button class="increment-btn" onclick="decrementValue('expense${blockNum}_1','expense${blockNum}')">▼</button></div></div></td></tr>
+</tbody>
+<tfoot><tr class="subtotal-row"><td></td><td style="text-align:center;">소계</td><td class="amount-cell" id="sub${blockNum}">0</td></tr></tfoot>
+</table>
+`;
+container.appendChild(div);
+rowCounters['expense'+blockNum]=1;
+calc();
+}
+function deleteRow(btn,type){
+let row=btn.closest('tr');
+let tbody=row.parentElement;
+if(tbody.querySelectorAll('tr').length<=1){
+alert('최소 1개 행은 유지해야 합니다.');
+return;
+}
+row.remove();
+calc();
+}
+function addRow(type){
+let tbody=document.getElementById(type+'Rows');
+if(!tbody){
+alert('지출 탭은 각 블록 헤더 왼쪽 + 버튼을 눌러주세요');
+return;
+}
+rowCounters[type]++;
+let newId=type+rowCounters[type];
+let tr=document.createElement('tr');
+tr.innerHTML='<td><button class="delete-row-btn" onclick="deleteRow(this,\''+type+'\')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">새 항목</span></td><td><div class="input-wrapper"><input type="text" id="'+newId+'" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue(\''+newId+'\',\''+type+'\')">▲</button><button class="increment-btn" onclick="decrementValue(\''+newId+'\',\''+type+'\')">▼</button></div></div></td>';
+tbody.appendChild(tr);
+calc();
+}
+function addExpenseRow(blockNum){
+let tbody=document.getElementById('expense'+blockNum+'Rows');
+if(!tbody)return;
+rowCounters['expense'+blockNum]++;
+let newId='expense'+blockNum+'_'+rowCounters['expense'+blockNum];
+let tr=document.createElement('tr');
+tr.innerHTML='<td><button class="delete-row-btn" onclick="deleteRow(this,\'expense'+blockNum+'\')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">새 항목</span></td><td><div class="input-wrapper"><input type="text" id="'+newId+'" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue(\''+newId+'\',\'expense'+blockNum+'\')">▲</button><button class="increment-btn" onclick="decrementValue(\''+newId+'\',\'expense'+blockNum+'\')">▼</button></div></div></td>';
+tbody.appendChild(tr);
+calc();
+}
+function deleteBlock(btn){
+console.log('deleteBlock called', btn);
+if(!btn)return;
+let section=btn.closest('.expense-section');
+console.log('section found:', section);
+if(!section){
+console.log('section not found!');
+return;
+}
+try{
+let parent=section.parentElement;
+parent.removeChild(section);
+console.log('section removed successfully');
+}catch(e){
+console.error('remove failed:', e);
+section.style.display='none';
+console.log('section hidden instead');
+}
+calc();
+}
+function changeUnit(type){
+let current=units[type];
+let options=[1000,10000,100000];
+let labels=['천','1만','10만'];
+let currentIndex=options.indexOf(current);
+let nextIndex=(currentIndex+1)%options.length;
+units[type]=options[nextIndex];
+document.getElementById(type+'Unit').textContent='단위('+labels[nextIndex]+')원';
+}
+function incrementValue(id,type){
+let input=document.getElementById(id);
+let val=input.value.replace(/,/g,'')||'0';
+let num=parseInt(val);
+num+=units[type];
+input.value=num.toLocaleString();
+calc();
+}
+function decrementValue(id,type){
+let input=document.getElementById(id);
+let val=input.value.replace(/,/g,'')||'0';
+let num=parseInt(val);
+num-=units[type];
+if(num<0)num=0;
+input.value=num>0?num.toLocaleString():'';
+calc();
+}
+function formatInput(input){
+let val=input.value.replace(/,/g,'');
+if(val&&!isNaN(val)){
+input.value=parseInt(val).toLocaleString();
+}
+}
+function parseVal(id){
+let el=document.getElementById(id);
+if(!el)return 0;
+let val=el.value.replace(/,/g,'');
+return parseInt(val)||0;
+}
+function showTab(t){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));event.target.classList.add('active');document.getElementById(t+'-tab').classList.add('active');}
+function calc(){
+let tInc=0;
+document.querySelectorAll('#incomeRows input[type="text"]').forEach(inp=>tInc+=parseVal(inp.id));
+let tSav=0;
+document.querySelectorAll('#savingRows input[type="text"]').forEach(inp=>tSav+=parseVal(inp.id));
+let tExp=0;
+let subtotals={};
+document.querySelectorAll('.expense-section').forEach((section,idx)=>{
+let tbody=section.querySelector('tbody');
+if(!tbody)return;
+let blockId=tbody.id.replace('Rows','');
+let subtotal=0;
+tbody.querySelectorAll('input[type="text"]').forEach(inp=>{
+subtotal+=parseVal(inp.id);
+});
+subtotals[blockId]=subtotal;
+tExp+=subtotal;
+let subCell=section.querySelector('.subtotal-row .amount-cell');
+if(subCell)subCell.textContent=subtotal.toLocaleString();
+});
+let sub1=subtotals['expense1']||0;
+let sub2=subtotals['expense2']||0;
+let sub3=subtotals['expense3']||0;
+let sub4=subtotals['expense4']||0;
+let wd=parseVal('weekday');
+let wa=parseVal('weekdayAmount');
+let md=parseVal('midday');
+let ma=parseVal('middayAmount');
+let ld=parseVal('lastday');
+let la=parseVal('lastdayAmount');
+let wt=wd*wa,mt=md*ma,lt=ld*la;
+let tDaily=wt+mt+lt;
+let totalDays=wd+md+ld;
+let avg=totalDays>0?Math.round(tDaily/totalDays):0;
+document.getElementById('incomeTotal').textContent=tInc.toLocaleString();
+document.getElementById('savingTotal').textContent=tSav.toLocaleString();
+let sub1El=document.getElementById('sub1');
+if(sub1El)sub1El.textContent=sub1.toLocaleString();
+let sub2El=document.getElementById('sub2');
+if(sub2El)sub2El.textContent=sub2.toLocaleString();
+let sub3El=document.getElementById('sub3');
+if(sub3El)sub3El.textContent=sub3.toLocaleString();
+let sub4El=document.getElementById('sub4');
+if(sub4El)sub4El.textContent=sub4.toLocaleString();
+document.getElementById('expenseTotal').textContent=tExp.toLocaleString();
+document.getElementById('summaryIncome').textContent=tInc.toLocaleString();
+document.getElementById('summarySaving').textContent=tSav.toLocaleString();
+document.getElementById('summaryExpense').textContent=tExp.toLocaleString();
+document.getElementById('totalDays').textContent=totalDays+'일';
+document.getElementById('avgDaily').textContent=avg.toLocaleString()+'원';
+document.getElementById('wd').textContent=wd;
+document.getElementById('wa').textContent=wa.toLocaleString();
+document.getElementById('wt').textContent=wt.toLocaleString()+'원';
+document.getElementById('md').textContent=md;
+document.getElementById('ma').textContent=ma.toLocaleString();
+document.getElementById('mt').textContent=mt.toLocaleString()+'원';
+document.getElementById('ld').textContent=ld;
+document.getElementById('la').textContent=la.toLocaleString();
+document.getElementById('lt').textContent=lt.toLocaleString()+'원';
+document.getElementById('dailyTotal').textContent=tDaily.toLocaleString()+'원';
+let bal=tInc-(tSav+tExp);
+document.getElementById('finalBalance').textContent=bal.toLocaleString();
+document.getElementById('finalBalance').className=bal>0?'amount-cell positive':bal<0?'amount-cell negative':'amount-cell';
+let idc='';
+document.querySelectorAll('#incomeRows tr').forEach((row,idx)=>{
+let label=row.querySelector('.editable-label');
+let input=row.querySelector('input[type="text"]');
+if(label&&input){
+let val=parseVal(input.id);
+idc+='<div class="detail-item"><span>'+label.textContent+'</span><span>'+val.toLocaleString()+'</span></div>';
+}
+});
+document.getElementById('incomeDetailContent').innerHTML=idc;
+let sdc='';
+document.querySelectorAll('#savingRows tr').forEach((row,idx)=>{
+let label=row.querySelector('.editable-label');
+let input=row.querySelector('input[type="text"]');
+if(label&&input){
+let val=parseVal(input.id);
+sdc+='<div class="detail-item"><span>'+label.textContent+'</span><span>'+val.toLocaleString()+'</span></div>';
+}
+});
+document.getElementById('savingDetailContent').innerHTML=sdc;
+let edc='';
+document.querySelectorAll('.expense-section').forEach((section)=>{
+let blockTitle=section.querySelector('.expense-block-title span[id^="blockTitle"]');
+if(!blockTitle)return;
+let tbody=section.querySelector('tbody');
+if(!tbody)return;
+let subtotal=0;
+let blockDetail='';
+tbody.querySelectorAll('tr').forEach(row=>{
+let label=row.querySelector('.editable-label');
+let input=row.querySelector('input[type="text"]');
+if(label&&input){
+let val=parseVal(input.id);
+subtotal+=val;
+blockDetail+='<div class="detail-item"><span style="padding-left:12px;">'+label.textContent+'</span><span>'+val.toLocaleString()+'</span></div>';
+}
+});
+edc+='<div class="detail-item"><strong>'+blockTitle.textContent+'</strong><strong>'+subtotal.toLocaleString()+'</strong></div>';
+edc+=blockDetail;
+});
+document.getElementById('expenseDetailContent').innerHTML=edc;
+}
+function toggleDetail(id){
+let el=document.getElementById(id);
+el.style.display=el.style.display=='table-row'?'none':'table-row';
+}
+function refreshSettlement(){
+calc();
+let btn=event.target;
+let originalText=btn.innerHTML;
+btn.innerHTML='✅ 반영완료!';
+btn.style.background='#10b981';
+setTimeout(()=>{
+btn.innerHTML=originalText;
+btn.style.background='#3b82f6';
+},1000);
+}
+function saveDefaults(){
+let d={};
+['incomeLabel1','incomeLabel2','incomeLabel3','savingLabel1','savingLabel2','savingLabel3','savingLabel4','blockTitle1','blockTitle2','blockTitle3','blockTitle4','expenseLabel1_1','expenseLabel1_2','expenseLabel1_3','expenseLabel1_4','expenseLabel2_1','expenseLabel2_2','expenseLabel2_3','expenseLabel2_4','expenseLabel3_1','expenseLabel3_2','expenseLabel3_3','expenseLabel3_4','expenseLabel4_1','expenseLabel4_2','expenseLabel4_3','expenseLabel4_4','weekdayLabel','weekdayAmountLabel','middayLabel','middayAmountLabel','lastdayLabel','lastdayAmountLabel'].forEach(k=>d[k]=document.getElementById(k).textContent);
+['income1','income2','income3','saving1','saving2','saving3','saving4','expense1_1','expense1_2','expense1_3','expense1_4','expense2_1','expense2_2','expense2_3','expense2_4','expense3_1','expense3_2','expense3_3','expense3_4','expense4_1','expense4_2','expense4_3','expense4_4','weekday','weekdayAmount','midday','middayAmount','lastday','lastdayAmount'].forEach(k=>d[k]=document.getElementById(k).value);
+localStorage.setItem('defaultValues',JSON.stringify(d));
+alert('✅ 입력값 저장 완료!');
+}
+function resetData(){
+if(!confirm('초기화하시겠습니까?'))return;
+let d=JSON.parse(localStorage.getItem('defaultValues')||'null');
+if(d){
+Object.keys(d).forEach(k=>{
+let el=document.getElementById(k);
+if(el.tagName=='INPUT')el.value=d[k];
+else el.textContent=d[k];
+});
+}else{
+['income1','income2','income3','saving1','saving2','saving3','saving4'].forEach(k=>document.getElementById(k).value='0');
+for(let i=1;i<=4;i++)for(let j=1;j<=4;j++)document.getElementById('expense'+i+'_'+j).value='0';
+document.getElementById('weekday').value='4';
+document.getElementById('weekdayAmount').value='80,000';
+document.getElementById('midday').value='8';
+document.getElementById('middayAmount').value='60,000';
+document.getElementById('lastday').value='16';
+document.getElementById('lastdayAmount').value='20,000';
+}
+calc();
+}
+function saveData(){
+let name=prompt('저장할 이름을 입력하세요:',new Date().toLocaleDateString());
+if(!name)return;
+let data={
+name:name,
+date:new Date().toISOString(),
+income:[],
+saving:[],
+expense:[],
+daily:{}
+};
+document.querySelectorAll('#incomeRows tr').forEach(row=>{
+let label=row.querySelector('.editable-label');
+let input=row.querySelector('input[type="text"]');
+if(label&&input){
+data.income.push({label:label.textContent,value:input.value});
+}
+});
+document.querySelectorAll('#savingRows tr').forEach(row=>{
+let label=row.querySelector('.editable-label');
+let input=row.querySelector('input[type="text"]');
+if(label&&input){
+data.saving.push({label:label.textContent,value:input.value});
+}
+});
+document.querySelectorAll('.expense-section').forEach(section=>{
+let blockTitle=section.querySelector('.expense-block-title span[id^="blockTitle"]');
+let tbody=section.querySelector('tbody');
+if(blockTitle&&tbody){
+let block={title:blockTitle.textContent,items:[]};
+tbody.querySelectorAll('tr').forEach(row=>{
+let label=row.querySelector('.editable-label');
+let input=row.querySelector('input[type="text"]');
+if(label&&input){
+block.items.push({label:label.textContent,value:input.value});
+}
+});
+data.expense.push(block);
+}
+});
+['weekday','weekdayAmount','midday','middayAmount','lastday','lastdayAmount'].forEach(k=>{
+let el=document.getElementById(k);
+if(el)data.daily[k]=el.value;
+});
+let saved=JSON.parse(localStorage.getItem('savedData')||'[]');
+saved.push(data);
+localStorage.setItem('savedData',JSON.stringify(saved));
+alert('💾 데이터 저장 완료!');
+}
+function showSavedList(){
+let saved=JSON.parse(localStorage.getItem('savedData')||'[]');
+let html='';
+if(saved.length>0){
+html='<table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#f8f9fa;border-bottom:2px solid #ddd;"><th style="padding:10px;text-align:left;font-size:13px;">이름</th><th style="padding:10px;text-align:center;font-size:13px;">저장일시</th><th style="padding:10px;text-align:center;font-size:13px;width:80px;">관리</th></tr></thead><tbody>';
+saved.forEach((d,i)=>{
+html+='<tr style="border-bottom:1px solid #e5e7eb;cursor:pointer;" onclick="loadData('+i+')"><td style="padding:12px;font-weight:600;">'+d.name+'</td><td style="padding:12px;text-align:center;font-size:12px;color:#666;">'+new Date(d.date).toLocaleString('ko-KR')+'</td><td style="padding:12px;text-align:center;"><button class="btn-small btn-delete" onclick="event.stopPropagation();deleteData('+i+')" style="padding:4px 8px;font-size:11px;">삭제</button></td></tr>';
+});
+html+='</tbody></table>';
+}else{
+html='<p style="text-align:center;color:#999;padding:40px 0;">저장된 데이터가 없습니다.</p>';
+}
+document.getElementById('savedListContent').innerHTML=html;
+document.getElementById('modal').style.display='block';
+}
+function loadData(i){
+let saved=JSON.parse(localStorage.getItem('savedData')||'[]');
+let d=saved[i];
+if(!d)return;
+let incomeHTML='';
+d.income.forEach((item,idx)=>{
+let id='income'+(idx+1);
+incomeHTML+='<tr><td><button class="delete-row-btn" onclick="deleteRow(this,\'income\')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">'+item.label+'</span></td><td><div class="input-wrapper"><input type="text" id="'+id+'" value="'+item.value+'" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue(\''+id+'\',\'income\')">▲</button><button class="increment-btn" onclick="decrementValue(\''+id+'\',\'income\')">▼</button></div></div></td></tr>';
+});
+document.getElementById('incomeRows').innerHTML=incomeHTML;
+rowCounters.income=d.income.length;
+let savingHTML='';
+d.saving.forEach((item,idx)=>{
+let id='saving'+(idx+1);
+savingHTML+='<tr><td><button class="delete-row-btn" onclick="deleteRow(this,\'saving\')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">'+item.label+'</span></td><td><div class="input-wrapper"><input type="text" id="'+id+'" value="'+item.value+'" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue(\''+id+'\',\'saving\')">▲</button><button class="increment-btn" onclick="decrementValue(\''+id+'\',\'saving\')">▼</button></div></div></td></tr>';
+});
+document.getElementById('savingRows').innerHTML=savingHTML;
+rowCounters.saving=d.saving.length;
+let container=document.getElementById('expenseBlocksContainer');
+container.innerHTML='';
+expenseBlockCounter=0;
+d.expense.forEach((block,blockIdx)=>{
+expenseBlockCounter++;
+let blockNum=expenseBlockCounter;
+units['expense'+blockNum]=10000;
+rowCounters['expense'+blockNum]=block.items.length;
+let itemsHTML='';
+block.items.forEach((item,itemIdx)=>{
+let id='expense'+blockNum+'_'+(itemIdx+1);
+itemsHTML+='<tr><td><button class="delete-row-btn" onclick="deleteRow(this,\'expense'+blockNum+'\')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">'+item.label+'</span></td><td><div class="input-wrapper"><input type="text" id="'+id+'" value="'+item.value+'" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue(\''+id+'\',\'expense'+blockNum+'\')">▲</button><button class="increment-btn" onclick="decrementValue(\''+id+'\',\'expense'+blockNum+'\')">▼</button></div></div></td></tr>';
+});
+let div=document.createElement('div');
+div.className='expense-section';
+div.innerHTML='<div class="expense-block-title"><button class="delete-row-btn delete-block-btn" style="margin-right:8px;">×</button><span id="blockTitle'+blockNum+'" contenteditable="true">'+block.title+'</span></div><table class="ledger-table"><thead><tr><th style="width:10%;"><button class="add-row-btn" onclick="addExpenseRow('+blockNum+')">+</button></th><th style="width:50%;">항목</th><th style="width:40%;">금액 <span class="unit-label" id="expense'+blockNum+'Unit" onclick="changeUnit(\'expense'+blockNum+'\')">단위(1만)원</span></th></tr></thead><tbody id="expense'+blockNum+'Rows">'+itemsHTML+'</tbody><tfoot><tr class="subtotal-row"><td></td><td style="text-align:center;">소계</td><td class="amount-cell" id="sub'+blockNum+'">0</td></tr></tfoot></table>';
+container.appendChild(div);
+});
+document.querySelectorAll('.delete-block-btn').forEach(btn=>{
+btn.addEventListener('click',function(){deleteBlock(this);});
+});
+if(d.daily){
+Object.keys(d.daily).forEach(k=>{
+let el=document.getElementById(k);
+if(el)el.value=d.daily[k];
+});
+}
+calc();
+document.getElementById('modal').style.display='none';
+alert('✅ 데이터 불러오기 완료!');
+}
+function deleteData(i){
+if(!confirm('정말 삭제하시겠습니까?'))return;
+let saved=JSON.parse(localStorage.getItem('savedData')||'[]');
+saved.splice(i,1);
+localStorage.setItem('savedData',JSON.stringify(saved));
+showSavedList();
+}
+function resetToDefault(){
+if(!confirm('초기 설정값으로 되돌리시겠습니까?\n현재 입력된 모든 데이터가 사라집니다.'))return;
+document.getElementById('incomeRows').innerHTML=`
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'income')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">이월</span></td><td><div class="input-wrapper"><input type="text" id="income1" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('income1','income')">▲</button><button class="increment-btn" onclick="decrementValue('income1','income')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'income')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">급여</span></td><td><div class="input-wrapper"><input type="text" id="income2" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('income2','income')">▲</button><button class="increment-btn" onclick="decrementValue('income2','income')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'income')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">기타</span></td><td><div class="input-wrapper"><input type="text" id="income3" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('income3','income')">▲</button><button class="increment-btn" onclick="decrementValue('income3','income')">▼</button></div></div></td></tr>
+`;
+rowCounters.income=3;
+document.getElementById('savingRows').innerHTML=`
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'saving')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">청약</span></td><td><div class="input-wrapper"><input type="text" id="saving1" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('saving1','saving')">▲</button><button class="increment-btn" onclick="decrementValue('saving1','saving')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'saving')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">적금</span></td><td><div class="input-wrapper"><input type="text" id="saving2" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('saving2','saving')">▲</button><button class="increment-btn" onclick="decrementValue('saving2','saving')">▼</button></div></div></td></tr>
+`;
+rowCounters.saving=2;
+let container=document.getElementById('expenseBlocksContainer');
+container.innerHTML=`
+<div class="expense-section">
+<div class="expense-block-title">
+<button class="delete-row-btn delete-block-btn" style="margin-right:8px;">×</button>
+<span id="blockTitle1" contenteditable="true">생필비</span>
+</div>
+<table class="ledger-table">
+<thead><tr><th style="width:10%;"><button class="add-row-btn" onclick="addExpenseRow(1)">+</button></th><th style="width:50%;">항목</th><th style="width:40%;">금액 <span class="unit-label" id="expense1Unit" onclick="changeUnit('expense1')">단위(1만)원</span></th></tr></thead>
+<tbody id="expense1Rows">
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense1')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">식비</span></td><td><div class="input-wrapper"><input type="text" id="expense1_1" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense1_1','expense1')">▲</button><button class="increment-btn" onclick="decrementValue('expense1_1','expense1')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense1')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">생필품</span></td><td><div class="input-wrapper"><input type="text" id="expense1_2" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense1_2','expense1')">▲</button><button class="increment-btn" onclick="decrementValue('expense1_2','expense1')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense1')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">교통/유류비</span></td><td><div class="input-wrapper"><input type="text" id="expense1_3" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense1_3','expense1')">▲</button><button class="increment-btn" onclick="decrementValue('expense1_3','expense1')">▼</button></div></div></td></tr>
+</tbody>
+<tfoot><tr class="subtotal-row"><td></td><td style="text-align:center;">소계</td><td class="amount-cell" id="sub1">0</td></tr></tfoot>
+</table>
+</div>
+<div class="expense-section">
+<div class="expense-block-title">
+<button class="delete-row-btn delete-block-btn" style="margin-right:8px;">×</button>
+<span id="blockTitle2" contenteditable="true">가정/경조지출</span>
+</div>
+<table class="ledger-table">
+<thead><tr><th style="width:10%;"><button class="add-row-btn" onclick="addExpenseRow(2)">+</button></th><th style="width:50%;">항목</th><th style="width:40%;">금액 <span class="unit-label" id="expense2Unit" onclick="changeUnit('expense2')">단위(1만)원</span></th></tr></thead>
+<tbody id="expense2Rows">
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense2')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">교육·병원</span></td><td><div class="input-wrapper"><input type="text" id="expense2_1" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense2_1','expense2')">▲</button><button class="increment-btn" onclick="decrementValue('expense2_1','expense2')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense2')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">가족용돈·외식</span></td><td><div class="input-wrapper"><input type="text" id="expense2_2" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense2_2','expense2')">▲</button><button class="increment-btn" onclick="decrementValue('expense2_2','expense2')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense2')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">보험·경조사비</span></td><td><div class="input-wrapper"><input type="text" id="expense2_3" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense2_3','expense2')">▲</button><button class="increment-btn" onclick="decrementValue('expense2_3','expense2')">▼</button></div></div></td></tr>
+</tbody>
+<tfoot><tr class="subtotal-row"><td></td><td style="text-align:center;">소계</td><td class="amount-cell" id="sub2">0</td></tr></tfoot>
+</table>
+</div>
+<div class="expense-section">
+<div class="expense-block-title">
+<button class="delete-row-btn delete-block-btn" style="margin-right:8px;">×</button>
+<span id="blockTitle3" contenteditable="true">개인소비</span>
+</div>
+<table class="ledger-table">
+<thead><tr><th style="width:10%;"><button class="add-row-btn" onclick="addExpenseRow(3)">+</button></th><th style="width:50%;">항목</th><th style="width:40%;">금액 <span class="unit-label" id="expense3Unit" onclick="changeUnit('expense3')">단위(1만)원</span></th></tr></thead>
+<tbody id="expense3Rows">
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense3')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">패션·뷰티</span></td><td><div class="input-wrapper"><input type="text" id="expense3_1" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense3_1','expense3')">▲</button><button class="increment-btn" onclick="decrementValue('expense3_1','expense3')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense3')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">취미·쇼핑</span></td><td><div class="input-wrapper"><input type="text" id="expense3_2" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense3_2','expense3')">▲</button><button class="increment-btn" onclick="decrementValue('expense3_2','expense3')">▼</button></div></div></td></tr>
+<tr><td><button class="delete-row-btn" onclick="deleteRow(this,'expense3')">×</button></td><td class="label-cell"><span class="editable-label" contenteditable="true">카페·간식</span></td><td><div class="input-wrapper"><input type="text" id="expense3_3" value="" placeholder="" oninput="formatInput(this);calc()"><div class="increment-btns"><button class="increment-btn" onclick="incrementValue('expense3_3','expense3')">▲</button><button class="increment-btn" onclick="decrementValue('expense3_3','expense3')">▼</button></div></div></td></tr>
+</tbody>
+<tfoot><tr class="subtotal-row"><td></td><td style="text-align:center;">소계</td><td class="amount-cell" id="sub3">0</td></tr></tfoot>
+</table>
+</div>
+`;
+expenseBlockCounter=3;
+rowCounters.expense1=3;
+rowCounters.expense2=3;
+rowCounters.expense3=3;
+units.expense1=10000;
+units.expense2=10000;
+units.expense3=10000;
+document.querySelectorAll('.delete-block-btn').forEach(btn=>{
+btn.addEventListener('click',function(){deleteBlock(this);});
+});
+document.getElementById('weekday').value='';
+document.getElementById('weekdayAmount').value='';
+document.getElementById('midday').value='';
+document.getElementById('middayAmount').value='';
+document.getElementById('lastday').value='';
+document.getElementById('lastdayAmount').value='';
+calc();
+alert('✅ 초기화 완료!');
+}
+window.onload=function(){initExpenseBlocks();calc();};
+</script>
+</body>
+</html>
