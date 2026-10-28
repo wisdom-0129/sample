@@ -117,6 +117,36 @@ button { cursor: pointer; }
 
 /* home: pair */
 .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.home-nav { display: flex; align-items: center; gap: 6px; }
+.hn-btn { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); font-size: 18px; line-height: 1; padding: 0; flex: none; }
+.hn-btn:disabled { opacity: .35; }
+.hn-mid { position: relative; flex: 1; min-width: 0; height: 34px; border-radius: 17px; background: var(--surface); border: 1px solid var(--line); display: grid; place-items: center; font-size: 13.5px; font-weight: 700; overflow: hidden; }
+.hn-mid input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
+.hn-today { border: 0; background: var(--accent-soft); color: var(--accent-ink); border-radius: 17px; height: 34px; padding: 0 11px; font-size: 12.5px; font-weight: 700; flex: none; }
+.hn-story { border: 0; background: var(--accent); color: var(--on-accent); border-radius: 17px; height: 34px; padding: 0 12px; font-size: 12.5px; font-weight: 700; white-space: nowrap; flex: none; }
+.rcol { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.rcol .dday { flex: 0 0 auto; gap: 6px; padding: 12px 10px; }
+.rcol .dday .ring { width: 78px; height: 78px; }
+.rcol .dday .ring .num { font-size: 23px; }
+.rcol .dday .sub { font-size: 11.5px; line-height: 1.35; }
+.ex-side { flex: 1 1 0; gap: 8px; cursor: pointer; }
+.ex-hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; flex: 1; justify-content: center; }
+.ex-hero .ph-wrap { width: 100%; }
+.ex-icon { width: 100%; max-width: 150px; aspect-ratio: 1 / 1; border-radius: 16px; background: var(--accent-soft); display: grid; place-items: center; font-size: 54px; }
+.ex-kw { font-weight: 700; font-size: 16px; }
+.ex-memo { font-size: 13px; color: var(--muted); word-break: keep-all; overflow-wrap: anywhere; }
+.exi { display: flex; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 10px; margin-bottom: 10px; }
+.exi-ph { width: 84px; height: 84px; border-radius: 12px; border: 1px dashed var(--accent); background: var(--accent-soft); color: var(--accent-ink); font-size: 12px; font-weight: 700; padding: 0; flex: none; overflow: hidden; }
+.exi-ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.exi-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.exi-body .opt-row button { padding: 4px 10px; font-size: 12.5px; }
+.exi-act { display: flex; gap: 6px; }
+.rcol.solo .dday { flex: 1 1 auto; gap: 10px; padding: 14px; }
+.rcol.solo .dday .ring { width: 108px; height: 108px; }
+.rcol.solo .dday .ring .num { font-size: 30px; }
+.rcol.solo .dday .sub { font-size: 12px; line-height: 1.45; }
+.ex-side .ex-rec { border-top: 0; padding-top: 0; }
+.ex-line { font-size: 13px; line-height: 1.4; word-break: keep-all; overflow-wrap: anywhere; }
 .last-card { cursor: pointer; }
 .photo-big { width: 100%; aspect-ratio: 1 / 1; max-width: 100%; border-radius: 12px; object-fit: cover; display: block; }
 .stars-mini { font-size: 12px; color: var(--warn); letter-spacing: 1px; }
@@ -180,8 +210,8 @@ button { cursor: pointer; }
 .nudge button { border: 0; background: var(--surface); border-radius: 10px; padding: 6px 12px; font-size: 12.5px; font-weight: 700; color: var(--accent-ink); white-space: nowrap; }
 
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); }
-.stat { padding: 2px 10px; border-left: 1px solid var(--line); min-width: 0; }
-.stat:first-child { border-left: 0; padding-left: 2px; }
+.stat { padding: 2px 10px; border-left: 1px solid var(--line); min-width: 0; text-align: center; }
+.stat:first-child { border-left: 0; }
 .stat strong { display: block; font: 400 20px/1.2 var(--font-display); font-variant-numeric: tabular-nums; }
 .stat span { font-size: 11.5px; color: var(--muted); }
 
@@ -403,6 +433,25 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
 .toast.on { opacity: 1; transform: translate(-50%, 0); }
 
 /* sheets */
+/* workout photos */
+.mode-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--accent); background: var(--accent-soft); font-size: 17px; line-height: 1; padding: 0; flex: 0 0 auto; }
+.cell.exm { --s: var(--accent-ink); --s-bg: var(--accent-soft); }
+.bulk-entry { justify-content: space-between; align-items: center; }
+.bulk-entry .btn-soft.mode-on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.ex-rec { display: flex; flex-direction: column; gap: 6px; padding-top: 8px; border-top: 1px dashed var(--line); }
+.ex-its { display: flex; flex-direction: column; gap: 6px; }
+.ex-it { display: flex; align-items: center; gap: 8px; font-size: 13px; min-width: 0; }
+.ex-it img, .ex-it .em, .ex-th { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; flex: none; display: grid; place-items: center; background: var(--surface-2); font-size: 20px; }
+.ex-it span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ex-list { display: flex; flex-direction: column; gap: 8px; }
+.ex-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 8px; }
+.ex-row img.ex-th { display: block; }
+.ex-row .main { flex: 1; min-width: 0; display: flex; flex-direction: column; font-size: 13.5px; }
+.ex-row .main .sub { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick-list { display: flex; flex-direction: column; gap: 10px; }
+.pick-list button { text-align: left; border: 1px solid var(--line); background: var(--surface); border-radius: 16px; padding: 14px 16px; font-size: 15px; font-weight: 700; display: flex; flex-direction: column; gap: 2px; }
+.pick-list button small { font-weight: 400; font-size: 12px; color: var(--muted); }
+.pick-list button:disabled { opacity: .4; }
 .sheet { position: fixed; inset: 0; z-index: 30; display: flex; align-items: flex-end; justify-content: center; }
 .scrim { position: absolute; inset: 0; background: rgba(20, 26, 24, .45); }
 .panel { position: relative; width: 100%; max-width: 560px; max-height: 88%; overflow-y: auto; background: var(--bg); border-radius: 22px 22px 0 0; padding: 16px max(16px, env(safe-area-inset-left, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)); animation: rise .22s ease-out; }
@@ -560,9 +609,18 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
 
   <main class="views">
     <section class="view" id="v-home" role="tabpanel" aria-label="홈">
+      <div class="home-nav" id="homeNav">
+        <button class="hn-btn" type="button" id="hnPrev" aria-label="전날">‹</button>
+        <label class="hn-mid"><span id="hnLbl"></span><input type="date" id="homeDate" aria-label="보고 싶은 날짜"></label>
+        <button class="hn-btn" type="button" id="hnNext" aria-label="다음날">›</button>
+        <button class="hn-today" type="button" id="hnToday" hidden>오늘로</button>
+      </div>
       <div class="pair">
         <div class="card last-card" id="last" role="button" tabindex="0" aria-label="마지막 기록 자세히 보기"></div>
-        <section class="card dday" id="dday" aria-label="D-day"></section>
+        <div class="rcol">
+          <section class="card ex-side" id="lastEx" aria-label="운동 기록"></section>
+          <section class="card dday" id="dday" aria-label="D-day"></section>
+        </div>
       </div>
       <section class="card" aria-label="최근 치팅(고탄수) 간격">
         <div class="head-row"><span class="cap">최근 치팅(고탄수) 간격</span><span class="sub" id="railSub"></span></div>
@@ -580,7 +638,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
         <h2 id="calTitle"></h2>
         <button class="cal-nav" type="button" id="calNext" aria-label="다음 달">›</button>
       </div>
-      <div class="bulk-entry"><button class="btn-soft" type="button" id="bulkBtn">☑ 일괄 체크</button></div>
+      <div class="bulk-entry"><button class="btn-soft mode-on" type="button" id="calModeBtn">🍽️ 식단 사진 보는 중</button><button class="btn-soft" type="button" id="bulkBtn">☑ 일괄 체크</button></div>
       <section class="card" id="bulkPanel" hidden>
         <div class="head-row"><span class="cap">일괄 체크 · 이 달만</span><button class="linkish" type="button" id="bulkAll">지난 날 전체 선택</button></div>
         <div class="big-seg">
@@ -655,15 +713,17 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
 
   <form class="bar" id="form" autocomplete="off">
     <div class="type-row">
-      <div class="seg" role="group" aria-label="식사 종류">
+      <div class="seg" id="foodSeg" role="group" aria-label="식사 종류">
         <button type="button" data-type="diet" aria-pressed="true">🥗 식단</button>
         <button type="button" data-type="normal" aria-pressed="false">🍚 일반식</button>
         <button type="button" data-type="ctrl" aria-pressed="false">🥩 조절식</button>
         <button type="button" data-type="carb" aria-pressed="false">🍕 고탄수</button>
       </div>
+      <div class="seg" id="exSeg" role="group" aria-label="운동 종류" hidden></div>
     </div>
     <div class="date-row">
       <select class="slot-in" id="slotIn" aria-label="끼니"><option value="b">아침</option><option value="l">점심</option><option value="d">저녁</option><option value="s">간식</option></select>
+      <button class="mode-btn" type="button" id="modeBtn" aria-label="식단 기록 중 · 누르면 운동으로">🍽️</button>
       <input class="date-in" id="dateIn" type="date" aria-label="먹은 날짜" required>
       <button class="qd" type="button" data-qd="0">오늘</button>
       <button class="qd" type="button" data-qd="-1">어제</button>
@@ -834,6 +894,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     </div>
     <p class="empty-note" style="margin-top:10px">한 운동을 고르면 같이 기록돼요 (안 골라도 돼요)</p>
     <div class="opt-row" id="exTypes" style="margin-top:8px"></div>
+    <div id="dayEx" style="margin-top:12px"></div>
     <h3>먹은 것</h3>
     <div id="dayFood"></div>
   </div>
@@ -875,6 +936,18 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   </div>
 </div>
 
+<div class="sheet" id="pickSheet" hidden>
+  <div class="scrim" data-close></div>
+  <div class="panel" role="dialog" aria-label="스토리 종류">
+    <div class="panel-head"><h2>어떤 스토리로 만들까요?</h2><button class="close" type="button" data-close>닫기</button></div>
+    <div class="pick-list">
+      <button type="button" data-spick="food" id="pkFood">🍽️ 식단 스토리<small>먹은 것 사진과 끼니 목록</small></button>
+      <button type="button" data-spick="ex" id="pkEx">🏋️ 오운완 스토리<small>운동 사진과 메모</small></button>
+      <button type="button" data-spick="all" id="pkAll">📋 하루 전체<small>식단과 운동을 한 장에</small></button>
+    </div>
+  </div>
+</div>
+
 <div class="sheet" id="shareSheet" hidden>
   <div class="scrim" data-close></div>
   <div class="panel" role="dialog" aria-label="스토리 공유">
@@ -883,6 +956,19 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       <img class="share-img" id="shareImg" alt="공유할 스토리 이미지 미리보기">
       <button class="share-btn" type="button" id="shareGo">이미지 저장 · 공유하기</button>
       <p class="share-hint" id="shareHint"></p>
+    </div>
+  </div>
+</div>
+
+<div class="sheet" id="exSheet" hidden>
+  <div class="scrim" data-close></div>
+  <div class="panel" role="dialog" aria-label="운동 기록 수정">
+    <div class="panel-head"><h2 id="exTitle">운동 기록</h2><button class="close" type="button" data-close>닫기</button></div>
+    <div id="exItems"></div>
+    <input id="exFile" type="file" accept="image/*" hidden>
+    <div class="btn-row">
+      <button type="button" class="btn-soft" id="exAdd">＋ 운동 추가</button>
+      <button type="button" class="primary" id="exSave">저장</button>
     </div>
   </div>
 </div>
@@ -1099,13 +1185,13 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
 
   let state = defaults();
   function defaults() {
-    return { cycle: DEFAULT_CYCLE, cycleSet: false, entries: [], wishes: [], workouts: {}, sample: true, calSync: false, celebrated: '', comment: '',
+    return { cycle: DEFAULT_CYCLE, cycleSet: false, entries: [], wishes: [], workouts: {}, exEntries: [], sample: true, calSync: false, celebrated: '', comment: '',
       ctrlAllow: 1, ctrlOver: 'fail', weekGoal: 4, diet: {}, dietPlan: { b: 'diet', l: 'normal', d: 'diet' }, backupAsk: '', lastBackup: '', exTypes: ['뮤직타격', 'PT', '걷기', '헬스'], skin: 'sage', font: 'basic' };
   }
   let docRef = null, assetsNs = null, downloadsNs = null, mcpNs = null;
   let saving = Promise.resolve();
   let booted = false, tab = 'home', calY, calM;
-  let inputType = 'diet', typeTouched = false;
+  let inputType = 'diet', typeTouched = false, inputMode = 'food', exPick = '', calMode = 'food', homeD = null;
 
   function loadState(s) {
     const d = defaults();
@@ -1115,11 +1201,12 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       entries: Array.isArray(s.entries) ? s.entries.filter((e) => e && e.d).map(syncEntry) : [],
       wishes: Array.isArray(s.wishes) ? s.wishes : [],
       workouts: fixWorkouts(s.workouts),
+      exEntries: fixExEntries(s.exEntries),
       sample: !!s.sample,
       calSync: !!s.calSync,
       celebrated: s.celebrated || '',
       comment: typeof s.comment === 'string' ? s.comment : '',
-      ctrlAllow: [0, 1, 2].indexOf(s.ctrlAllow) !== -1 ? s.ctrlAllow : d.ctrlAllow,
+      ctrlAllow: Number.isInteger(s.ctrlAllow) && s.ctrlAllow >= 0 && s.ctrlAllow <= 6 ? s.ctrlAllow : d.ctrlAllow,
       ctrlOver: s.ctrlOver === 'warn' ? 'warn' : 'fail',
       weekGoal: Math.min(7, Math.max(1, Number(s.weekGoal) || d.weekGoal)),
       diet: s.diet && typeof s.diet === 'object' && !Array.isArray(s.diet) ? s.diet : {},
@@ -1201,7 +1288,24 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       { id: 's3', t: '피자', done: true, doneOn: d(-48) }
     ];
     st.celebrated = d(-9);
+    st.exEntries = Object.keys(st.workouts).sort().slice(-6).map((d, i) => ({ d, items: [{ id: 'x' + i, type: st.workouts[d][0], memo: ['오늘도 땀 한 바가지','자세 교정받음','가볍게 한 바퀴','컨디션 좋았다'][i % 4] }] }));
     return st;
+  }
+  /* workout records: photo + memo per exercise, kept beside the simple workouts[date] check marks */
+  function fixExEntries(a) {
+    if (!Array.isArray(a)) return [];
+    return a.filter((x) => x && x.d && Array.isArray(x.items)).map((x) => ({ d: x.d, items: x.items.filter((i) => i && typeof i === 'object').map((i) => {
+      const o = { id: i.id || uid(), type: fixEx(String(i.type || '운동')), memo: typeof i.memo === 'string' ? i.memo : '' };
+      if (typeof i.photo === 'string' && i.photo) o.photo = i.photo; return o; }) })).filter((x) => x.items.length).sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : 0);
+  }
+  const exEntryOf = (d) => (state.exEntries || []).find((x) => x.d === d) || null;
+  const exPhotoOf = (d) => { const x = exEntryOf(d); const it = x && x.items.find((i) => i.photo); return it ? it.photo : null; };
+  function exBlock(d, onlyRec) {
+    const xe = exEntryOf(d);
+    if (xe) return `<div class="ex-rec"><span class="cap">🏋️ 운동</span><div class="ex-its">${xe.items.map((it) => `<div class="ex-it">${it.photo ? `<img src="${esc(photoSrc(it.photo))}" alt="">` : '<span class="em">💪</span>'}<span>${esc(it.type)}${it.memo ? ' · ' + esc(it.memo) : ''}</span></div>`).join('')}</div></div>`;
+    const w = state.workouts[d];
+    if (!onlyRec && w) return `<div class="ex-rec"><span class="cap">🏋️ 운동</span><div class="chips">${w.length ? w.map((t) => `<span class="chip">💪 ${esc(t)}</span>`).join('') : '<span class="chip">💪 운동 완료</span>'}</div></div>`;
+    return '';
   }
 
   /* judge every entry: carb gaps and the per-cycle allowance for ctrl meals */
@@ -1293,26 +1397,38 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   function dotInner(e) { return e.photo ? `<img src="${esc(photoSrc(e.photo))}" alt="${esc(e.foods.join(', '))}">` : emo(e.foods[0]); }
   function stTag(j) { if (j.st === 'normal') return ''; return `<span class="tag ${ST[j.st].cls}">${j.gap != null && j.st !== 'none' ? j.gap + '일 ' : ''}${ST[j.st].label}</span>`; }
   function renderHome(S) {
-    const { E, C, T, J, lastCarb, last } = S;
+    const { E, C, T, J, lastCarb } = S, lastAll = S.last;
+    const hdate = homeD || todayStr();
+    const last = state.sample ? lastAll : (E.find((x) => x.d === hdate) || null);
+    const dl = hdate === todayStr() ? '오늘' : hdate === ds(T - 1) ? '어제' : fmtShort(hdate);
+    $('#hnLbl').textContent = `${fmt(hdate)}${hdate === todayStr() ? ' · 오늘' : ''}`;
+    $('#homeDate').value = hdate; $('#homeDate').max = todayStr();
+    $('#hnNext').disabled = hdate >= todayStr(); $('#hnToday').hidden = hdate === todayStr();
 
     const L = $('#last');
     if (!last) {
-      L.innerHTML = '<span class="cap">마지막 기록</span><div class="big">–</div><p class="empty-note">아래에서 끼니와 종류를 고르고 먹은 걸 입력하면 여기에 쌓여요.</p>';
+      L.innerHTML = `<span class="cap">${dl} 기록</span><div class="big">${fmt(hdate)}</div><p class="empty-note">${hdate === todayStr() ? '오늘은 아직 기록이 없어요. 아래에서 끼니와 종류를 고르고 먹은 걸 입력하면 여기에 쌓여요.' : '이 날은 식단 기록이 없어요.'}</p>`;
     } else {
-      const li = E.length - 1, ago = T - dn(last.d);
-      L.innerHTML = '<span class="cap">마지막 기록</span>' +
+      const li = E.indexOf(last), ago = T - dn(last.d);
+      const ci_ = (last.items || []).find((i) => i.id === last.cover) || (last.items || []).slice().sort((x, y) => (SLOT_ORDER[y.slot] ?? 9) - (SLOT_ORDER[x.slot] ?? 9))[0] || null;
+      L.innerHTML = `<span class="cap">${state.sample ? '마지막' : dl} 기록</span>` +
         `<div class="big">${fmt(last.d)}</div>` +
-        `<div class="sub">${ago === 0 ? '오늘' : ago > 0 ? ago + '일 전' : Math.abs(ago) + '일 뒤'}</div>` +
+        (ago === 0 ? '' : `<div class="sub">${ago > 0 ? ago + '일 전' : Math.abs(ago) + '일 뒤'}</div>`) +
         `<div class="tagline"><span class="type-tag">${typeLabel(last)}</span>${stTag(J[li])}</div>` +
         (last.photo ? `<div class="ph-wrap"><img class="photo-big" src="${esc(photoSrc(last.photo))}" alt="${esc(last.foods.join(', '))}">${photoCount(last) > 1 ? `<span class="ph-cnt">📷 ${photoCount(last)}</span>` : ''}</div>` : '') +
-        ((last.items || []).length > 1 ? `<div class="meal-mini">${last.items.slice().sort((a, b) => SLOT_ORDER[a.slot] - SLOT_ORDER[b.slot]).map((i) => `<span>${esc(slotName(i.slot) || '기타')} ${kindName(i.kind).split(' ')[0]}</span>`).join('')}</div>` : '') +
-        '<div class="chips">' + last.foods.map((f) => `<span class="chip">${emo(f)} ${esc(f)}</span>`).join('') + '</div>' +
+        ((last.items || []).length ? `<div class="meal-mini">${last.items.slice().sort((a, b) => SLOT_ORDER[a.slot] - SLOT_ORDER[b.slot]).map((i) => `<span>${esc(slotName(i.slot) || '기타')} ${i.slot === 's' ? '☕' : kindName(i.kind).split(' ')[0]}</span>`).join('')}</div>` : '') +
+        '<div class="chips">' + (ci_ && ci_.foods.length ? ci_.foods : last.foods).map((f) => `<span class="chip">${emo(f)} ${esc(f)}</span>`).join('') + '</div>' +
         (last.rating ? `<span class="stars-mini">${stars(last.rating)}</span>` : '') +
         (last.review ? `<span class="review-mini">“${esc(last.review)}”</span>` : '') +
         `<button class="linkish" type="button" id="openHist">전체 ${E.length}회 보기 ›</button>`;
       $('#openHist').addEventListener('click', (ev) => { ev.stopPropagation(); openHist(); });
     }
 
+    const xd = hdate, xe = exEntryOf(xd), xw = state.workouts[xd];
+    const xph = xe ? xe.items.filter((i) => i.photo) : [];
+    const xhero = xe ? (xph[0] || xe.items[0]) : null, xmore = xe ? xe.items.length - 1 : 0;
+    $('#lastEx').innerHTML = `<span class="cap">🏋️ 운동 · ${fmtShort(xd)}</span>` + (xe ? `<div class="ex-hero">${xhero.photo ? `<div class="ph-wrap"><img class="photo-big" src="${esc(photoSrc(xhero.photo))}" alt="${esc(xhero.type)}">${xph.length > 1 ? `<span class="ph-cnt">📷 ${xph.length}</span>` : ''}</div>` : '<div class="ex-icon">💪</div>'}<div class="ex-kw">${esc(xhero.type)}</div>${xhero.memo ? `<div class="ex-memo">${esc(xhero.memo)}</div>` : ''}${xmore ? `<span class="sub">외 ${xmore}개 · ${esc(xe.items.slice(1).map((i) => i.type).join(', '))}</span>` : ''}</div>` : xw ? `<div class="ex-hero"><div class="ex-icon">💪</div><div class="ex-kw">${esc(xw.length ? xw.join(' · ') : '운동 완료')}</div></div>` : '<p class="empty-note">이 날 운동 기록이 없어요.</p>');
+    $('#lastEx').hidden = !(xe || xw); $('#lastEx').parentNode.classList.toggle('solo', !(xe || xw));
     const D = $('#dday');
     let num = '–', label = '다음 치팅까지', sub1 = '고탄수를 기록하면 계산돼요', sub2 = '', tone = 'none', prog = 0, note = '', wishLine = '';
     const pend = state.wishes.filter((w) => !w.done);
@@ -1380,10 +1496,10 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
 
     // nudges
     const N = [];
-    if (last && !state.sample) {
-      if (!last.rating) N.push({ t: `${emo(last.foods[0])} ${esc(last.foods[0])} 어땠어요?`, b: '별점 남기기', d: last.d, f: 'rating' });
-      const after = T - dn(last.d);
-      if (after >= 1 && after <= 3 && last.wa == null) N.push({ t: '⚖️ 먹은 다음날 체중을 적어볼까요?', b: '체중 적기', d: last.d, f: 'weight' });
+    if (lastAll && !state.sample) {
+      if (!lastAll.rating) N.push({ t: `${emo(lastAll.foods[0])} ${esc(lastAll.foods[0])} 어땠어요?`, b: '별점 남기기', d: lastAll.d, f: 'rating' });
+      const after = T - dn(lastAll.d);
+      if (after >= 1 && after <= 3 && lastAll.wa == null) N.push({ t: '⚖️ 먹은 다음날 체중을 적어볼까요?', b: '체중 적기', d: lastAll.d, f: 'weight' });
     }
     $('#nudges').innerHTML = N.map((n) => `<div class="nudge"><span>${n.t}</span><button type="button" data-entry="${n.d}" data-focus="${n.f}">${n.b}</button></div>`).join('');
 
@@ -1396,6 +1512,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   /* ---------- calendar (grid starts Sunday, weeks counted Mon–Sun) ---------- */
   function renderCal(S) {
     const { E, C, J, lastCarb, T } = S;
+    const exm = calMode === 'ex';
+    $('#calModeBtn').textContent = exm ? '🏋️ 운동 사진 보는 중' : '🍽️ 식단 사진 보는 중';
     $('#calTitle').textContent = `${calY}년 ${calM + 1}월`;
     const firstN = Date.UTC(calY, calM, 1) / 864e5;
     const lastN = Date.UTC(calY, calM + 1, 0) / 864e5;
@@ -1407,16 +1525,21 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     for (let k = 0; k < rows * 7; k++) {
       const n = startN + k, d = ds(n);
       if (n < firstN || n > lastN) { html += '<div class="cell out"></div>'; continue; }
-      const hit = byDate[d], ex = state.workouts[d];
+      const hit = exm ? null : byDate[d], ex = state.workouts[d];
       let cls = 'cell', inner = `<span class="dn">${new Date(n * 864e5).getUTCDate()}</span>`;
       if (hit) {
         cls += ' has ' + ST[hit.j.st].cls;
         if (hit.e.photo) { cls += ' img'; inner += `<img src="${esc(photoSrc(hit.e.photo))}" alt="">`; }
         else inner += `<span class="em">${emo(hit.e.foods[0])}</span>`;
-      } else if (d === target && n > T) cls += ' target';
-      if (state.diet[d]) inner += '<span class="dchk" aria-hidden="true">✓</span>';
+      } else if (!exm && d === target && n > T) cls += ' target';
+      if (exm) {
+        const xp = exPhotoOf(d);
+        if (xp) { cls += ' has exm img'; inner += `<img src="${esc(photoSrc(xp))}" alt="">`; }
+        else if (ex) { cls += ' has exm'; inner += '<span class="em">💪</span>'; }
+      }
+      if (!exm && state.diet[d]) inner += '<span class="dchk" aria-hidden="true">✓</span>';
       if (bulk.active && bulk.sel.has(d)) cls += ' sel';
-      if (ex) inner += '<span class="exbar"></span>';
+      if (ex && !exm) inner += '<span class="exbar"></span>';
       if (n === T) cls += ' today';
       if (n > T) cls += ' future';
       const lbl = `${calM + 1}월 ${new Date(n * 864e5).getUTCDate()}일${hit ? ' ' + esc(hit.e.foods.join(' ')) + ' ' + ST[hit.j.st].label : ''}${ex ? ' 운동함' : ''}${state.diet[d] ? ' 식단 지킴' : ''}`;
@@ -1425,7 +1548,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     $('#calGrid').innerHTML = html;
     $('#calGrid').classList.toggle('bulking', bulk.active);
     renderBulk();
-    $('#calLegend').innerHTML = ['ok', 'ctrl', 'warn', 'bad'].filter((k) => k !== 'warn' || state.ctrlOver === 'warn')
+    $('#calLegend').innerHTML = exm ? '<span><i class="exleg"></i>운동한 날 · 사진을 올리면 사진으로 보여요</span>' : ['ok', 'ctrl', 'warn', 'bad'].filter((k) => k !== 'warn' || state.ctrlOver === 'warn')
       .map((k) => `<span class="${ST[k].cls}"><b></b>${LEG[k]}</span>`).join('') + '<span class="s-norm"><b></b>일반식</span><span><i class="exleg"></i>운동</span><span><span class="dleg">✓</span>식단</span>';
 
     const goal = state.weekGoal;
@@ -1574,7 +1697,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     { const pt = planText(); $('#planSummary').textContent = `3끼 중 ${pt.n}끼 식단이에요. 이대로 지킨 날은 달력이나 홈에서 ✓로 체크해요.`; }
     $('#goalIn').value = state.weekGoal;
     $('#presets').innerHTML = [7, 15, 21, 30, 45, 60].map((n) => `<button type="button" data-p="${n}" class="${n === state.cycle ? 'on' : ''}">${n}일</button>`).join('');
-    $('#allowOpts').innerHTML = [0, 1, 2].map((n) => `<button type="button" data-allow="${n}" class="${n === state.ctrlAllow ? 'on' : ''}">${n ? n + '회' : '허용 안 함'}</button>`).join('');
+    $('#allowOpts').innerHTML = [0, 1, 2, 3, 4, 5, 6].map((n) => `<button type="button" data-allow="${n}" class="${n === state.ctrlAllow ? 'on' : ''}">${n ? n + '회' : '허용 안 함'}</button>`).join('');
     $('#overOpts').innerHTML = [['fail', '치팅으로 계산'], ['warn', '조절 필요']].map(([k, t]) => `<button type="button" data-over="${k}" class="${k === state.ctrlOver ? 'on' : ''}">${t}</button>`).join('');
     $('#skins').innerHTML = Object.entries(SKINS).map(([k, s]) => `<button type="button" class="skin" data-skin="${k}" aria-pressed="${k === state.skin}"><span class="sw"><i style="background:${s.sw[0]}"></i><i style="background:${s.sw[1]}"></i></span>${s.name}</button>`).join('');
     $('#fonts').innerHTML = Object.entries(FONTS).map(([k, f]) => `<button type="button" class="font-opt" data-font="${k}" aria-pressed="${k === state.font}"><span class="fn">${f.name}</span><span class="fp" style="font-family:${esc(f.d)}">유지어터 노트 D-15</span><span class="fb" style="font-family:${esc(f.b)}">오늘은 회 먹고 조절했어요 123</span></button>`).join('');
@@ -1584,12 +1707,23 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     if (!mcpNs) $('#calSyncNote').textContent = '이 화면에서는 구글 캘린더를 연결할 수 없어요. Claude 앱이나 claude.ai에서 열면 켤 수 있어요.';
   }
   function renderMotto() { const m = (state.comment || '').trim(); $('#motto').hidden = !m; $('#motto').textContent = m; }
+  function renderMode() {
+    const ex = inputMode === 'ex';
+    $('#foodSeg').hidden = ex; $('#exSeg').hidden = !ex; $('#slotIn').hidden = ex;
+    $('#modeBtn').textContent = ex ? '🏋️' : '🍽️';
+    $('#modeBtn').setAttribute('aria-label', ex ? '운동 기록 중 · 누르면 식단으로' : '식단 기록 중 · 누르면 운동으로');
+    $('#foodIn').placeholder = ex ? '운동 메모 (선택, 예: 1시간)' : '먹은 것 (띄어쓰기로 여러 개)';
+    $('#foodIn').maxLength = ex ? 40 : 60;
+    const types = state.exTypes.length ? state.exTypes : ['운동'];
+    if (types.indexOf(exPick) === -1) exPick = types[0];
+    $('#exSeg').innerHTML = types.map((t) => `<button type="button" data-expick="${esc(t)}" aria-pressed="${t === exPick}">${esc(t)}</button>`).join('');
+  }
   function renderSeg() { document.querySelectorAll('.seg [data-type]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.type === inputType))); }
 
   function render() {
     applyLook();
     const S = summary();
-    renderMotto(); renderSeg();
+    renderMotto(); renderSeg(); renderMode();
     renderHome(S);
     if (tab === 'cal') renderCal(S);
     if (tab === 'stats') renderStats(S);
@@ -1770,8 +1904,32 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       else toast('캘린더에 일정을 넣지 못했어요');
     }
   }
+  async function addEx(e) {
+    const d = $('#dateIn').value, memo = $('#foodIn').value.trim(), type = exPick || '운동';
+    if (!d) { $('#dateIn').focus(); return; }
+    { const ex0 = exEntryOf(d); if (ex0 && !pending && !memo && ex0.items.some((i) => i.type === type)) { toast(`이미 ${type} 기록이 있어요. 운동 카드를 눌러 메모나 사진을 추가해 보세요`, 3500); return; } }
+    if (state.sample) { state.sample = false; state.entries = []; }
+    let xe = exEntryOf(d), photo = null, note = '';
+    if (pending) {
+      if (xe && xe.items.filter((i) => i.photo).length >= 6) note = ' · 사진은 하루 6장까지라 글만 기록했어요';
+      else {
+        $('#form').classList.add('busy');
+        try { photo = await storePhoto(pending.blob); } catch (err) { note = ' · ' + photoErr(err) + ', 글만 기록했어요'; }
+        $('#form').classList.remove('busy');
+      }
+    }
+    const it = { id: uid(), type, memo }; if (photo) it.photo = photo;
+    if (!xe) { xe = { d, items: [] }; state.exEntries.push(xe); state.exEntries.sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : 0); }
+    xe.items.push(it);
+    const cur = (state.workouts[d] || []).slice(); if (cur.indexOf(type) === -1) cur.push(type); state.workouts[d] = cur;
+    clearPending(); $('#foodIn').value = '';
+    persist(); render();
+    toast(`${fmt(d)} ${type} 기록했어요${xe.items.length > 1 ? ` · 이 날 ${xe.items.length}개째` : ''}${note}`, 4000);
+    $('#v-home').scrollTop = 0; maybeNudge();
+  }
   async function add(e) {
     e.preventDefault();
+    if (inputMode === 'ex') return addEx(e);
     const d = $('#dateIn').value, foods = splitFoods($('#foodIn').value), slot = $('#slotIn').value, kind = inputType;
     if (!d || !foods.length) {
       const c = $('#chat'); c.classList.remove('shake'); void c.offsetWidth; c.classList.add('shake');
@@ -1832,6 +1990,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     $('#exOff').setAttribute('aria-pressed', String(!ex));
     $('#exTypes').innerHTML = state.exTypes.length ? '' : '<p class="empty-note">환경설정에서 운동 종류를 등록하면 여기서 고를 수 있어요.</p>';
     if (state.exTypes.length) $('#exTypes').innerHTML = state.exTypes.map((t) => `<button type="button" data-ext="${esc(t)}" aria-pressed="${!!ex && ex.indexOf(t) !== -1}">${esc(t)}</button>`).join('');
+    renderDayEx();
     const E = view(), e = E.find((x) => x.d === d);
     if (e) {
       const j = judge(E)[E.indexOf(e)];
@@ -1841,6 +2000,87 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     } else {
       $('#dayFood').innerHTML = '<button class="btn-wide" type="button" id="dayAddFood">이 날 먹은 것 기록하기</button>';
     }
+  }
+  function renderDayEx() {
+    const d = dayD, xe = exEntryOf(d), n = dn(d), T = today(); let h = '';
+    if (xe) h += '<div class="ex-list">' + xe.items.map((it) => `<div class="ex-row">${it.photo ? `<img class="ex-th" src="${esc(photoSrc(it.photo))}" alt="">` : '<span class="ex-th">💪</span>'}<div class="main"><b>${esc(it.type)}</b><span class="sub">${esc(it.memo || '메모 없음')}</span></div><button type="button" class="btn-soft" data-exdel="${it.id}">${armedKey === 'xd' + it.id ? '정말 삭제' : '삭제'}</button></div>`).join('') + '</div>';
+    if (n <= T) {
+      const has = xe || view().some((x) => x.d === d);
+      h += `<div class="opt-row" style="margin-top:8px"><button type="button" class="btn-soft" id="dayAddEx">📷 운동 사진·메모 기록하기</button>${xe ? '<button type="button" class="btn-soft" id="dayEditEx">✏️ 운동 수정</button>' : ''}${has ? '<button type="button" class="btn-soft" id="dayStory">📤 스토리</button>' : ''}</div>`;
+    }
+    $('#dayEx').innerHTML = h;
+  }
+  /* ---------- workout record editor ---------- */
+  const exd = { d: null, draft: [], pend: {}, fileFor: null };
+  const exSrc = (it) => exd.pend[it.id] ? exd.pend[it.id].url : (it.photo ? photoSrc(it.photo) : null);
+  function openExEdit(d) {
+    const xe = exEntryOf(d), w = state.workouts[d];
+    Object.values(exd.pend).forEach((p) => URL.revokeObjectURL(p.url));
+    exd.d = d; exd.pend = {};
+    exd.draft = xe ? JSON.parse(JSON.stringify(xe.items)) : (w && w.length ? w.map((t) => ({ id: uid(), type: t, memo: '' })) : [{ id: uid(), type: state.exTypes[0] || '운동', memo: '' }]);
+    $('#exTitle').textContent = fmt(d) + ' 운동';
+    renderExEdit(); $('#daySheet').hidden = true; $('#exSheet').hidden = false;
+  }
+  function renderExEdit() {
+    $('#exItems').innerHTML = exd.draft.map((it) => {
+      const src = exSrc(it), types = state.exTypes.indexOf(it.type) === -1 ? [it.type].concat(state.exTypes) : state.exTypes;
+      return `<div class="exi"><button type="button" class="exi-ph" data-xphoto="${it.id}">${src ? `<img src="${esc(src)}" alt="">` : '📷<br>사진 넣기'}</button>` +
+        `<div class="exi-body"><div class="opt-row">${types.map((t) => `<button type="button" data-xtype="${esc(t)}" data-xid="${it.id}" class="${it.type === t ? 'on' : ''}">${esc(t)}</button>`).join('')}</div>` +
+        `<input class="txt" type="text" maxlength="40" data-xmemo="${it.id}" value="${esc(it.memo || '')}" placeholder="메모 (선택)">` +
+        `<div class="exi-act">${src ? `<button type="button" class="btn-soft" data-xnophoto="${it.id}">사진 빼기</button>` : ''}<button type="button" class="btn-soft" data-xdel="${it.id}">이 운동 빼기</button></div></div></div>`;
+    }).join('') || '<p class="empty-note">운동 기록이 없어요. 아래에서 추가해 보세요.</p>';
+  }
+  $('#exItems').addEventListener('input', (e) => { const m = e.target.closest('[data-xmemo]'); if (m) { const it = exd.draft.find((i) => i.id === m.dataset.xmemo); if (it) it.memo = m.value; } });
+  $('#exItems').addEventListener('click', (e) => {
+    const t = e.target, ph = t.closest('[data-xphoto]'), ty = t.closest('[data-xtype]'), del = t.closest('[data-xdel]'), np = t.closest('[data-xnophoto]');
+    if (ph) {
+      const it = exd.draft.find((i) => i.id === ph.dataset.xphoto), has = (i) => !!exSrc(i);
+      if (it && !has(it) && exd.draft.filter(has).length >= 6) { toast('사진은 하루 6장까지예요'); return; }
+      exd.fileFor = ph.dataset.xphoto; $('#exFile').click(); return;
+    }
+    if (ty) { const it = exd.draft.find((i) => i.id === ty.dataset.xid); if (it) { it.type = ty.dataset.xtype; renderExEdit(); } return; }
+    if (np) { const id = np.dataset.xnophoto, it = exd.draft.find((i) => i.id === id); if (exd.pend[id]) { URL.revokeObjectURL(exd.pend[id].url); delete exd.pend[id]; } if (it) delete it.photo; renderExEdit(); return; }
+    if (del) { const id = del.dataset.xdel; if (exd.pend[id]) { URL.revokeObjectURL(exd.pend[id].url); delete exd.pend[id]; } exd.draft = exd.draft.filter((i) => i.id !== id); renderExEdit(); }
+  });
+  $('#exFile').addEventListener('change', (e) => {
+    const f = e.target.files && e.target.files[0]; e.target.value = ''; if (!f) return;
+    if (!/^image\//.test(f.type)) { toast('사진 파일만 넣을 수 있어요'); return; }
+    openCrop(f, null, (blob) => {
+      const id = exd.fileFor, it = exd.draft.find((i) => i.id === id); if (!it) return;
+      if (exd.pend[id]) URL.revokeObjectURL(exd.pend[id].url);
+      exd.pend[id] = { blob, url: URL.createObjectURL(blob) }; renderExEdit();
+    });
+  });
+  $('#exAdd').addEventListener('click', () => { exd.draft.push({ id: uid(), type: state.exTypes[0] || '운동', memo: '' }); renderExEdit(); });
+  $('#exSave').addEventListener('click', async () => {
+    const btn = $('#exSave'); btn.disabled = true;
+    const d = exd.d, orig = exEntryOf(d), om = {}; (orig ? orig.items : []).forEach((i) => { om[i.id] = i; });
+    const out = [];
+    for (const it of exd.draft) {
+      const o = { id: it.id, type: it.type || '운동', memo: (it.memo || '').trim() };
+      if (exd.pend[it.id]) { try { o.photo = await storePhoto(exd.pend[it.id].blob); if (om[it.id] && om[it.id].photo) dropAsset(om[it.id].photo); } catch (err) { toast(photoErr(err)); if (om[it.id] && om[it.id].photo) o.photo = om[it.id].photo; } }
+      else if (it.photo) o.photo = it.photo;
+      else if (om[it.id] && om[it.id].photo) dropAsset(om[it.id].photo);
+      out.push(o);
+    }
+    Object.keys(om).forEach((id) => { if (!exd.draft.some((i) => i.id === id) && om[id].photo) dropAsset(om[id].photo); });
+    if (orig) { if (out.length) orig.items = out; else state.exEntries = state.exEntries.filter((x) => x !== orig); }
+    else if (out.length) { state.exEntries.push({ d, items: out }); state.exEntries.sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : 0); }
+    { const gone = (orig ? orig.items : []).map((i) => i.type).filter((t) => !out.some((o) => o.type === t));
+      let w = (state.workouts[d] || []).filter((t) => gone.indexOf(t) === -1);
+      out.forEach((o) => { if (w.indexOf(o.type) === -1) w.push(o.type); });
+      if (out.length || w.length) state.workouts[d] = w; else if (orig) delete state.workouts[d]; }
+    Object.values(exd.pend).forEach((p) => URL.revokeObjectURL(p.url)); exd.pend = {};
+    persist(); render(); if (!$('#daySheet').hidden) renderDay();
+    $('#exSheet').hidden = true; btn.disabled = false; toast('운동 기록을 저장했어요');
+  });
+  $('#lastEx').addEventListener('click', () => openExEdit(homeD || todayStr()));
+  let pickD = null;
+  function openPick(d) {
+    pickD = d;
+    const fe = view().some((x) => x.d === d), xe = !!exEntryOf(d);
+    $('#pkFood').disabled = !fe; $('#pkEx').disabled = !xe; $('#pkAll').disabled = !(fe || xe);
+    $('#daySheet').hidden = true; $('#pickSheet').hidden = false;
   }
   function setWorkout(d, types) {
     if (types === null) delete state.workouts[d]; else state.workouts[d] = types;
@@ -1962,11 +2202,19 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
   function fit(c, t, maxW) { if (c.measureText(t).width <= maxW) return t; while (t.length > 1 && c.measureText(t + '…').width > maxW) t = t.slice(0, -1); return t + '…'; }
   function cover(c, im, x, y, w, h) { const s = Math.max(w / im.naturalWidth, h / im.naturalHeight), sw = w / s, sh = h / s; c.drawImage(im, (im.naturalWidth - sw) / 2, (im.naturalHeight - sh) / 2, sw, sh, x, y, w, h); }
-  async function buildStory() {
+  async function buildStory(hd0) {
     const DISP = tok('--font-display') || '"Jua", sans-serif', BODY = tok('--font-body') || '"Noto Sans KR", sans-serif';
     try { await Promise.all([document.fonts.load('400 40px ' + DISP, '유지어터'), document.fonts.load('400 30px ' + BODY, '성공 실패'), document.fonts.load('700 30px ' + BODY, '성공')]); } catch (e) {}
     try { await document.fonts.ready; } catch (e) {}
-    const S = summary(), { E, C, T, J, lastCarb, last } = S;
+    const S = summary(), { E, C, T, J, lastCarb } = S;
+    const hd = hd0 || todayStr();
+    const last = state.sample ? S.last : (E.find((x) => x.d === hd) || null);
+    const lci = last && ((last.items || []).find((i) => i.id === last.cover) || (last.items || [])[0]);
+    const coverFoods = lci && lci.foods.length ? lci.foods : (last ? last.foods : []);
+    const mealItems = last && (last.items || []).length ? (last.items || []).slice().sort((a, b) => SLOT_ORDER[a.slot] - SLOT_ORDER[b.slot]).map((i) => (slotName(i.slot) || '기타') + ' ' + (i.slot === 's' ? '☕' : kindName(i.kind).split(' ')[0])) : [];
+    const xe = exEntryOf(hd), hasEx = !!xe, XH = 290;
+    const xph = hasEx ? xe.items.find((i) => i.photo) : null;
+    const xim = xph ? await loadImg(photoSrc(xph.photo)) : null;
     const K = { bg: tok('--bg'), surface: tok('--surface'), s2: tok('--surface-2'), ink: tok('--ink'), muted: tok('--muted'), line: tok('--line'), acc: tok('--accent'), accInk: tok('--accent-ink'), accSoft: tok('--accent-soft'), onAcc: tok('--on-accent') };
     const SC = { ok: [tok('--ok'), tok('--ok-bg')], ctrl: [tok('--ctrl'), tok('--ctrl-bg')], warn: [tok('--warn'), tok('--warn-bg')], bad: [tok('--bad'), tok('--bad-bg')], none: [K.line, K.surface], normal: [K.muted, K.s2] };
     const W = 1080, H = 1920, P = 64, CW = W - P * 2;
@@ -1980,16 +2228,21 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     const cardW = (CW - 32) / 2, pad = 40;
     const hasPhoto = last && last.photo && imgs[last.photo];
     c.font = '500 30px ' + BODY;
-    const chipRowsFor = (maxW) => { const rows = []; let row = [], rw = 0; (last ? last.foods : []).forEach((f) => { const t = emo(f) + ' ' + f, w = Math.min(maxW, c.measureText(t).width + 36); if (row.length && rw + 10 + w > maxW) { rows.push(row); row = []; rw = 0; } row.push({ t, w }); rw += (row.length > 1 ? 10 : 0) + w; }); if (row.length) rows.push(row); return rows; };
+    const chipRowsFor = (maxW) => { const rows = []; let row = [], rw = 0; coverFoods.forEach((f) => { const t = emo(f) + ' ' + f, w = Math.min(maxW, c.measureText(t).width + 36); if (row.length && rw + 10 + w > maxW) { rows.push(row); row = []; rw = 0; } row.push({ t, w }); rw += (row.length > 1 ? 10 : 0) + w; }); if (row.length) rows.push(row); return rows; };
     const chipRows = chipRowsFor(cardW - pad * 2).slice(0, 2);
-    const railH = 40 + 60 + 150 + 120 + 30 + 36, exH = 36 + 28 + 18 + 22 + 8 + 160 + 30, statsH = 130;
+    c.font = '400 26px ' + BODY;
+    const mealRows = []; { let row = [], rw = 0; mealItems.forEach((t) => { const w = c.measureText(t).width; if (row.length && rw + 22 + w > cardW - pad * 2) { mealRows.push(row); row = []; rw = 0; } row.push({ t, w }); rw += (row.length > 1 ? 22 : 0) + w; }); if (row.length) mealRows.push(row); }
+    const RD = hasEx ? 124 : 150, ROWH = hasEx ? 32 : 40;
+    const railH = 40 + 60 + RD + 120 + 30 + 36, exH = 36 + 28 + 18 + 22 + 8 + ROWH * 4 + 30, statsH = 130;
     const fixedTop = 140 + (motto ? 56 : 0);
-    const leftBase = pad + 52 + 82 + 46 + 52 + chipRows.length * 58 + (last && last.rating ? 46 : 0) + pad - 8;
+    const leftBase = pad + 52 + 82 + 46 + 52 + chipRows.length * 58 + (last && last.rating ? 46 : 0) + (mealRows.length ? mealRows.length * 38 + 8 : 0) - (last && T - dn(last.d) === 0 ? 46 : 0) + pad - 8;
     // the last-record photo always shows; it shrinks to fit the 1920px canvas
-    const avail = H - 80 - fixedTop - 32 - railH - 28 - exH - 28 - statsH - 50;
+    const avail = H - 80 - fixedTop - 32 - railH - 28 - exH - 28 - statsH - 50 - (hasEx ? 20 : 0);
     let photoS = hasPhoto ? Math.max(0, Math.min(cardW - pad * 2, avail - leftBase - 20)) : 0;
     if (hasPhoto) photoS = Math.max(photoS, 150);
-    const cardH = Math.max(leftBase + (photoS ? photoS + 20 : 0), 560);
+    let cardH = Math.max(leftBase + (photoS ? photoS + 28 : 0), 560);
+    if (hasEx) cardH = Math.max(cardH, XH + 24 + 340);
+    if (hasEx && photoS) photoS = Math.min(cardW - pad * 2, Math.max(photoS, cardH - leftBase - 20));
     const total = fixedTop + cardH + 32 + railH + 28 + exH + 28 + statsH + 60;
     let y = Math.max(40, (H - total) / 2);
 
@@ -2000,21 +2253,56 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     // left card: last record
     c.fillStyle = K.surface; rr(c, P, y, cardW, cardH, 40); c.fill(); c.strokeStyle = K.line; c.lineWidth = 2; c.stroke();
     const lx = P + pad; let ly = y + pad;
-    c.fillStyle = K.muted; c.font = '700 28px ' + BODY; c.fillText('마지막 기록', lx, ly + 26); ly += 52;
-    c.fillStyle = K.ink; c.font = '400 68px ' + DISP; c.fillText(last ? fmt(last.d) : '–', lx, ly + 58); ly += 82;
+    c.fillStyle = K.muted; c.font = '700 28px ' + BODY; c.fillText((state.sample ? '마지막' : hd === todayStr() ? '오늘' : hd === ds(T - 1) ? '어제' : fmtShort(hd)) + ' 기록', lx, ly + 26); ly += 52;
+    c.fillStyle = K.ink; c.font = '400 68px ' + DISP; c.fillText(fmt(last ? last.d : hd), lx, ly + 58); ly += 82;
     if (last) {
       const ago = T - dn(last.d); c.fillStyle = K.muted; c.font = '400 28px ' + BODY;
-      c.fillText(ago === 0 ? '오늘' : ago > 0 ? ago + '일 전' : Math.abs(ago) + '일 뒤', lx, ly + 26); ly += 46;
-      const j = J[E.length - 1], pills = j.st === 'normal' ? [[typeLabel(last), K.s2, K.muted]] : [[typeLabel(last), K.s2, K.muted], [(j.gap != null && j.st !== 'none' ? j.gap + '일 ' : '') + ST[j.st].label, SC[j.st][1], j.st === 'none' ? K.muted : SC[j.st][0]]];
+      if (ago !== 0) { c.fillText(ago > 0 ? ago + '일 전' : Math.abs(ago) + '일 뒤', lx, ly + 26); ly += 46; }
+      const j = J[E.indexOf(last)], pills = j.st === 'normal' ? [[typeLabel(last), K.s2, K.muted]] : [[typeLabel(last), K.s2, K.muted], [(j.gap != null && j.st !== 'none' ? j.gap + '일 ' : '') + ST[j.st].label, SC[j.st][1], j.st === 'none' ? K.muted : SC[j.st][0]]];
       let px0 = lx; c.font = '700 26px ' + BODY;
       pills.forEach(([t, bg, fg]) => { const w = c.measureText(t).width + 32; c.fillStyle = bg; rr(c, px0, ly, w, 42, 21); c.fill(); c.fillStyle = fg; c.fillText(t, px0 + 16, ly + 30); px0 += w + 10; });
       ly += 52;
     } else ly += 98;
-    if (photoS) { c.save(); rr(c, lx, ly, photoS, photoS, 26); c.clip(); cover(c, imgs[last.photo], lx, ly, photoS, photoS); c.restore(); ly += photoS + 20; }
+    if (photoS) { ly += 8; const pw = photoS < (cardW - pad * 2) * 0.92 ? cardW - pad * 2 : photoS; c.save(); rr(c, lx, ly, pw, photoS, 26); c.clip(); cover(c, imgs[last.photo], lx, ly, pw, photoS); c.restore(); ly += photoS + 20; }
+    if (mealRows.length) { c.font = '400 26px ' + BODY; c.fillStyle = K.muted; mealRows.forEach((r) => { let mx = lx; r.forEach((m) => { c.fillText(m.t, mx, ly + 28); mx += m.w + 22; }); ly += 38; }); ly += 8; }
     c.font = '500 30px ' + BODY;
     chipRows.forEach((r) => { let cx = lx; r.forEach((ch) => { c.fillStyle = K.s2; rr(c, cx, ly, ch.w, 48, 24); c.fill(); c.fillStyle = K.ink; c.fillText(fit(c, ch.t, ch.w - 36), cx + 18, ly + 34); cx += ch.w + 10; }); ly += 58; });
     if (last && last.rating) { c.fillStyle = SC.warn[0]; c.font = '400 34px ' + BODY; c.fillText(stars(last.rating), lx, ly + 32); }
 
+    // workout card (only when that day has a workout record)
+    if (hasEx) {
+      const rx0 = P + cardW + 32, exH2 = cardH - XH - 24, hero = xph || xe.items[0], others = xe.items.length - 1, cxm = rx0 + cardW / 2;
+      c.fillStyle = K.surface; rr(c, rx0, y, cardW, exH2, 40); c.fill(); c.strokeStyle = K.line; c.lineWidth = 2; c.stroke();
+      let ey2 = y + 36;
+      c.textAlign = 'left'; c.fillStyle = K.muted; c.font = '700 28px ' + BODY; c.fillText('🏋️ 운동 · ' + fmtShort(hd), rx0 + pad, ey2 + 26); ey2 += 52;
+      c.font = '400 26px ' + BODY;
+      const wrapL = (t, maxW, maxL) => {
+        const words = t.split(/\s+/).filter(Boolean), out = []; let cur = '';
+        const push = () => { out.push(cur); cur = ''; };
+        for (const w of words) {
+          const test = cur ? cur + ' ' + w : w;
+          if (c.measureText(test).width <= maxW) { cur = test; continue; }
+          if (cur) { push(); if (out.length === maxL) break; }
+          if (c.measureText(w).width <= maxW) { cur = w; continue; }
+          for (const ch of w) { if (c.measureText(cur + ch).width > maxW) { push(); if (out.length === maxL) break; } cur += ch; }
+          if (out.length === maxL) break;
+        }
+        if (cur && out.length < maxL) out.push(cur);
+        if (out.join('').replace(/\s/g, '').length < t.replace(/\s/g, '').length) out[out.length - 1] = fit(c, out[out.length - 1] + '…', maxW);
+        return out;
+      };
+      const ml = hero.memo ? wrapL(hero.memo, cardW - pad * 2, 2) : [];
+      const textH = 40 + ml.length * 34 + (others ? 34 : 0);
+      const ps = Math.max(90, Math.min(cardW - pad * 2, exH2 - 36 - 52 - textH - 24)), bx = cxm - ps / 2;
+      if (xim) { c.save(); rr(c, bx, ey2, ps, ps, 24); c.clip(); cover(c, xim, bx, ey2, ps, ps); c.restore(); }
+      else { c.fillStyle = K.accSoft; rr(c, bx, ey2, ps, ps, 24); c.fill(); c.textAlign = 'center'; c.fillStyle = K.ink; c.font = Math.round(ps * 0.5) + 'px ' + BODY; c.fillText('💪', cxm, ey2 + ps / 2 + ps * 0.17); }
+      ey2 += ps + 12; c.textAlign = 'center';
+      c.fillStyle = K.ink; c.font = '700 30px ' + BODY; c.fillText(fit(c, hero.type, cardW - pad * 2), cxm, ey2 + 30); ey2 += 40;
+      c.fillStyle = K.muted; c.font = '400 26px ' + BODY;
+      ml.forEach((l) => { c.fillText(l, cxm, ey2 + 24); ey2 += 34; });
+      if (others) c.fillText('외 ' + others + '개', cxm, ey2 + 24);
+      c.textAlign = 'left';
+    }
     // D-day card
     const rx = P + cardW + 32;
     let num = '–', label = '다음 치팅까지', s1 = '고탄수를 기록하면 계산돼요', s2 = '', s3 = '', tone = K.muted, toneBg = K.surface, prog = 0;
@@ -2027,17 +2315,19 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
         if (state.ctrlAllow) { const left = state.ctrlAllow - S.ctrlUsed; s3 = left > 0 ? `조절식 ${left}회 남음` : '조절식 다 썼어요'; }
       } else { num = 'OK'; tone = K.onAcc; toneBg = K.acc; label = '이제 먹어도 돼요'; s1 = rem === 0 ? '오늘부터 치팅 가능' : Math.abs(rem) + '일 더 관리했어요'; s2 = S.el + '일째 관리 중'; }
     }
-    c.fillStyle = toneBg; rr(c, rx, y, cardW, cardH, 40); c.fill();
+    if (hasEx) s3 = '';
+    const dTop = hasEx ? y + cardH - XH : y, dHt = hasEx ? XH : cardH;
+    c.fillStyle = toneBg; rr(c, rx, dTop, cardW, dHt, 40); c.fill();
     if (!lastCarb) { c.strokeStyle = K.line; c.lineWidth = 2; c.stroke(); }
-    const ccx = rx + cardW / 2, R = 140, block = 58 + R * 2 + 116 + (s3 ? 44 : 0), by = y + (cardH - block) / 2;
+    const ccx = rx + cardW / 2, R = hasEx ? 44 : 140, block = 58 + R * 2 + (hasEx ? 90 : 116) + (s3 ? 44 : 0), by = hasEx ? dTop + 18 : dTop + (dHt - block) / 2;
     c.textAlign = 'center'; c.fillStyle = K.muted; c.font = '700 30px ' + BODY; c.fillText(label, ccx, by + 26);
     const rcy = by + 58 + R;
-    c.lineWidth = 24; c.lineCap = 'round';
+    c.lineWidth = hasEx ? 12 : 24; c.lineCap = 'round';
     c.globalAlpha = 0.2; c.strokeStyle = tone; c.beginPath(); c.arc(ccx, rcy, R, 0, Math.PI * 2); c.stroke(); c.globalAlpha = 1;
     if (prog > 0) { c.beginPath(); c.arc(ccx, rcy, R, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * prog); c.stroke(); }
     c.lineCap = 'butt';
-    c.fillStyle = tone; c.font = '400 88px ' + DISP; c.fillText(num, ccx, rcy + 30);
-    c.fillStyle = K.muted; c.font = '400 29px ' + BODY; c.fillText(s1, ccx, rcy + R + 62); if (s2) c.fillText(s2, ccx, rcy + R + 102);
+    c.fillStyle = tone; c.font = '400 ' + (hasEx ? 36 : 88) + 'px ' + DISP; c.fillText(num, ccx, rcy + (hasEx ? 16 : 30));
+    c.fillStyle = K.muted; c.font = '400 ' + (hasEx ? 26 : 29) + 'px ' + BODY; c.fillText(s1, ccx, rcy + R + (hasEx ? 56 : 62)); if (s2) c.fillText(s2, ccx, rcy + R + (hasEx ? 92 : 102));
     if (s3) { c.fillStyle = SC.ctrl[0]; c.font = '700 28px ' + BODY; c.fillText(s3, ccx, rcy + R + 146); }
     c.textAlign = 'left';
     y += cardH + 32;
@@ -2052,7 +2342,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     const between = (from, to) => { const r = []; for (let i = from + 1; i < to; i++) if (!J[i].anchor && J[i].st !== 'normal') r.push(J[i].st); return r; };
     show.forEach((i, k) => { const j = J[i]; if (k > 0 || j.gap != null) seq.push({ link: true, j, dots: between(ci[ci.indexOf(i) - 1], i) }); seq.push({ e: E[i], st: j.st }); });
     for (let s = show.length; s < 3; s++) { const isNext = s === show.length && lastCarb; if (s > 0) seq.push({ link: true, next: true, dots: isNext ? between(ci[ci.length - 1], E.length) : [] }); seq.push({ slot: true, next: isNext }); }
-    const Dm = 150, nodes = seq.filter((q) => !q.link).length, links = seq.length - nodes;
+    const Dm = RD, nodes = seq.filter((q) => !q.link).length, links = seq.length - nodes;
     const linkW = links ? (CW - 80 - nodes * Dm) / links : 0;
     let sx = px; const mid = py + Dm / 2;
     seq.forEach((q) => {
@@ -2094,7 +2384,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     c.textAlign = 'right'; c.font = '400 26px ' + BODY;
     c.fillText(`${hitN}주 달성 · ${totN}회`, P + CW - 40, ey + 26);
     ey += 28 + 18;
-    const labW = 150, resW = 110, dotsW = CW - 80 - labW - resW, cellW = dotsW / 7, x0 = px + labW, DR = 15, ROW = 40;
+    const labW = 150, resW = 110, dotsW = CW - 80 - labW - resW, cellW = dotsW / 7, x0 = px + labW, DR = 15, ROW = ROWH;
     c.textAlign = 'center'; c.font = '400 22px ' + BODY; c.fillStyle = K.muted;
     WD_MON.forEach((w, k) => c.fillText(w, x0 + cellW * k + cellW / 2, ey + 18));
     ey += 22 + 8;
@@ -2121,17 +2411,19 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     const st = [[S.rate == null ? '–' : S.rate + '%', '성공률'], [S.streak + '회', '연속 성공'], [S.longest ? S.longest + '일' : '–', '최장 관리 기간']];
     const colW = CW / 3;
     st.forEach((v, j) => {
-      const sx2 = P + colW * j + (j ? 28 : 4);
+      const sx2 = P + colW * (j + 0.5); c.textAlign = 'center';
       if (j) { c.strokeStyle = K.line; c.lineWidth = 2; c.beginPath(); c.moveTo(P + colW * j, y + 8); c.lineTo(P + colW * j, y + statsH - 12); c.stroke(); }
       c.fillStyle = K.ink; c.font = '400 68px ' + DISP; c.fillText(v[0], sx2, y + 66);
       c.fillStyle = K.muted; c.font = '400 29px ' + BODY; c.fillText(v[1], sx2, y + 112);
     });
+    c.textAlign = 'left';
     y += statsH + 44;
     c.fillStyle = K.muted; c.font = '400 26px ' + BODY; c.textAlign = 'center';
     const td = new Date(); c.fillText(`${td.getFullYear()}.${td.getMonth() + 1}.${td.getDate()} 기준`, W / 2, y);
     return new Promise((res, rej) => cv.toBlob((b) => b ? res(b) : rej(new Error('encode')), 'image/png'));
   }
-  async function buildCalStory() {
+  async function buildCalStory(mode) {
+    const exm = mode === 'ex';
     const DISP = tok('--font-display') || '"Jua", sans-serif', BODY = tok('--font-body') || '"Noto Sans KR", sans-serif';
     try { await Promise.all([document.fonts.load('400 40px ' + DISP, '유지어터'), document.fonts.load('400 30px ' + BODY, '성공 실패'), document.fonts.load('700 30px ' + BODY, '성공')]); } catch (e) {}
     try { await document.fonts.ready; } catch (e) {}
@@ -2146,7 +2438,9 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     const startN = firstN - dow(firstN), rows = Math.ceil((lastN - startN + 1) / 7);
     const byDate = {}; E.forEach((e, i) => { byDate[e.d] = { e, j: J[i] }; });
     const imgs = {};
-    await Promise.all(E.filter((e) => e.photo && dn(e.d) >= firstN && dn(e.d) <= lastN).map((e) => loadImg(photoSrc(e.photo)).then((im) => { imgs[e.photo] = im; })));
+    const exCov = {};
+    if (exm) (state.exEntries || []).forEach((x) => { if (dn(x.d) >= firstN && dn(x.d) <= lastN) { const it = x.items.find((i) => i.photo); if (it) exCov[x.d] = it.photo; } });
+    await Promise.all((exm ? Object.values(exCov) : E.filter((e) => e.photo && dn(e.d) >= firstN && dn(e.d) <= lastN).map((e) => e.photo)).map((p) => loadImg(photoSrc(p)).then((im) => { imgs[p] = im; })));
     const motto = (state.comment || '').trim();
     // weekly exercise rows (Mon–Sun weeks touching this month, up to the current week)
     const goal = state.weekGoal, wks = [];
@@ -2169,35 +2463,37 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     // calendar card
     c.fillStyle = K.surface; rr(c, P, y, CW, calCardH, 40); c.fill(); c.strokeStyle = K.line; c.lineWidth = 2; c.stroke();
     const hx = P + 40, gx = P + (CW - gridW) / 2; let gy = y + 40;
-    c.fillStyle = K.ink; c.font = '400 52px ' + DISP; c.fillText(`${calY}년 ${calM + 1}월`, hx, gy + 46);
+    c.fillStyle = K.ink; c.font = '400 52px ' + DISP; c.fillText(`${calY}년 ${calM + 1}월${exm ? ' 오운완' : ''}`, hx, gy + 46);
     const pre = `${calY}-${p2(calM + 1)}`;
     const inM = E.map((e, i) => ({ e, j: J[i] })).filter((x) => x.e.d.indexOf(pre) === 0);
     let exM = 0; Object.keys(state.workouts).forEach((d) => { if (d.indexOf(pre) === 0) exM++; });
     c.textAlign = 'right'; c.fillStyle = K.muted; c.font = '400 28px ' + BODY;
     let dtM = 0; Object.keys(state.diet).forEach((d) => { if (d.indexOf(pre) === 0) dtM++; });
-    c.fillText(`치팅 ${inM.length}번 · 운동 ${exM}회 · 식단 ${dtM}일`, P + CW - 40, gy + 44);
+    c.fillText(exm ? `운동 ${exM}회 · 사진 ${Object.keys(exCov).length}장` : `치팅 ${inM.length}번 · 운동 ${exM}회 · 식단 ${dtM}일`, P + CW - 40, gy + 44);
     gy += 60 + 24;
     c.textAlign = 'center'; c.font = '700 26px ' + BODY;
     WD.forEach((w, k) => { c.fillStyle = k === 0 ? SC.bad[0] : K.muted; c.fillText(w, gx + k * (cell + GAP) + cell / 2, gy + 30); });
     gy += 50;
-    const target = lastCarb ? ds(dn(lastCarb.d) + C) : '';
+    const target = (!exm && lastCarb) ? ds(dn(lastCarb.d) + C) : '';
     for (let k = 0; k < rows * 7; k++) {
       const n = startN + k; if (n < firstN || n > lastN) continue;
       const d = ds(n), col = k % 7, row = Math.floor(k / 7);
       const x = gx + col * (cell + GAP), yy = gy + row * (cell + GAP);
-      const hit = byDate[d], ex = state.workouts[d], im = hit && hit.e.photo && imgs[hit.e.photo];
+      const hit = exm ? null : byDate[d], ex = state.workouts[d], im = exm ? (exCov[d] && imgs[exCov[d]]) : (hit && hit.e.photo && imgs[hit.e.photo]);
       rr(c, x, yy, cell, cell, 20);
       c.fillStyle = hit && !im ? SC[hit.j.st][1] : (d === target && n > T ? K.accSoft : K.s2); c.fill();
       if (im) { c.save(); rr(c, x, yy, cell, cell, 20); c.clip(); cover(c, im, x, yy, cell, cell); c.restore(); }
+      else if (exm && ex) { c.textAlign = 'center'; c.font = '50px ' + BODY; c.fillStyle = K.ink; c.fillText('💪', x + cell / 2, yy + cell / 2 + 26); }
       else if (hit) { c.textAlign = 'center'; c.font = '50px ' + BODY; c.fillStyle = K.ink; c.fillText(emo(hit.e.foods[0]), x + cell / 2, yy + cell / 2 + 26); }
       else if (d === target && n > T) { c.textAlign = 'center'; c.font = '44px ' + BODY; c.fillText('🎯', x + cell / 2, yy + cell / 2 + 22); }
-      if (hit) { c.lineWidth = 7; c.strokeStyle = SC[hit.j.st][0]; rr(c, x + 3.5, yy + 3.5, cell - 7, cell - 7, 17); c.stroke(); }
+      if (exm && (im || ex)) { c.lineWidth = 7; c.strokeStyle = K.accInk; rr(c, x + 3.5, yy + 3.5, cell - 7, cell - 7, 17); c.stroke(); }
+      else if (hit) { c.lineWidth = 7; c.strokeStyle = SC[hit.j.st][0]; rr(c, x + 3.5, yy + 3.5, cell - 7, cell - 7, 17); c.stroke(); }
       else if (d === target && n > T) { c.lineWidth = 4; c.strokeStyle = K.acc; rr(c, x + 2, yy + 2, cell - 4, cell - 4, 18); c.stroke(); }
       c.textAlign = 'left'; c.font = (n === T ? '700' : '400') + ' 26px ' + BODY;
       if (im) { c.save(); c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = 6; c.fillStyle = '#fff'; c.fillText(String(new Date(n * 864e5).getUTCDate()), x + 14, yy + 34); c.restore(); }
       else { c.fillStyle = n === T ? K.accInk : n > T ? K.muted : K.ink; c.fillText(String(new Date(n * 864e5).getUTCDate()), x + 14, yy + 34); }
-      if (ex) { c.fillStyle = K.accInk; rr(c, x + 14, yy + cell - 22, cell - 28, 9, 4.5); c.fill(); if (im) { c.strokeStyle = K.surface; c.lineWidth = 2; c.stroke(); } }
-      if (state.diet[d]) {
+      if (ex && !exm) { c.fillStyle = K.accInk; rr(c, x + 14, yy + cell - 22, cell - 28, 9, 4.5); c.fill(); if (im) { c.strokeStyle = K.surface; c.lineWidth = 2; c.stroke(); } }
+      if (!exm && state.diet[d]) {
         c.textAlign = 'center';
         if (hit || (d === target && n > T)) { const bx = x + cell - 22, by = yy + 22; c.fillStyle = K.surface; c.beginPath(); c.arc(bx, by, 17, 0, Math.PI * 2); c.fill(); c.fillStyle = K.accInk; c.beginPath(); c.arc(bx, by, 14, 0, Math.PI * 2); c.fill(); c.fillStyle = K.surface; c.font = '700 18px ' + BODY; c.fillText('✓', bx, by + 6); }
         else { c.fillStyle = K.accInk; c.font = '700 ' + Math.round(cell * 0.4) + 'px ' + BODY; c.fillText('✓', x + cell / 2, yy + cell / 2 + cell * 0.15); }
@@ -2206,9 +2502,9 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     }
     gy += rows * cell + (rows - 1) * GAP + 36;
     c.font = '400 26px ' + BODY; let lx = hx;
-    legKeys().forEach((k) => { c.fillStyle = SC[k][1]; c.beginPath(); c.arc(lx + 10, gy - 8, 10, 0, Math.PI * 2); c.fill(); c.strokeStyle = SC[k][0]; c.lineWidth = 5; c.stroke(); c.fillStyle = K.muted; c.textAlign = 'left'; c.fillText(LEG[k], lx + 28, gy); lx += 28 + c.measureText(LEG[k]).width + 32; });
-    c.fillStyle = K.accInk; rr(c, lx, gy - 13, 30, 9, 4.5); c.fill(); c.fillStyle = K.muted; c.fillText('운동', lx + 40, gy);
-    lx += 40 + c.measureText('운동').width + 30; c.fillStyle = K.accInk; c.font = '700 26px ' + BODY; c.fillText('✓', lx, gy); c.fillStyle = K.muted; c.font = '400 26px ' + BODY; c.fillText('식단', lx + 26, gy);
+    (exm ? [] : legKeys()).forEach((k) => { c.fillStyle = SC[k][1]; c.beginPath(); c.arc(lx + 10, gy - 8, 10, 0, Math.PI * 2); c.fill(); c.strokeStyle = SC[k][0]; c.lineWidth = 5; c.stroke(); c.fillStyle = K.muted; c.textAlign = 'left'; c.fillText(LEG[k], lx + 28, gy); lx += 28 + c.measureText(LEG[k]).width + 32; });
+    if (!exm) { c.fillStyle = K.accInk; rr(c, lx, gy - 13, 30, 9, 4.5); c.fill(); c.fillStyle = K.muted; c.fillText('운동', lx + 40, gy);
+    lx += 40 + c.measureText('운동').width + 30; c.fillStyle = K.accInk; c.font = '700 26px ' + BODY; c.fillText('✓', lx, gy); c.fillStyle = K.muted; c.font = '400 26px ' + BODY; c.fillText('식단', lx + 26, gy); }
     y += calCardH + 28;
 
     // weekly exercise card
@@ -2369,14 +2665,82 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     const td = new Date(); c.fillText(`${td.getFullYear()}.${td.getMonth() + 1}.${td.getDate()} 기준`, W / 2, Math.min(y, H - 40));
     return new Promise((res, rej) => cv.toBlob((b) => b ? res(b) : rej(new Error('encode')), 'image/png'));
   }
+  async function buildDayExStory(d, all) {
+    const DISP = tok('--font-display') || '"Jua", sans-serif', BODY = tok('--font-body') || '"Noto Sans KR", sans-serif';
+    try { await Promise.all([document.fonts.load('400 40px ' + DISP, '유지어터'), document.fonts.load('400 30px ' + BODY, '운동 오운완'), document.fonts.load('700 30px ' + BODY, '운동')]); } catch (e) {}
+    try { await document.fonts.ready; } catch (e) {}
+    const S = summary(), fe = all ? S.E.find((x) => x.d === d) : null, xe = exEntryOf(d);
+    if (!xe && !fe) throw new Error('no entry');
+    const K = { bg: tok('--bg'), surface: tok('--surface'), s2: tok('--surface-2'), ink: tok('--ink'), muted: tok('--muted'), line: tok('--line'), acc: tok('--accent'), accInk: tok('--accent-ink'), accSoft: tok('--accent-soft'), onAcc: tok('--on-accent') };
+    const W = 1080, H = 1920, P = 64, CW = W - P * 2;
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const c = cv.getContext('2d');
+    c.fillStyle = K.bg; c.fillRect(0, 0, W, H);
+    const exItems = xe ? xe.items : [];
+    const foodItems = fe ? (fe.items || []).slice().sort((a, b) => (SLOT_ORDER[a.slot] ?? 9) - (SLOT_ORDER[b.slot] ?? 9)) : [];
+    const cand = exItems.filter((i) => i.photo).map((i) => ({ id: i.id, photo: i.photo, lab: i.type }))
+      .concat(foodItems.filter((i) => i.photo).map((i) => ({ id: i.id, photo: i.photo, lab: [slotName(i.slot), kindName(i.kind)].filter(Boolean).join(' · ') })));
+    const imgs = {};
+    await Promise.all(cand.map((i) => loadImg(photoSrc(i.photo)).then((im) => { imgs[i.id] = im; })));
+    const shown = cand.filter((i) => imgs[i.id]).slice(0, 6);
+    const motto = (state.comment || '').trim();
+    const rows = exItems.map((i) => ({ tag: '운동', mid: i.type, t: i.memo || '' }))
+      .concat(foodItems.map((i) => ({ tag: slotName(i.slot) || '기타', mid: kindName(i.kind), t: emo((i.foods || [])[0]) + ' ' + ((i.foods || []).join(', ') || '사진만 기록') })));
+    const listH = 30 + rows.length * 54 + 30, footH = 120;
+    const top = 96 + (motto ? 52 : 0) + 120, gapAfter = 36;
+    const colH = shown.length ? Math.min(shown.length === 1 ? CW : 1000, H - 80 - top - gapAfter - listH - 28 - footH - 70) : 0;
+    const total = top + (colH ? colH + gapAfter : 0) + listH + 28 + footH;
+    let y = Math.max(72, Math.round((H - total) / 2) - 20);
+    c.textAlign = 'left'; c.fillStyle = K.ink; c.font = '400 64px ' + DISP; c.fillText('유지어터 노트', P, y + 58);
+    y += 96;
+    if (motto) { c.fillStyle = K.muted; c.font = '400 32px ' + BODY; c.fillText(fit(c, motto, CW), P + 2, y + 10); y += 52; }
+    c.fillStyle = K.ink; c.font = '400 76px ' + DISP; c.fillText(fmt(d), P, y + 70);
+    const dw = c.measureText(fmt(d)).width;
+    c.fillStyle = K.muted; c.font = '400 40px ' + BODY; c.fillText(all ? ' 하루 기록' : ' 오운완 🏋️', P + dw + 6, y + 66);
+    y += 120;
+    const L = { 1: [[0, 0, 1, 1]], 2: [[0, 0, .5, 1], [.5, 0, .5, 1]], 3: [[0, 0, .62, 1], [.62, 0, .38, .5], [.62, .5, .38, .5]],
+      4: [[0, 0, .5, .5], [.5, 0, .5, .5], [0, .5, .5, .5], [.5, .5, .5, .5]],
+      5: [[0, 0, 1, .56], [0, .56, .25, .44], [.25, .56, .25, .44], [.5, .56, .25, .44], [.75, .56, .25, .44]],
+      6: [[0, 0, .62, .6], [.62, 0, .38, .3], [.62, .3, .38, .3], [0, .6, .334, .4], [.334, .6, .333, .4], [.667, .6, .333, .4]] }[shown.length] || [];
+    const G = 12;
+    L.forEach(([fx, fy, fw, fh], k) => {
+      const it = shown[k], x = P + fx * CW + (fx ? G / 2 : 0), yy = y + fy * colH + (fy ? G / 2 : 0);
+      const w = fw * CW - (fx ? G / 2 : 0) - (fx + fw < .999 ? G / 2 : 0), h = fh * colH - (fy ? G / 2 : 0) - (fy + fh < .999 ? G / 2 : 0);
+      c.save(); rr(c, x, yy, w, h, 28); c.clip(); cover(c, imgs[it.id], x, yy, w, h); c.restore();
+      c.font = '700 24px ' + BODY; const lw = c.measureText(it.lab).width + 28;
+      c.fillStyle = 'rgba(0,0,0,.45)'; rr(c, x + 14, yy + h - 54, lw, 40, 20); c.fill();
+      c.fillStyle = '#fff'; c.fillText(it.lab, x + 28, yy + h - 26);
+    });
+    if (colH) y += colH + gapAfter;
+    c.fillStyle = K.surface; rr(c, P, y, CW, listH, 32); c.fill(); c.strokeStyle = K.line; c.lineWidth = 2; c.stroke();
+    let ly = y + 30;
+    rows.forEach((r) => {
+      c.textAlign = 'left';
+      c.fillStyle = K.accInk; c.font = '700 28px ' + BODY; c.fillText(r.tag, P + 36, ly + 34);
+      c.fillStyle = K.muted; c.font = '400 26px ' + BODY; c.fillText(fit(c, r.mid, 160), P + 130, ly + 33);
+      c.fillStyle = K.ink; c.font = '400 30px ' + BODY; c.fillText(fit(c, r.t, CW - 360), P + 300, ly + 34);
+      ly += 54;
+    });
+    y += listH + 28;
+    const goal = state.weekGoal, wn = exWeek(monOf(dn(d))).n;
+    const chips = [[`💪 이번 주 ${wn}/${goal}회`, wn >= goal ? K.accSoft : K.s2, wn >= goal ? K.accInk : K.muted]];
+    if (all) chips.push([state.diet[d] ? '✓ 식단 지킴' : '식단 체크 없음', state.diet[d] ? K.accSoft : K.s2, state.diet[d] ? K.accInk : K.muted]);
+    c.font = '700 28px ' + BODY;
+    let cx = P;
+    chips.forEach(([t, bg, fg]) => { const w = Math.min(CW, c.measureText(t).width + 44); if (cx + w > P + CW) { cx = P; y += 74; } c.fillStyle = bg; rr(c, cx, y, w, 60, 30); c.fill(); c.fillStyle = fg; c.fillText(fit(c, t, w - 44), cx + 22, y + 40); cx += w + 12; });
+    y += 60 + 44;
+    c.fillStyle = K.muted; c.font = '400 26px ' + BODY; c.textAlign = 'center';
+    const td = new Date(); c.fillText(`${td.getFullYear()}.${td.getMonth() + 1}.${td.getDate()} 기준`, W / 2, Math.min(y, H - 40));
+    return new Promise((res, rej) => cv.toBlob((b) => b ? res(b) : rej(new Error('encode')), 'image/png'));
+  }
   const HINT_SAVE = '공유 창이 뜨면 Instagram을 골라 스토리에 올리세요. 사진첩에 저장한 뒤 스토리에서 골라도 돼요.';
   const HINT_PRESS = '이미지를 길게 눌러 사진첩에 저장한 뒤, 인스타그램 스토리에서 골라 올리세요.';
-  async function openShare(kind, d) {
+  async function openShare(kind, d, mode) {
     if (typeof kind !== 'string') kind = tab === 'cal' ? 'cal' : 'home';
     const btn = $('#openShare'); btn.disabled = true;
     try {
-      shareBlob = kind === 'cal' ? await buildCalStory() : kind === 'day' ? await buildDayStory(d) : await buildStory();
-      shareName = kind === 'cal' ? `유지어터노트_${calY}-${p2(calM + 1)}_달력_${todayStr()}.png` : kind === 'day' ? `유지어터노트_${d}_먹은것.png` : `유지어터노트_${todayStr()}.png`;
+      shareBlob = kind === 'cal' ? await buildCalStory(calMode) : kind === 'day' ? (mode === 'ex' || mode === 'all' ? await buildDayExStory(d, mode === 'all') : await buildDayStory(d)) : await buildStory(homeD);
+      shareName = kind === 'cal' ? `유지어터노트_${calY}-${p2(calM + 1)}_${calMode === 'ex' ? '오운완달력' : '달력'}_${todayStr()}.png` : kind === 'day' ? `유지어터노트_${d}_${mode === 'ex' ? '오운완' : mode === 'all' ? '하루전체' : '먹은것'}.png` : `유지어터노트_${homeD || todayStr()}.png`;
       if (shareUrl) URL.revokeObjectURL(shareUrl);
       shareUrl = URL.createObjectURL(shareBlob);
       $('#shareImg').src = shareUrl; $('#shareGo').hidden = !canFileOut();
@@ -2410,7 +2774,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     const snap = JSON.parse(JSON.stringify(state)), photos = {}, refs = new Set();
     snap.entries.forEach((e) => (e.items || []).forEach((i) => { if (i.photo && i.photo.indexOf('a:') === 0) refs.add(i.photo); }));
     for (const r of refs) { try { const res = await fetch(photoSrc(r)); if (res.ok) photos[r] = await blobToDataUrl(await res.blob()); } catch (e) {} }
-    const nPh = snap.entries.reduce((n, e) => n + (e.items || []).filter((i) => i.photo).length, 0);
+    (snap.exEntries || []).forEach((x) => x.items.forEach((i) => { if (i.photo && i.photo.indexOf('a:') === 0) refs.add(i.photo); }));
+    const nPh = (snap.exEntries || []).reduce((n, x) => n + x.items.filter((i) => i.photo).length, 0) + snap.entries.reduce((n, e) => n + (e.items || []).filter((i) => i.photo).length, 0);
     const body = { app: 'yuji-note', v: 1, at: new Date().toISOString(), days: snap.entries.length, photoCount: nPh, state: snap, photos };
     return new Blob([JSON.stringify(body)], { type: 'application/json' });
   }
@@ -2451,7 +2816,9 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   async function applyBackup(b) {
     const st = b.state, photos = b.photos || {}, map = {};
     st.entries = st.entries.filter((e) => e && e.d).map(syncEntry);
-    for (const e of st.entries) for (const i of e.items) {
+    st.exEntries = fixExEntries(st.exEntries);
+    const allItems = st.entries.flatMap((e) => e.items).concat(st.exEntries.flatMap((x) => x.items));
+    for (const i of allItems) {
       const p = i.photo; if (!p) continue;
       if (p.indexOf('a:') === 0) {
         if (!(p in map)) {
@@ -2503,7 +2870,10 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   document.querySelectorAll('[data-qd]').forEach((b) => b.addEventListener('click', () => { $('#dateIn').value = ds(today() + Number(b.dataset.qd)); syncQd(); }));
   $('#dateIn').addEventListener('change', syncQd);
   document.querySelectorAll('.seg [data-type]').forEach((b) => b.addEventListener('click', () => { inputType = b.dataset.type; typeTouched = true; renderSeg(); }));
-  $('#foodIn').addEventListener('input', () => { if (typeTouched) return; const g = guessType(splitFoods($('#foodIn').value)); if (g && g !== inputType) { inputType = g; renderSeg(); } });
+  $('#foodIn').addEventListener('input', () => { if (typeTouched || inputMode === 'ex') return; const g = guessType(splitFoods($('#foodIn').value)); if (g && g !== inputType) { inputType = g; renderSeg(); } });
+  $('#modeBtn').addEventListener('click', () => { inputMode = inputMode === 'ex' ? 'food' : 'ex'; renderMode(); toast(inputMode === 'ex' ? '🏋️ 운동 기록 모드예요' : '🍽️ 식단 기록 모드예요', 1800); });
+  $('#exSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-expick]'); if (b) { exPick = b.dataset.expick; renderMode(); } });
+  $('#calModeBtn').addEventListener('click', () => { calMode = calMode === 'ex' ? 'food' : 'ex'; renderCal(summary()); });
   $('#camBtn').addEventListener('click', () => $('#fileIn').click());
   $('#fileIn').addEventListener('change', (e) => {
     const f = e.target.files && e.target.files[0]; if (!f) return;
@@ -2519,6 +2889,24 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     if (close) { const sh = close.closest('.sheet'); if (sh) sh.hidden = true; armedKey = null; return; }
     const ent = t.closest && t.closest('[data-entry]');
     if (ent) { e.stopPropagation(); openDetail(ent.dataset.entry, ent.dataset.focus); return; }
+    if (t.closest && t.closest('#dayAddEx')) {
+      $('#daySheet').hidden = true; $('#dateIn').value = dayD; syncQd(); inputMode = 'ex'; setTab('home'); renderMode(); $('#foodIn').focus();
+      toast(`${fmt(dayD)} 운동 사진·메모를 남겨주세요`); return;
+    }
+    if (t.closest && t.closest('#dayStory')) { openPick(dayD); return; }
+    if (t.closest && t.closest('#dayEditEx')) { openExEdit(dayD); return; }
+    const xd = t.closest && t.closest('[data-exdel]');
+    if (xd) {
+      const id = xd.dataset.exdel;
+      arm('xd' + id, () => {
+        const xe = exEntryOf(dayD); if (!xe) return;
+        const it = xe.items.find((i) => i.id === id); if (!it) return;
+        dropAsset(it.photo); xe.items = xe.items.filter((i) => i !== it);
+        if (!xe.items.length) state.exEntries = state.exEntries.filter((x) => x !== xe);
+        persist(); render(); renderDay();
+      }, renderDay);
+      return;
+    }
     const exd = t.closest && t.closest('[data-exday]');
     if (exd && !exd.disabled) { openDay(exd.dataset.exday); return; }
     if (t.closest && t.closest('#dayAddFood')) {
@@ -2526,7 +2914,12 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       toast(`${fmt(dayD)}에 먹은 걸 적어주세요`);
     }
   });
-  $('#last').addEventListener('click', () => { const E = view(); if (E.length) openDetail(E[E.length - 1].d); });
+  $('#last').addEventListener('click', () => { const E = view(), t = state.sample ? (E.length && E[E.length - 1].d) : (homeD || todayStr()); if (t && E.some((x) => x.d === t)) openDetail(t); });
+  const setHomeD = (d) => { homeD = d >= todayStr() ? null : d; render(); };
+  $('#hnPrev').addEventListener('click', () => setHomeD(ds(dn(homeD || todayStr()) - 1)));
+  $('#hnNext').addEventListener('click', () => setHomeD(ds(dn(homeD || todayStr()) + 1)));
+  $('#hnToday').addEventListener('click', () => setHomeD(todayStr()));
+  $('#homeDate').addEventListener('change', (e) => { if (e.target.value) setHomeD(e.target.value); });
   $('#last').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('#last').click(); } });
 
   // calendar
@@ -2619,7 +3012,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     });
   });
   $('#dSave').addEventListener('click', saveDetail);
-  $('#dStory').addEventListener('click', async () => { const saved = await saveDetail(); if (saved) openShare('day', saved.d); });
+  $('#dStory').addEventListener('click', async () => { const saved = await saveDetail(); if (saved) openPick(saved.d); });
+  $('#pickSheet').addEventListener('click', (e) => { const b = e.target.closest('[data-spick]'); if (!b || b.disabled) return; $('#pickSheet').hidden = true; openShare('day', pickD, b.dataset.spick); });
   $('#dDelete').addEventListener('click', () => {
     const btn = $('#dDelete');
     arm('del' + det.d, () => {
@@ -2714,7 +3108,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     const btn = $('#wipe');
     arm('wipe', () => {
       state.entries.forEach((x) => (x.items || [{ photo: x.photo }]).forEach((i) => dropAsset(i.photo)));
-      state.sample = false; state.entries = []; state.workouts = {}; state.diet = {}; state.celebrated = '';
+      state.exEntries.forEach((x) => x.items.forEach((i) => dropAsset(i.photo)));
+      state.sample = false; state.entries = []; state.workouts = {}; state.exEntries = []; state.diet = {}; state.celebrated = '';
       persist(); render();
       btn.classList.remove('armed'); btn.textContent = '식사·운동·식단 기록 모두 지우기';
       $('#setSheet').hidden = true; toast('식사·운동·식단 기록을 모두 지웠어요');
