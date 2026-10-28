@@ -322,6 +322,9 @@ button { cursor: pointer; }
 .btn-row3 .danger { color: var(--bad); }
 .btn-row3 .danger.armed { background: var(--bad); border-color: var(--bad); color: #fff; }
 .ph-wrap { position: relative; }
+.head-acts { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+.d-story { border: 0; background: var(--accent); color: var(--on-accent); border-radius: 99px; padding: 7px 13px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+.d-story:disabled { opacity: .5; }
 .wel { text-align: center; }
 .wel-emo { font-size: 40px; margin: 6px 0 4px; }
 .wel h2 { margin-bottom: 10px !important; }
@@ -338,7 +341,7 @@ button { cursor: pointer; }
 .bk-btn.bk-apply { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .bk-confirm { background: var(--surface-2); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
 .bk-confirm p { color: var(--ink) !important; font-size: 13px !important; }
-.bk-nudge { position: fixed; z-index: 55; top: calc(env(safe-area-inset-top, 0px) + 60px); right: max(16px, env(safe-area-inset-right, 0px)); display: flex; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 99px; box-shadow: 0 4px 14px rgba(30,40,35,.12); animation: nudgeIn .25s ease-out; }
+.bk-nudge { position: fixed; z-index: 25; top: calc(env(safe-area-inset-top, 0px) + 60px); right: max(16px, env(safe-area-inset-right, 0px)); display: flex; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 99px; box-shadow: 0 4px 14px rgba(30,40,35,.12); animation: nudgeIn .25s ease-out; }
 .bk-nudge button { border: 0; background: none; font-size: 11.5px; font-weight: 700; color: var(--accent-ink); padding: 6px 4px 6px 11px; }
 .bk-nudge .x { color: var(--muted); font-weight: 400; font-size: 14px; padding: 4px 10px 4px 6px; }
 @keyframes nudgeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
@@ -732,7 +735,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
 <div class="sheet" id="detailSheet" hidden>
   <div class="scrim" data-close></div>
   <div class="panel" role="dialog" aria-label="기록 자세히">
-    <div class="panel-head"><h2 id="dTitle">기록</h2><button class="close" type="button" data-close>닫기</button></div>
+    <div class="panel-head"><h2 id="dTitle">기록</h2><div class="head-acts"><button class="d-story" type="button" id="dStory">📤 스토리</button><button class="close" type="button" data-close>닫기</button></div></div>
     <div class="d-hero" id="dHero"></div>
     <div class="d-strip" id="dStrip"></div>
     <div class="d-item" id="dItem"></div>
@@ -758,9 +761,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       </div>
       <span class="wdiff" id="dWdiff"></span>
     </div>
-    <div class="btn-row3">
+    <div class="btn-row">
       <button type="button" class="danger" id="dDelete">삭제</button>
-      <button type="button" id="dStory">📤 스토리</button>
       <button type="button" class="primary" id="dSave">저장</button>
     </div>
   </div>
