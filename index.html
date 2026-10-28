@@ -438,6 +438,11 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
 /* workout photos */
 .mode-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--accent); background: var(--accent-soft); font-size: 17px; line-height: 1; padding: 0; flex: 0 0 auto; }
 .cell.exm { --s: var(--accent-ink); --s-bg: var(--accent-soft); }
+.cal-sw { position: relative; display: grid; grid-template-columns: 1fr 1fr; align-items: center; width: 168px; height: 38px; padding: 0; border: 1px solid var(--line, #d8e0db); border-radius: 999px; background: var(--surface-2); cursor: pointer; font: inherit; font-size: 13px; font-weight: 700; color: var(--muted, #7a8a82); -webkit-tap-highlight-color: transparent; }
+.cal-sw span { position: relative; z-index: 1; text-align: center; transition: color .2s; }
+.cal-sw::before { content: ''; position: absolute; top: 3px; left: 3px; width: calc(50% - 3px); height: 30px; border-radius: 999px; background: var(--accent-soft); border: 1.5px solid var(--accent); box-sizing: border-box; box-shadow: 0 1px 3px rgba(0,0,0,.12); transition: transform .22s cubic-bezier(.3,.7,.3,1); }
+.cal-sw[data-mode="ex"]::before { transform: translateX(100%); }
+.cal-sw[data-mode="food"] span:first-child, .cal-sw[data-mode="ex"] span:last-child { color: var(--accent-ink); }
 .bulk-entry { justify-content: space-between; align-items: center; }
 .bulk-entry .btn-soft.mode-on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
 .ex-rec { display: flex; flex-direction: column; gap: 6px; padding-top: 8px; border-top: 1px dashed var(--line); }
@@ -640,7 +645,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
         <h2 id="calTitle"></h2>
         <button class="cal-nav" type="button" id="calNext" aria-label="다음 달">›</button>
       </div>
-      <div class="bulk-entry"><button class="btn-soft mode-on" type="button" id="calModeBtn">🍽️ 식단 사진 보는 중</button><button class="btn-soft" type="button" id="bulkBtn">☑ 일괄 체크</button></div>
+      <div class="bulk-entry"><button class="cal-sw" type="button" id="calModeBtn" role="switch" aria-label="달력 사진 보기: 식단 또는 운동" data-mode="food"><span>🍽️ 식단</span><span>🏋️ 운동</span></button><button class="btn-soft" type="button" id="bulkBtn">☑ 일괄 체크</button></div>
       <section class="card" id="bulkPanel" hidden>
         <div class="head-row"><span class="cap">일괄 체크 · 이 달만</span><button class="linkish" type="button" id="bulkAll">지난 날 전체 선택</button></div>
         <div class="big-seg">
@@ -1528,7 +1533,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   function renderCal(S) {
     const { E, C, J, lastCarb, T } = S;
     const exm = calMode === 'ex';
-    $('#calModeBtn').textContent = exm ? '🏋️ 운동 사진 보는 중' : '🍽️ 식단 사진 보는 중';
+    $('#calModeBtn').dataset.mode = exm ? 'ex' : 'food'; $('#calModeBtn').setAttribute('aria-checked', exm ? 'true' : 'false');
     $('#calTitle').textContent = `${calY}년 ${calM + 1}월`;
     const firstN = Date.UTC(calY, calM, 1) / 864e5;
     const lastN = Date.UTC(calY, calM + 1, 0) / 864e5;
