@@ -326,6 +326,25 @@ button { cursor: pointer; }
 .d-story { border: 0; background: var(--accent); color: var(--on-accent); border-radius: 99px; padding: 7px 13px; font-size: 13px; font-weight: 700; white-space: nowrap; }
 .d-story:disabled { opacity: .5; }
 .wel { text-align: center; }
+.brand h1 { white-space: nowrap; }
+.sub-row { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.sub-row .motto { min-width: 0; }
+.sub-row .man-pill { flex: none; font-size: 10.5px; padding: 2px 8px; }
+.man-pill { border: 0; background: var(--accent-soft); color: var(--accent-ink); cursor: pointer; }
+.wel-man { border: 1px solid var(--line); background: var(--surface); border-radius: 99px; padding: 8px 16px; font-size: 13px; font-weight: 700; color: var(--accent-ink); margin: 6px 0 0; }
+.man-lead { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+.man-sec { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 8px; padding: 0 14px; }
+.man-sec summary { list-style: none; cursor: pointer; padding: 13px 0; font-weight: 700; font-size: 14.5px; display: flex; justify-content: space-between; align-items: center; }
+.man-sec summary::-webkit-details-marker { display: none; }
+.man-sec summary::after { content: '›'; color: var(--muted); font-size: 18px; transition: transform .15s; }
+.man-sec[open] summary::after { transform: rotate(90deg); }
+.man-sec ol, .man-sec ul { margin: 0 0 12px; padding-left: 20px; font-size: 13.5px; line-height: 1.65; }
+.man-sec p { margin: 0 0 10px; font-size: 13.5px; line-height: 1.6; }
+.man-sec b { color: var(--accent-ink); }
+.man-sec code { background: var(--surface-2); border-radius: 6px; padding: 1px 6px; font-size: 12.5px; }
+.man-tip { background: var(--accent-soft); border-radius: 10px; padding: 8px 10px; font-size: 12.5px !important; }
+.man-kinds { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0 0 10px; font-size: 12.5px; }
+.man-kinds span { background: var(--surface-2); border-radius: 10px; padding: 7px 9px; line-height: 1.4; }
 .wel-emo { font-size: 40px; margin: 6px 0 4px; }
 .wel h2 { margin-bottom: 10px !important; }
 .wel p { margin: 0 0 8px; color: var(--ink); font-size: 14px; }
@@ -527,7 +546,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
         <h1>유지어터 노트</h1>
         <span class="pill" id="sample">샘플 노트</span>
       </div>
-      <p class="motto" id="motto" hidden></p>
+      <div class="sub-row"><p class="motto" id="motto" hidden></p><button class="pill man-pill" id="openMan" type="button">📖 사용법</button></div>
     </div>
     <div class="top-actions">
       <button class="icon-btn" id="openShare" type="button" aria-label="스토리 이미지로 공유">
@@ -694,11 +713,99 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     <p>샘플 기록이 미리 들어 있어요. 마음껏 눌러보세요!</p>
     <p>내 기록으로 쓰려면 아래 <b>비우고 시작</b>을 누르거나, 나중에 <b>⚙️ 설정 → 기록 모두 지우기</b>를 하면 돼요.</p>
     <div class="wel-box" id="welInstall" hidden></div>
+    <button type="button" class="wel-man" id="welMan">📖 사용법 매뉴얼 보기</button>
     <p class="wel-note">기록은 이 폰에만 저장돼요. 가끔 <b>⚙️ 설정 → 💾 백업</b>을 해두세요.</p>
     <div class="btn-row">
       <button type="button" id="welClear">비우고 시작</button>
       <button type="button" class="primary" id="welGo">둘러보기</button>
     </div>
+  </div>
+</div>
+
+<div class="sheet" id="manSheet" hidden>
+  <div class="scrim" data-close></div>
+  <div class="panel man" role="dialog" aria-label="사용법 매뉴얼">
+    <div class="panel-head"><h2>📖 유지어터 노트 사용법</h2><button class="close" type="button" data-close>닫기</button></div>
+    <p class="man-lead">치팅(고탄수) 사이 간격을 지키면서 끼니·운동·식단을 가볍게 기록하는 노트예요. 궁금한 항목을 눌러보세요.</p>
+
+    <details class="man-sec" open><summary>🚀 처음 시작하기</summary>
+      <ol>
+        <li>지금 보이는 기록은 <b>샘플</b>이에요. 마음껏 눌러보세요.</li>
+        <li>내 기록으로 쓰려면 <b>⚙️ 설정 → 기록 모두 지우기</b>를 눌러요. 샘플로 돌아가려면 <b>샘플 데이터로 되돌리기</b>.</li>
+        <li>⚙️ 설정에서 <b>고탄수 주기</b>(기본 15일)와 <b>운동 종류</b>를 내 루틴에 맞게 바꿔요.</li>
+      </ol>
+    </details>
+
+    <details class="man-sec"><summary>📱 앱처럼 설치하기</summary>
+      <p><b>갤럭시</b> — <b>크롬</b>으로 링크 열기 → 오른쪽 위 <b>⋮</b> → <b>앱 설치</b>(또는 홈 화면에 추가) → 홈 화면 아이콘으로 열기</p>
+      <p><b>아이폰</b> — <b>사파리</b>로 링크 열기 → <b>공유 ⬆︎</b> → <b>홈 화면에 추가</b> → 홈 화면 아이콘으로 열기</p>
+      <p class="man-tip">아이폰은 사파리와 홈 화면 앱의 기록이 따로 저장돼요. 설치했다면 <b>아이콘으로만</b> 쓰세요. 삼성 인터넷은 앱이 아닌 바로가기로 만들어질 수 있어서 크롬을 추천해요.</p>
+    </details>
+
+    <details class="man-sec"><summary>🍽️ 끼니 기록하기</summary>
+      <ol>
+        <li>아래 입력창 위에서 <b>종류</b>를 골라요.</li>
+        <li>날짜 왼쪽에서 <b>끼니</b>(아침·점심·저녁·간식)를 골라요. 시간에 맞춰 자동으로 골라져 있어요.</li>
+        <li>먹은 것을 <b>띄어쓰기로 여러 개</b> 적고 ↑ 를 눌러요. 예) <code>닭가슴살 고구마</code></li>
+        <li>📷 를 누르면 사진을 넣을 수 있어요. 정사각형으로 자르고 확대·이동도 돼요.</li>
+      </ol>
+      <div class="man-kinds">
+        <span>🥗 <b>식단</b> 다이어트 식단</span>
+        <span>🍚 <b>일반식</b> 평범한 한 끼</span>
+        <span>🥩 <b>조절식</b> 고기·회처럼 탄수 적은 외식</span>
+        <span>🍕 <b>고탄수</b> 치팅! 피자·떡볶이·치킨 등</span>
+      </div>
+      <p class="man-tip">같은 날 여러 끼를 올려도 <b>하루 기록 하나</b>로 묶여요. 그날은 <b>가장 센 끼니</b>로 판정해요. (고탄수 &gt; 조절식 &gt; 일반식 &gt; 식단)</p>
+    </details>
+
+    <details class="man-sec"><summary>⚖️ 성공·실패는 어떻게 정해져요?</summary>
+      <ul>
+        <li><b>성공</b> — 지난 고탄수부터 <b>주기(15일)</b>가 지난 뒤에 고탄수를 먹으면</li>
+        <li><b>실패</b> — 주기 전에 고탄수를 먹으면</li>
+        <li><b>조절식</b> — 주기 안에 조절식을 먹으면 설정한 횟수(기본 1회)까지는 괜찮아요</li>
+        <li>허용 횟수를 넘긴 조절식은 <b>치팅으로 계산</b>돼서 실패가 돼요. (설정에서 '조절 필요'로 바꿀 수 있어요)</li>
+        <li>식단·일반식은 판정하지 않아요.</li>
+      </ul>
+      <p class="man-tip">오른쪽 큰 원의 <b>D-day</b>는 다음 치팅까지 남은 날이에요. 0이 되면 "치팅 가능"!</p>
+    </details>
+
+    <details class="man-sec"><summary>📝 기록 자세히 보기·고치기</summary>
+      <ul>
+        <li>홈의 <b>마지막 기록</b> 카드나 <b>달력 날짜 → 먹은 것</b>을 누르면 그날 기록이 열려요.</li>
+        <li>사진은 <b>하루 6장</b>까지. 사진을 고르고 <b>★ 커버로 지정</b>하면 달력·홈에 그 사진이 나와요.</li>
+        <li>끼니별로 종류·음식을 고치거나 <b>＋ 글로 추가 / 📷 사진 추가</b>로 끼니를 더할 수 있어요.</li>
+        <li>별점, 한줄평, <b>먹기 전날·다음날 체중</b>도 적을 수 있어요.</li>
+        <li>맨 위 <b>📤 스토리</b>를 누르면 "그날 먹은 것" 인스타 스토리 이미지가 만들어져요.</li>
+      </ul>
+    </details>
+
+    <details class="man-sec"><summary>📅 달력 · 💪 운동 · ✓ 식단 체크</summary>
+      <ul>
+        <li>달력에서 날짜를 누르면 그날 <b>운동</b>(종류 선택)과 <b>식단 지킴 ✓</b>을 체크할 수 있어요.</li>
+        <li><b>일괄 체크</b>로 한 달 안에서 여러 날을 한 번에 체크해요.</li>
+        <li>홈의 <b>이번 주 운동</b>은 월~일 기준이고, 목표 횟수는 설정에서 바꿔요.</li>
+      </ul>
+    </details>
+
+    <details class="man-sec"><summary>💝 위시리스트</summary>
+      <p>치팅 때 먹고 싶은 걸 <b>위시</b> 탭에 적어두세요. 나중에 그 음식을 기록하면 자동으로 <b>위시 달성</b>이 돼요.</p>
+    </details>
+
+    <details class="man-sec"><summary>📤 인스타 스토리 공유</summary>
+      <p>오른쪽 위 <b>⬆︎</b> 버튼 — 홈에서는 요약 카드, 달력 탭에서는 그 달 달력이 스토리 이미지(9:16)로 만들어져요. <b>저장/공유</b>를 누르거나 이미지를 길게 눌러 저장한 뒤 인스타 스토리에 올려요.</p>
+    </details>
+
+    <details class="man-sec"><summary>💾 백업 · 불러오기</summary>
+      <ul>
+        <li>기록은 <b>이 폰(브라우저)에만</b> 저장돼요. 다른 사람에게는 안 보여요.</li>
+        <li>하루 첫 기록을 하면 오른쪽 위에 <b>💾 오늘 백업할까요?</b>가 작게 떠요. 누르면 기록·사진·설정이 파일 하나로 저장돼요. 카톡 나에게 보내기나 파일 앱에 보관하세요.</li>
+        <li>폰을 바꾸거나 기록이 사라졌을 땐 <b>⚙️ 설정 → 📂 백업 불러오기</b>로 그 파일을 고르면 돼요.</li>
+      </ul>
+    </details>
+
+    <details class="man-sec"><summary>🎨 꾸미기 · 설정</summary>
+      <p>⚙️ 설정에서 <b>스킨(파스텔 색)</b>, <b>글꼴</b>, 제목 아래 <b>한 줄 문구</b>, 고탄수 주기, 조절식 허용 횟수, 기본 식단(아침·점심·저녁), 운동 목표와 종류를 바꿀 수 있어요.</p>
+    </details>
   </div>
 </div>
 
@@ -2635,8 +2742,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     let h = '<strong>📱 홈 화면에 추가하면 앱처럼 넓게 써요</strong>';
     if (ios) h += '<ol><li>아래(또는 위) <b>공유 버튼 ⬆︎</b> 누르기</li><li><b>홈 화면에 추가</b> 고르기</li><li>홈 화면의 <b>유지어터 노트</b> 아이콘으로 열기</li></ol><p class="wel-note" style="margin:6px 0 0">사파리와 홈 화면 앱은 기록이 따로 저장돼요. 홈 화면 아이콘으로만 쓰세요.</p>';
     else if (installEvt) h += '<p style="margin:0">버튼 하나면 홈 화면에 아이콘이 생겨요.</p><button type="button" class="wel-inst" id="welInst">홈 화면에 추가</button>';
-    else if (/SamsungBrowser/.test(ua)) h += '<ol><li>아래 <b>≡ 메뉴</b> 누르기</li><li><b>현재 페이지 추가 → 홈 화면</b></li></ol>';
-    else h += '<ol><li>오른쪽 위 <b>⋮ 메뉴</b> 누르기</li><li><b>홈 화면에 추가</b> 또는 <b>앱 설치</b></li></ol>';
+    else if (/SamsungBrowser/.test(ua)) h += '<ol><li>이 링크를 <b>크롬</b>으로 열기</li><li>오른쪽 위 <b>⋮</b> → <b>앱 설치</b></li><li>홈 화면의 <b>유지어터 노트</b> 아이콘으로 열기</li></ol><p class="wel-note" style="margin:6px 0 0">삼성 인터넷은 앱이 아닌 바로가기로 만들어질 수 있어요.</p>';
+    else h += '<ol><li>오른쪽 위 <b>⋮</b> 누르기</li><li><b>앱 설치</b> (또는 홈 화면에 추가)</li><li>홈 화면의 <b>유지어터 노트</b> 아이콘으로 열기</li></ol>';
     box.innerHTML = h; box.hidden = false;
   }
   function openWelcome() { renderInstall(); $('#welSheet').hidden = false; }
@@ -2651,6 +2758,9 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     if (!e.target.closest('#welInst') || !installEvt) return;
     installEvt.prompt(); try { await installEvt.userChoice; } catch (x) {} installEvt = null; renderInstall();
   });
+  function openMan() { $('#welSheet').hidden = true; try { localStorage.setItem(WEL_KEY, '1'); } catch (e) {} $('#manSheet').hidden = false; $('#manSheet .panel').scrollTop = 0; }
+  $('#openMan').addEventListener('click', openMan);
+  $('#welMan').addEventListener('click', openMan);
   $('#sample').addEventListener('click', openWelcome);
   if (HOSTED && 'serviceWorker' in navigator) { try { navigator.serviceWorker.register('sw.js').catch(() => {}); } catch (e) {} }
 
