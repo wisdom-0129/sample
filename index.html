@@ -2823,8 +2823,21 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     else { Hc = 860; const rh = (Hc - g) / 2; rects = [0, 1, 2, 3, 4, 5].map((k) => [(k % 3) * (tw3 + g), Math.floor(k / 3) * (rh + g), tw3, rh]); }
     const a = d.split('-').map(Number), wd = ['일', '월', '화', '수', '목', '금', '토'][new Date(Date.UTC(a[0], a[1] - 1, a[2])).getUTCDay()];
     const dl = `${a[0]}.${p2(a[1])}.${p2(a[2])} ${wd}`;
+    const ell = (t, w) => { if (c.measureText(t).width <= w) return t; let b = t; while (b.length > 1 && c.measureText(b + '…').width > w) b = b.slice(0, -1); return b + '…'; };
+    const wrapW = (t, w, max) => {
+      const ls = []; let cur = '';
+      for (const wd of t.split(' ')) {
+        const trial = cur ? cur + ' ' + wd : wd;
+        if (c.measureText(trial).width <= w) { cur = trial; continue; }
+        if (cur) ls.push(cur); cur = wd;
+        while (c.measureText(cur).width > w && cur.length > 1) { let k = cur.length; while (k > 1 && c.measureText(cur.slice(0, k)).width > w) k--; ls.push(cur.slice(0, k)); cur = cur.slice(k); }
+      }
+      if (cur) ls.push(cur);
+      if (ls.length > max) { const o = ls.slice(0, max); o[max - 1] = ell(o[max - 1] + '…', w).replace(/……$/, '…'); return o; }
+      return ls;
+    };
     c.font = '400 36px ' + BODY;
-    const lines = (n === 0 || grid4) ? [] : all.map((i) => { const t = [slotName(i.slot), (i.foods || []).join(' ')].filter(Boolean).join(' · '); let l = t || '식단'; while (l.length > 1 && c.measureText(l).width > GW - 8) l = l.slice(0, -1) + (l.endsWith('…') ? '' : '…'); return l; }).slice(0, 7);
+    const lines = (n === 0 || grid4) ? [] : all.map((i) => { const t = [slotName(i.slot), (i.foods || []).join(' ')].filter(Boolean).join(' · '); return ell(t || '식단', GW - 8); }).slice(0, 7);
     const totalH = grid4 ? Hc : Hc + 70 + 40 + (lines.length ? 24 + lines.length * LH : 0);
     let y = Math.max(120, Math.round((H - totalH) / 2) - 20);
     if (n === 0) {
@@ -2834,7 +2847,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       rows.forEach((i, k) => {
         const cy = top + k * rh + rh / 2, fo = (i.foods || []).join(' ') || '식단', sl = slotName(i.slot);
         c.fillStyle = K.muted; c.font = '400 28px ' + BODY; if (sl) c.fillText(sl, W / 2, cy - 22);
-        c.fillStyle = K.ink; c.font = '400 46px ' + BODY; let t = fo; while (t.length > 1 && c.measureText(t).width > GW - 80) t = t.slice(0, -1) + (t.endsWith('…') ? '' : '…'); c.fillText(t, W / 2, cy + (sl ? 28 : 12));
+        c.fillStyle = K.ink; c.font = '400 46px ' + BODY; c.fillText(ell(fo, GW - 80), W / 2, cy + (sl ? 28 : 12));
       });
     }
     if (grid4 === 3) {
@@ -2843,26 +2856,29 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       c.fillStyle = K.muted; c.font = '400 28px ' + BODY; c.fillText(String(a[0]), px, y + 66);
       c.fillStyle = K.ink; c.font = '400 92px ' + DISP; c.fillText(`${a[1]}.${p2(a[2])}`, px, y + 156);
       c.fillStyle = K.muted; c.font = '400 30px ' + BODY; c.fillText(wd + '요일', px, y + 202);
-      rows.forEach((i, k) => {
-        const sl = slotName(i.slot), fo = (i.foods || []).join(' ') || '식단', sw = sl ? 76 : 0; let t = fo; c.font = '400 32px ' + BODY;
-        while (t.length > 1 && c.measureText(t).width > hw - 88 - sw) t = t.slice(0, -1) + (t.endsWith('…') ? '' : '…');
-        const cy = y + 262 + k * rh;
+      let cy = y + 252; const maxY = y + hw - 24;
+      for (const i of rows) {
+        const sl = slotName(i.slot), fo = (i.foods || []).join(' ') || '식단', sw = sl ? 76 : 0; c.font = '400 32px ' + BODY;
+        const ls = wrapW(fo, hw - 88 - sw, 2);
+        if (cy + (ls.length - 1) * 38 > maxY) break;
         if (sl) { c.fillStyle = K.muted; c.font = '400 26px ' + BODY; c.fillText(sl, px, cy); }
-        c.fillStyle = K.ink; c.font = '400 32px ' + BODY; c.fillText(t, px + sw, cy);
-      });
+        c.fillStyle = K.ink; c.font = '400 32px ' + BODY; ls.forEach((l, q) => c.fillText(l, px + sw, cy + q * 38));
+        cy += ls.length * 38 + 8;
+      }
     }
     if (grid4 === 2) {
       c.fillStyle = K.soft; rr(c, x0, y, hw, hw, 34); c.fill(); rr(c, x0 + hw + g, y + hw + g, hw, hw, 34); c.fill();
       c.textAlign = 'center'; c.fillStyle = K.muted; c.font = '400 32px ' + BODY; c.fillText(String(a[0]), x0 + hw / 2, y + hw / 2 - 78);
       c.fillStyle = K.ink; c.font = '400 118px ' + DISP; c.fillText(`${a[1]}.${p2(a[2])}`, x0 + hw / 2, y + hw / 2 + 36);
       c.fillStyle = K.muted; c.font = '400 34px ' + BODY; c.fillText(wd + '요일', x0 + hw / 2, y + hw / 2 + 98);
-      const rows = all.slice(0, 6), rh = 64, tx = x0 + hw + g + 44, top = y + hw + g + (hw - rows.length * rh) / 2; c.textAlign = 'left';
-      rows.forEach((i, k) => {
-        const sl = slotName(i.slot), fo = (i.foods || []).join(' ') || '식단'; let t = fo; c.font = '400 36px ' + BODY;
-        const sw = sl ? 84 : 0; while (t.length > 1 && c.measureText(t).width > hw - 88 - sw) t = t.slice(0, -1) + (t.endsWith('…') ? '' : '…');
-        const cy = top + k * rh + rh / 2 + 12;
-        if (sl) { c.fillStyle = K.muted; c.font = '400 28px ' + BODY; c.fillText(sl, tx, cy); }
-        c.fillStyle = K.ink; c.font = '400 36px ' + BODY; c.fillText(t, tx + sw, cy);
+      const tx = x0 + hw + g + 44, LH2 = 46; c.textAlign = 'left'; c.font = '400 36px ' + BODY;
+      const items = []; let tot = 0;
+      for (const i of all.slice(0, 6)) { const fo = (i.foods || []).join(' ') || '식단', sl = slotName(i.slot), ls = wrapW(fo, hw - 88 - (sl ? 84 : 0), 2), h = ls.length * LH2 + 14; if (tot + h > hw - 80) break; items.push({ sl, ls }); tot += h; }
+      let cy = y + hw + g + (hw - tot) / 2 + 34;
+      items.forEach((it) => {
+        if (it.sl) { c.fillStyle = K.muted; c.font = '400 28px ' + BODY; c.fillText(it.sl, tx, cy); }
+        c.fillStyle = K.ink; c.font = '400 36px ' + BODY; it.ls.forEach((l, q) => c.fillText(l, tx + (it.sl ? 84 : 0), cy + q * LH2));
+        cy += it.ls.length * LH2 + 14;
       });
     }
     rects.forEach((r, k) => {
