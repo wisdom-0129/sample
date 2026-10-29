@@ -2836,6 +2836,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       if (ls.length > max) { const o = ls.slice(0, max); o[max - 1] = ell(o[max - 1] + '…', w).replace(/……$/, '…'); return o; }
       return ls;
     };
+    // one food per line (foods are separate items); fall back to packed wrapping only when it would not fit
+    const foodLns = (i, w, split) => { const f = (i.foods || []).filter(Boolean); if (!f.length) return ['식단']; return split ? f.map((x) => ell(x, w)) : wrapW(f.join(' '), w, 2); };
     c.font = '400 36px ' + BODY;
     const lines = (n === 0 || grid4) ? [] : all.map((i) => { const t = [slotName(i.slot), (i.foods || []).join(' ')].filter(Boolean).join(' · '); return ell(t || '식단', GW - 8); }).slice(0, 7);
     const totalH = grid4 ? Hc : Hc + 70 + 40 + (lines.length ? 24 + lines.length * LH : 0);
@@ -2856,10 +2858,12 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       c.fillStyle = K.muted; c.font = '400 28px ' + BODY; c.fillText(String(a[0]), px, y + 66);
       c.fillStyle = K.ink; c.font = '400 92px ' + DISP; c.fillText(`${a[1]}.${p2(a[2])}`, px, y + 156);
       c.fillStyle = K.muted; c.font = '400 30px ' + BODY; c.fillText(wd + '요일', px, y + 202);
-      let cy = y + 252; const maxY = y + hw - 24;
+      let cy = y + 252; const maxY = y + hw - 24; c.font = '400 32px ' + BODY;
+      const sim = (split) => { let t = 252; for (const i of rows) { const sw = slotName(i.slot) ? 76 : 0, ls = foodLns(i, hw - 88 - sw, split); if (t + (ls.length - 1) * 38 > maxY - y) return false; t += ls.length * 38 + 8; } return true; };
+      const split3 = sim(true);
       for (const i of rows) {
-        const sl = slotName(i.slot), fo = (i.foods || []).join(' ') || '식단', sw = sl ? 76 : 0; c.font = '400 32px ' + BODY;
-        const ls = wrapW(fo, hw - 88 - sw, 2);
+        const sl = slotName(i.slot), sw = sl ? 76 : 0; c.font = '400 32px ' + BODY;
+        const ls = foodLns(i, hw - 88 - sw, split3);
         if (cy + (ls.length - 1) * 38 > maxY) break;
         if (sl) { c.fillStyle = K.muted; c.font = '400 26px ' + BODY; c.fillText(sl, px, cy); }
         c.fillStyle = K.ink; c.font = '400 32px ' + BODY; ls.forEach((l, q) => c.fillText(l, px + sw, cy + q * 38));
@@ -2873,7 +2877,9 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       c.fillStyle = K.muted; c.font = '400 34px ' + BODY; c.fillText(wd + '요일', x0 + hw / 2, y + hw / 2 + 98);
       const tx = x0 + hw + g + 44, LH2 = 46; c.textAlign = 'left'; c.font = '400 36px ' + BODY;
       const items = []; let tot = 0;
-      for (const i of all.slice(0, 6)) { const fo = (i.foods || []).join(' ') || '식단', sl = slotName(i.slot), ls = wrapW(fo, hw - 88 - (sl ? 84 : 0), 2), h = ls.length * LH2 + 14; if (tot + h > hw - 80) break; items.push({ sl, ls }); tot += h; }
+      const build = (split) => { const out = []; let t = 0; for (const i of all.slice(0, 6)) { const sl = slotName(i.slot), ls = foodLns(i, hw - 88 - (sl ? 84 : 0), split), h = ls.length * LH2 + 14; if (t + h > hw - 80) return { out, t, full: false }; out.push({ sl, ls }); t += h; } return { out, t, full: true }; };
+      const bs = build(true), bp = build(false), pick = bs.full ? bs : bp;
+      items.push(...pick.out); tot = pick.t;
       let cy = y + hw + g + (hw - tot) / 2 + 34;
       items.forEach((it) => {
         if (it.sl) { c.fillStyle = K.muted; c.font = '400 28px ' + BODY; c.fillText(it.sl, tx, cy); }
