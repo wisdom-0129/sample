@@ -1122,6 +1122,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       <img class="share-img" id="shareImg" alt="공유할 스토리 이미지 미리보기">
       <button class="share-btn" type="button" id="shareGo">이미지 저장 · 공유하기</button>
       <p class="share-hint" id="shareHint"></p>
+      <button type="button" class="btn-soft" id="shareOrder" hidden style="align-self:center">↕ 끼니 순서 바꾸기</button>
     </div>
   </div>
 </div>
@@ -1377,6 +1378,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       e.items = [it]; if (e.photo) e.cover = it.id;
     }
     e.items.forEach((i) => { if (!i.id) i.id = uid(); if (RANK[i.kind] == null) i.kind = 'carb'; if (!Array.isArray(i.foods)) i.foods = []; if (SLOT_ORDER[i.slot] == null) i.slot = ''; });
+    if (!e.ordered) e.items = e.items.map((i, k) => [i, k]).sort((a, b) => (SLOT_ORDER[a[0].slot] - SLOT_ORDER[b[0].slot]) || (a[1] - b[1])).map((x) => x[0]);
     if (!e.items.some((i) => i.id === e.cover && i.photo)) { const p = e.items.find((i) => i.photo); if (p) e.cover = p.id; else delete e.cover; }
     let t = 'diet'; e.items.forEach((i) => { if (RANK[i.kind] > RANK[t]) t = i.kind; }); e.type = t;
     const f = []; e.items.slice().sort((a, b) => (RANK[b.kind] - RANK[a.kind]) || (SLOT_ORDER[a.slot] - SLOT_ORDER[b.slot])).forEach((i) => i.foods.forEach((x) => { if (f.indexOf(x) === -1) f.push(x); }));
@@ -3149,7 +3151,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       shareUrl = URL.createObjectURL(shareBlob);
       $('#shareImg').src = shareUrl; $('#shareGo').hidden = !canFileOut();
       $('#shareHint').textContent = canFileOut() ? HINT_SAVE : HINT_PRESS;
-      $('#shareRailRow').hidden = kind !== 'home'; $('#shareStyleRow').hidden = kind !== 'diary';
+      $('#shareRailRow').hidden = kind !== 'home'; $('#shareStyleRow').hidden = kind !== 'diary'; $('#shareOrder').hidden = kind !== 'meal' || (state.entries.find((x) => x.d === det.d) || { items: [] }).items.length < 2;
       document.querySelectorAll('[data-ds]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ds === (state.diaryShare || 'A')))); $('#shareRail').checked = state.shareRail !== false; shareKind = kind;
       $('#shareSheet').hidden = false;
     } catch (e) { toast('이미지를 만들지 못했어요. 다시 눌러주세요'); }
@@ -3378,7 +3380,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       if (!t || t.dataset.item === gg.id) return;
       const arr = det.draft.items, from = arr.findIndex((i) => i.id === gg.id), to = arr.findIndex((i) => i.id === t.dataset.item);
       if (from < 0 || to < 0) return;
-      const [it] = arr.splice(from, 1); arr.splice(to, 0, it); renderDetail(); toast('순서를 바꿨어요. 저장하면 반영돼요', 1400);
+      const [it] = arr.splice(from, 1); arr.splice(to, 0, it); det.draft.ordered = true; renderDetail(); toast('순서를 바꿨어요. 저장하면 반영돼요', 1400);
     };
     document.addEventListener('pointerup', (e) => finish(e, false));
     document.addEventListener('pointercancel', (e) => finish(e, true));
@@ -3552,6 +3554,11 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
 
   // share
   $('#openShare').addEventListener('click', openShare);
+  $('#shareOrder').addEventListener('click', () => {
+    $('#shareSheet').hidden = true; const st = $('#dStrip'); try { st.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {}
+    st.style.animation = 'none'; void st.offsetWidth; st.style.animation = 'shake .35s 2'; setTimeout(() => { st.style.animation = ''; }, 900);
+    toast('끼니 칸을 꾹 누른 채 끌어서 순서를 바꾸고, 저장하면 내보내기에 반영돼요', 3200);
+  });
   $('#shareStyleRow').addEventListener('click', async (e) => { const b = e.target.closest('[data-ds]'); if (!b || b.dataset.ds === state.diaryShare) return; state.diaryShare = b.dataset.ds; persist(); await openShare('diary'); });
   $('#shareRail').addEventListener('change', async (e) => { state.shareRail = e.target.checked; persist(); await openShare(shareKind); });
   $('#shareGo').addEventListener('click', async () => {
