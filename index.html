@@ -20,7 +20,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700&family=Gowun+Dodum&family=Do+Hyeon&family=Nanum+Gothic:wght@400;700;800&family=Gaegu:wght@400;700&family=Gamja+Flower&family=Gowun+Batang:wght@400;700&family=Hi+Melody&family=Poor+Story&family=Single+Day&family=Cute+Font&display=swap">
 <style>
-html, body, button, a, input, label, summary { touch-action: manipulation; }
+/* no pinch-zoom and no double-tap zoom anywhere (the photo cropper keeps its own touch-action: none) */
+* { touch-action: pan-x pan-y; }
 
 /* Layout: one-screen phone app. Header, one scrolling view per tab (홈/달력/통계/위시),
    chat-style input bar on 홈 only, tab bar pinned at the bottom.
@@ -448,7 +449,7 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
 .tab[aria-selected="true"] .ic { background: var(--accent-soft); }
 
 /* toast */
-.toast { position: fixed; left: 50%; bottom: calc(150px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 8px); background: var(--ink); color: var(--bg); padding: 9px 14px; border-radius: 14px; font-size: 13px; max-width: calc(100% - 32px); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 60; text-align: center; }
+.toast { position: fixed; left: 50%; bottom: calc(150px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 8px); background: var(--ink); color: var(--bg); padding: 9px 14px; border-radius: 14px; font-size: 13px; max-width: calc(100% - 32px); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 100; text-align: center; }
 .toast.on { opacity: 1; transform: translate(-50%, 0); }
 
 /* sheets */
@@ -466,6 +467,25 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
 #diSheet { align-items: stretch; z-index: 60; }
 #cropSheet { z-index: 70; }
 #fontSheet { z-index: 40; }
+#diPickSheet { z-index: 65; }
+.di-pick-btn { display: block; margin: 12px auto 0; border: 0; border-radius: 99px; background: var(--accent-soft); color: var(--accent-ink); padding: 9px 16px; font-size: 13px; font-weight: 700; }
+.pk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.pk-grid button { position: relative; border: 0; padding: 0; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; background: var(--surface); }
+.pk-grid img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pk-grid small { position: absolute; left: 4px; bottom: 4px; background: rgba(0,0,0,.55); color: #fff; border-radius: 99px; padding: 1px 7px; font-size: 11px; }
+.nudge { animation: shake .35s 2; }
+.dgrid .cell { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+.dgrid .cell img { -webkit-user-drag: none; pointer-events: none; }
+.dgrid .cell.lifted { opacity: .35; }
+.dgrid .cell.drop { background: var(--accent-soft); box-shadow: inset 0 0 0 2px var(--accent-ink); }
+body.dragging { cursor: grabbing; }
+.di-ghost { position: fixed; z-index: 80; pointer-events: none; width: 64px; transform: translate(-50%, -62%) scale(1.08) rotate(-3deg); box-shadow: 0 12px 28px rgba(0,0,0,.28); border-radius: 6px; overflow: hidden; opacity: .95; }
+.di-ghost .dph { display: block; }
+.di-trash { position: fixed; z-index: 75; left: 50%; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); padding: 12px 22px; border-radius: 99px; background: var(--surface); color: var(--ink); border: 2px dashed var(--line); font-size: 14px; font-weight: 700; box-shadow: 0 6px 20px rgba(0,0,0,.16); white-space: nowrap; }
+.di-trash.over { background: #e8a5a5; color: #fff; border-color: #fff; }
+.di-menu { position: fixed; z-index: 75; display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 14px; border-radius: 14px; background: var(--ink); color: var(--bg); font-size: 12.5px; box-shadow: 0 8px 24px rgba(0,0,0,.25); transform: translate(-50%, 0); max-width: calc(100vw - 24px); }
+.di-menu button { border: 0; border-radius: 10px; background: var(--bg); color: var(--ink); padding: 8px 12px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+.di-menu button.armed { background: #d96b6b; color: #fff; }
 #diSheet .di-page { max-width: none; max-height: none; height: 100%; min-height: 0; border-radius: 0; padding: 0; display: flex; flex-direction: column; animation: none; background: var(--bg); }
 .di-bar { display: grid; grid-template-columns: 52px 1fr 52px; align-items: center; padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 8px; }
 .di-bar h2 { font: 600 17px/1.2 var(--font-body, inherit); color: var(--muted); text-align: center; letter-spacing: .02em; }
@@ -476,8 +496,13 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
 .di-scroll { flex: 1; overflow-y: auto; padding: 14px 16px calc(24px + env(safe-area-inset-bottom, 0px)); max-width: 560px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; }
 .di-ph { width: min(100%, 44vh); aspect-ratio: 1 / 1; margin: 0 auto; border-radius: 24px; border: 0; background: var(--surface); color: var(--muted); font-size: 15px; font-weight: 700; overflow: hidden; padding: 0; display: block; flex: none; box-shadow: 0 2px 14px rgba(0,0,0,.06); }
 .di-ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.mood-row { display: flex; justify-content: center; gap: 10px; margin: 16px 0 6px; }
-.mood-row button { width: 52px; height: 52px; border-radius: 50%; border: 0; background: var(--surface); font-size: 26px; line-height: 1; box-shadow: 0 1px 6px rgba(0,0,0,.08); filter: grayscale(.9); opacity: .6; transition: transform .15s, opacity .15s; }
+.mood-row { display: flex; justify-content: center; gap: 6px; margin: 16px 0 6px; }
+.mood-row button { width: 42px; height: 42px; border-radius: 50%; border: 0; background: var(--surface); font-size: 22px; line-height: 1; box-shadow: 0 1px 6px rgba(0,0,0,.08); filter: grayscale(.9); opacity: .6; transition: transform .15s, opacity .15s; }
+.emo-row { display: flex; gap: 8px; justify-content: center; margin: 8px 0 0; }
+.emo-row input { width: 200px; max-width: 60%; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 8px 12px; font-size: 18px; text-align: center; }
+.emo-row button { border: 0; border-radius: 12px; background: var(--accent); color: var(--on-accent); padding: 8px 16px; font-weight: 700; }
+.mood-row button.emo { filter: none; opacity: .75; color: var(--muted); }
+.mood-row button.emo.on { color: inherit; opacity: 1; }
 .mood-row button.on { filter: none; opacity: 1; transform: scale(1.14); box-shadow: 0 0 0 3px var(--accent), 0 3px 10px rgba(0,0,0,.14); }
 .di-text { width: 100%; flex: 1; min-height: 180px; border: 0; background: transparent; padding: 14px 4px; font-size: 17px; line-height: 1.7; color: var(--ink); resize: none; outline: none; }
 .di-text::placeholder { color: var(--muted); opacity: .7; }
@@ -492,9 +517,30 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
 .di-img { float: left; width: 112px; height: 112px; border-radius: 14px; object-fit: cover; margin: 0 14px 6px 0; display: block; }
 .di-ph0 { float: left; width: 112px; height: 112px; border-radius: 14px; background: var(--accent-soft); display: grid; place-items: center; font-size: 36px; margin: 0 14px 6px 0; }
 .di-tx { margin: 0; font-size: 15px; line-height: 1.65; white-space: normal; word-break: break-word; overflow-wrap: anywhere; }
+.diary.di-split { background: transparent; border: 0; padding: 0; }
+.di-grid { position: relative; display: grid; grid-template-columns: 1fr 1fr; column-gap: 14px; }
+.di-ring { position: absolute; left: 50%; width: 28px; height: 7px; margin-left: -14px; border-radius: 4px; background: var(--accent); box-shadow: inset 0 -1.5px 0 rgba(0,0,0,.12); pointer-events: none; z-index: 3; }
+.di-ring::before, .di-ring::after { content: ""; position: absolute; top: -1.5px; width: 10px; height: 10px; border-radius: 50%; background: rgba(0,0,0,.12); z-index: -1; }
+.di-ring::before { left: -3px; }
+.di-ring::after { right: -3px; }
+.di-ring:nth-of-type(1) { top: 18%; } .di-ring:nth-of-type(2) { top: 50%; margin-top: -3px; } .di-ring:nth-of-type(3) { top: 82%; }
+.di-pc, .di-mc { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; aspect-ratio: 1 / 1; overflow: hidden; min-width: 0; }
+.di-pc, .di-mc { position: relative; }
+.di-pc .di-img, .di-pc .di-ph0 { float: none; width: 100%; height: 100%; margin: 0; border-radius: 0; object-fit: cover; display: block; }
+.di-pc .di-ph0 { display: grid; font-size: 56px; }
+.di-mc { padding: 14px; display: flex; flex-direction: column; }
+.di-mm { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 14px; color: var(--muted); text-align: center; }
+.di-mh { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.di-me { font-size: 20px; line-height: 1; }
+.di-tw { flex: 1; min-height: 0; overflow: hidden; margin-top: 8px; }
+.di-mc .di-tx { font-size: 12.5px; line-height: 1.45; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow: hidden; }
+@media (max-width: 359px) { .di-mc .di-tx { -webkit-line-clamp: 4; } }
+@media (min-width: 700px) { .di-mc { padding: 20px; } .di-mc .di-tx { font-size: 17px; line-height: 1.6; -webkit-line-clamp: 10; } .di-tw { margin-top: 12px; } .di-me { font-size: 28px; } }
 .di-row { display: flex; align-items: center; gap: 16px; }
-.di-row .di-img, .di-row .di-ph0 { float: none; margin: 0; flex: none; }
-.di-ml { font-size: 15px; color: var(--muted); line-height: 1.6; }
+.di-row .di-img, .di-row .di-ph0 { float: none; margin: 0; flex: none; width: min(46%, 220px); height: auto; aspect-ratio: 1 / 1; border-radius: 18px; }
+.di-ml { flex: 1; min-width: 0; font-size: 14px; color: var(--muted); line-height: 1.5; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.di-e { font-size: 58px; line-height: 1.15; color: var(--ink); }
+.di-n { font-size: 17px; font-weight: 700; color: var(--ink); }
 .di-ml strong { display: block; font-size: 20px; color: var(--ink); margin-top: 2px; }
 input.sw { -webkit-appearance: none; appearance: none; width: 48px; height: 28px; border-radius: 999px; background: var(--line); position: relative; border: 0; flex: none; transition: background .2s; }
 input.sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: transform .2s; }
@@ -842,6 +888,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="di-trash" id="diTrash" hidden>🗑 여기에 놓으면 비우기</div>
+<div class="di-menu" id="diMenu" hidden><span>끌어서 다른 날로 옮길 수 있어요</span><button type="button" id="diMenuDel">🗑 비우기</button></div>
 <div class="bk-nudge" id="bkNudge" hidden><button type="button" id="bkNudgeGo">💾 오늘 백업할까요?</button><button type="button" class="x" id="bkNudgeX" aria-label="닫기">×</button></div>
 <canvas id="confetti" hidden></canvas>
 
@@ -938,11 +986,12 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     <details class="man-sec"><summary>📔 일기</summary>
       <ol>
         <li>달력 위 스위치를 <b>📔 일기</b>로 바꾸고 날짜를 눌러요.</li>
-        <li><b>사진 1장</b>은 꼭 넣어요. 글은 선택이고, 글이 없으면 <b>기분</b>(😆 🙂 😐 😔 😭)을 골라요.</li>
+        <li><b>사진 1장</b>은 꼭 넣어요. 글은 선택이고, 글이 없으면 <b>기분</b>(😆 🙂 😐 😔 😭 🩷, 맨 끝 <b>＋</b>로 이모지를 직접 넣을 수도 있어요)을 골라요.</li>
         <li>글이 있어도 기분을 고를 수 있어요. 달력 칸에는 사진과 기분이 나와요.</li>
         <li><b>🔒 비공개</b>를 켜면 홈과 스토리에는 나오지 않아요. 달력에서만 볼 수 있어요.</li>
         <li>홈에는 그날 일기가 아래 카드로 나오고, 홈 스토리를 내보내면 맨 아래에 같이 담겨요.</li>
         <li>그날 일기가 없으면 홈 아래에 <b>＋ 일기 쓰기</b> 버튼이 나와요. 눌러서 바로 쓸 수 있어요.</li>
+        <li>달력 일기 칸을 <b>꾹 누르면</b> 손가락으로 끌어 다른 날로 옮길 수 있고, 아래 <b>🗑 비우기</b>에 놓으면 지워져요. 일기가 있는 날로 옮기면 서로 바뀌어요. 끌지 않고 떼면 비우기 버튼이 떠요.</li>
       </ol>
     </details>
 
@@ -1072,6 +1121,14 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   </div>
 </div>
 
+<div class="sheet" id="diPickSheet" hidden>
+  <div class="scrim" data-close></div>
+  <div class="panel" role="dialog" aria-label="사진 고르기">
+    <div class="panel-head"><h2>이 날 기록한 사진</h2><button class="close" type="button" data-close>닫기</button></div>
+    <div class="pk-grid" id="pkGrid"></div>
+  </div>
+</div>
+
 <div class="sheet" id="diSheet" hidden>
   <div class="panel di-page" role="dialog" aria-label="일기">
     <div class="di-bar">
@@ -1082,7 +1139,9 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     <div class="di-scroll">
       <button type="button" class="di-ph" id="diPh">사진을 선택하세요</button>
       <input id="diFile" type="file" accept="image/*" hidden>
+      <button type="button" class="di-pick-btn" id="diPick">🖼 이 날 식단·운동 사진에서 고르기</button>
       <div class="mood-row" id="diMood" aria-label="오늘의 기분"></div>
+      <div class="emo-row" id="diEmoRow" hidden><input id="diEmo" type="text" maxlength="16" placeholder="이모지 하나를 넣어주세요" autocomplete="off"><button type="button" id="diEmoOk">확인</button></div>
       <textarea class="di-text" id="diText" maxlength="3000" placeholder="오늘의 이야기를 적어보세요 (선택)"></textarea>
       <div class="di-foot">
         <label class="di-priv"><span>🔒 비공개</span><input type="checkbox" id="diPriv" class="sw"></label>
@@ -1428,17 +1487,22 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       if (typeof i.photo === 'string' && i.photo) o.photo = i.photo; return o; }) })).filter((x) => x.items.length).sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : 0);
   }
   /* diary: one photo (required when saving) + optional text + mood, per day; private days stay off the home card and stories */
-  const MOODS = [['😆', '최고'], ['🙂', '좋음'], ['😐', '보통'], ['😔', '별로'], ['😭', '힘듦']];
+  const isEmoji = (t) => /^\p{Extended_Pictographic}(\uFE0F|\u200D\p{Extended_Pictographic}|[\u{1F3FB}-\u{1F3FF}])*$/u.test(t) && t.length <= 16;
+  const MOODS = [['😆', '최고'], ['🙂', '좋음'], ['😐', '보통'], ['😔', '별로'], ['😭', '힘듦'], ['💬', '수다'], ['🩷', '사랑']];
   function fixDiary(o) {
     const out = {};
     if (!o || typeof o !== 'object' || Array.isArray(o)) return out;
     Object.keys(o).forEach((d) => {
       const x = o[d]; if (!x || typeof x !== 'object' || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return;
-      const e = { photo: typeof x.photo === 'string' && x.photo ? x.photo : '', text: typeof x.text === 'string' ? x.text : '', mood: Number.isInteger(x.mood) && x.mood >= 1 && x.mood <= 5 ? x.mood : 0, priv: !!x.priv };
-      if (e.photo || e.text || e.mood) out[d] = e;
+      const e = { photo: typeof x.photo === 'string' && x.photo ? x.photo : '', text: typeof x.text === 'string' ? x.text : '', mood: Number.isInteger(x.mood) && x.mood >= 1 && x.mood <= 7 ? x.mood : 0, emo: typeof x.emo === 'string' && isEmoji(x.emo.trim()) ? x.emo.trim() : '', priv: !!x.priv };
+      if (e.emo) e.mood = 0;
+      if (e.photo || e.text || e.mood || e.emo) out[d] = e;
     });
     return out;
   }
+  const moodOf = (dy) => !dy ? null : dy.emo ? [dy.emo, ''] : dy.mood ? MOODS[dy.mood - 1] : null;
+  const moodTxt = (m) => m[1] ? m[0] + ' ' + m[1] : m[0];
+  const MOOD_PICK = [1, 2, 3, 4, 5, 7];
   const diaryOf = (d) => (state.diary && state.diary[d]) || null;
   const exEntryOf = (d) => (state.exEntries || []).find((x) => x.d === d) || null;
   const exPhotoOf = (d) => { const x = exEntryOf(d); const it = x && x.items.find((i) => i.photo); return it ? it.photo : null; };
@@ -1571,16 +1635,18 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     const xhero = xe ? (xph[0] || xe.items[0]) : null, xmore = xe ? xe.items.length - 1 : 0;
     $('#lastEx').innerHTML = `<span class="cap">🏋️ 운동 · ${fmtShort(xd)}</span>` + (xe ? `<div class="ex-hero">${xhero.photo ? `<div class="ph-wrap"><img class="photo-big" src="${esc(photoSrc(xhero.photo))}" alt="${esc(xhero.type)}">${xph.length > 1 ? `<span class="ph-cnt">📷 ${xph.length}</span>` : ''}</div>` : '<div class="ex-icon">💪</div>'}<div class="ex-kw">${esc(xhero.type)}</div>${xhero.memo ? `<div class="ex-memo">${esc(xhero.memo)}</div>` : ''}${xmore ? `<span class="sub">외 ${xmore}개 · ${esc(xe.items.slice(1).map((i) => i.type).join(', '))}</span>` : ''}</div>` : xw ? `<div class="ex-hero"><div class="ex-icon">💪</div><div class="ex-kw">${esc(xw.length ? xw.join(' · ') : '운동 완료')}</div></div>` : '<p class="empty-note">이 날 운동 기록이 없어요.</p>');
     $('#lastEx').hidden = !(xe || xw); $('#lastEx').parentNode.classList.toggle('solo', !(xe || xw));
-    { const dy = diaryOf(hdate), dc = $('#diaryCard'), m = dy && dy.mood ? MOODS[dy.mood - 1] : null;
+    { const dy = diaryOf(hdate), dc = $('#diaryCard'), m = moodOf(dy);
       dc.hidden = dy ? !!dy.priv : dn(hdate) > today();
       if (!dc.hidden && !dy) {
+        dc.classList.remove('di-split');
         dc.innerHTML = `<button type="button" class="di-add"><span>📔 ${hdate === todayStr() ? '오늘' : fmtShort(hdate)} 일기 쓰기</span><b>＋</b></button>`;
       } else if (!dc.hidden) {
         const who = hdate === todayStr() ? '오늘' : fmtShort(hdate);
         const img = dy.photo ? `<img class="di-img" src="${esc(photoSrc(dy.photo))}" alt="">` : '<div class="di-ph0">📔</div>';
-        dc.innerHTML = dy.text.trim()
-          ? `<div class="di-head"><span class="cap">📔 ${who} 일기</span>${m ? `<span class="di-mood">${m[0]} ${m[1]}</span>` : ''}</div><div class="di-body">${img}<p class="di-tx">${esc(dy.text.trim().replace(/\s*\n+\s*/g, ' '))}</p></div>`
-          : `<div class="di-head"><span class="cap">📔 ${who} 일기</span></div><div class="di-row">${img}<div class="di-ml">${hdate === todayStr() ? '오늘' : '이날'}의 기분은<strong>${m ? m[0] + ' ' + m[1] : ''}</strong></div></div>`;
+        const noTx = !dy.text.trim(); dc.classList.add('di-split');
+        dc.innerHTML = !noTx
+          ? `<div class="di-grid"><div class="di-pc">${img}</div><i class="di-ring"></i><i class="di-ring"></i><i class="di-ring"></i><div class="di-mc"><div class="di-mh"><span class="cap">📔 ${who} 일기</span>${m ? `<span class="di-me">${m[0]}</span>` : ''}</div><div class="di-tw"><p class="di-tx">${esc(dy.text.trim().replace(/\s*\n+\s*/g, ' '))}</p></div></div></div>`
+          : `<div class="di-grid"><div class="di-pc">${img}</div><i class="di-ring"></i><i class="di-ring"></i><i class="di-ring"></i><div class="di-mc"><span class="cap">📔 ${who} 일기</span><div class="di-mm">${hdate === todayStr() ? '오늘' : '이날'}의 기분은<span class="di-e">${m ? m[0] : ''}</span>${m && m[1] ? `<span class="di-n">${m[1]}</span>` : ''}</div></div></div>`;
       } }
     const D = $('#dday');
     let num = '–', label = '다음 치팅까지', sub1 = '고탄수를 기록하면 계산돼요', sub2 = '', tone = 'none', prog = 0, note = '', wishLine = '';
@@ -1689,7 +1755,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       } else if (!exm && d === target && n > T) cls += ' target';
       if (dm) {
         const dy = diaryOf(d);
-        inner += dy ? `<span class="dph has">${dy.photo ? `<img src="${esc(photoSrc(dy.photo))}" alt="">` : '<span class="em">📔</span>'}${dy.mood ? `<span class="mood">${MOODS[dy.mood - 1][0]}</span>` : ''}</span>` : '<span class="dph"></span>';
+        inner += dy ? `<span class="dph has">${dy.photo ? `<img src="${esc(photoSrc(dy.photo))}" alt="">` : '<span class="em">📔</span>'}</span>` : '<span class="dph"></span>';
       } else if (exm) {
         const xp = exPhotoOf(d);
         if (xp) { cls += ' has exm img'; inner += `<img src="${esc(photoSrc(xp))}" alt="">`; }
@@ -1706,7 +1772,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     $('#calGrid').innerHTML = html;
     $('#calGrid').classList.toggle('bulking', bulk.active); $('#calGrid').classList.toggle('dgrid', dm); { const hn = $('#calHint'); if (hn) hn.hidden = dm; }
     renderBulk();
-    $('#calLegend').innerHTML = dm ? '<span>날짜를 눌러 일기 쓰기 · 😊 기분 · <i class="pdot"></i> 비공개</span>' : exm ? '<span><i class="exleg"></i>운동한 날 · 사진을 올리면 사진으로 보여요</span>' : ['ok', 'ctrl', 'warn', 'bad'].filter((k) => k !== 'warn' || state.ctrlOver === 'warn')
+    $('#calLegend').innerHTML = dm ? '<span>눌러서 쓰기 · 꾹 눌러 이동·비우기 · <i class="pdot"></i> 비공개</span>' : exm ? '<span><i class="exleg"></i>운동한 날 · 사진을 올리면 사진으로 보여요</span>' : ['ok', 'ctrl', 'warn', 'bad'].filter((k) => k !== 'warn' || state.ctrlOver === 'warn')
       .map((k) => `<span class="${ST[k].cls}"><b></b>${LEG[k]}</span>`).join('') + '<span class="s-norm"><b></b>일반식</span><span><i class="exleg"></i>운동</span><span><span class="dleg">✓</span>식단</span>';
 
     const goal = state.weekGoal;
@@ -2235,17 +2301,18 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   });
   $('#lastEx').addEventListener('click', () => openExEdit(homeD || todayStr()));
   /* ---------- diary editor ---------- */
-  const di = { d: null, photo: '', pend: null, mood: 0, armed: false };
+  const di = { d: null, photo: '', pend: null, mood: 0, emo: '', armed: false };
   function renderDi() {
     const src = di.pend ? di.pend.url : (di.photo ? photoSrc(di.photo) : '');
     $('#diPh').innerHTML = src ? `<img src="${esc(src)}" alt="">` : '사진을 선택하세요';
-    $('#diMood').innerHTML = MOODS.map((m, i) => `<button type="button" data-mood="${i + 1}" class="${di.mood === i + 1 ? 'on' : ''}" aria-pressed="${di.mood === i + 1}" aria-label="${m[1]}" title="${m[1]}">${m[0]}</button>`).join('');
+    $('#diMood').innerHTML = MOOD_PICK.map((v) => { const m = MOODS[v - 1]; return `<button type="button" data-mood="${v}" class="${di.mood === v ? 'on' : ''}" aria-pressed="${di.mood === v}" aria-label="${m[1]}" title="${m[1]}">${m[0]}</button>`; }).join('') + `<button type="button" data-emo="1" class="emo${di.emo ? ' on' : ''}" aria-pressed="${!!di.emo}" aria-label="이모지 직접 입력" title="직접 입력">${di.emo ? esc(di.emo) : '＋'}</button>`;
     $('#diDel').style.visibility = diaryOf(di.d) ? 'visible' : 'hidden'; $('#diDel').textContent = di.armed ? '정말 지울까요?' : '일기 지우기';
   }
   function openDi(d) {
     const x = diaryOf(d);
     if (di.pend) URL.revokeObjectURL(di.pend.url);
-    Object.assign(di, { d, photo: x ? x.photo : '', pend: null, mood: x ? x.mood : 0, armed: false });
+    Object.assign(di, { d, photo: x ? x.photo : '', pend: null, mood: x ? x.mood : 0, emo: x ? (x.emo || '') : '', armed: false });
+    $('#diEmoRow').hidden = true;
     $('#diText').value = x ? x.text : ''; $('#diPriv').checked = !!(x && x.priv);
     $('#diTitle').textContent = d.replace(/-/g, '.');
     renderDi(); $('#diSheet').hidden = false;
@@ -2256,7 +2323,34 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     if (!/^image\//.test(f.type)) { toast('사진 파일만 넣을 수 있어요'); return; }
     openCrop(f, null, (blob) => { if (di.pend) URL.revokeObjectURL(di.pend.url); di.pend = { blob, url: URL.createObjectURL(blob) }; renderDi(); });
   });
-  $('#diMood').addEventListener('click', (e) => { const b = e.target.closest('[data-mood]'); if (!b) return; const v = Number(b.dataset.mood); di.mood = di.mood === v ? 0 : v; renderDi(); });
+  let pkList = [];
+  $('#diPick').addEventListener('click', () => {
+    const seen = new Set(); pkList = [];
+    state.entries.filter((e) => e.d === di.d).forEach((e) => (e.items || []).forEach((i) => { if (i.photo && !seen.has(i.photo)) { seen.add(i.photo); pkList.push({ d: e.d, p: i.photo, k: '🍽️' }); } }));
+    state.exEntries.filter((x) => x.d === di.d).forEach((x) => x.items.forEach((i) => { if (i.photo && !seen.has(i.photo)) { seen.add(i.photo); pkList.push({ d: x.d, p: i.photo, k: '💪' }); } }));
+    pkList.sort((a, b) => (a.d < b.d ? 1 : a.d > b.d ? -1 : 0)); pkList = pkList.slice(0, 60);
+    if (!pkList.length) { toast('이 날 식단·운동에 올린 사진이 없어요', 2000); return; }
+    $('#pkGrid').innerHTML = pkList.map((x, i) => `<button type="button" data-pk="${i}" aria-label="${x.d} 사진"><img src="${esc(photoSrc(x.p))}" alt=""><small>${x.d.slice(5).replace('-', '/')} ${x.k}</small></button>`).join('');
+    $('#diPickSheet').hidden = false;
+  });
+  $('#pkGrid').addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-pk]'); if (!b) return; const x = pkList[Number(b.dataset.pk)]; if (!x) return;
+    try {
+      const blob = await (await fetch(photoSrc(x.p))).blob();
+      openCrop(blob, null, (bl) => { $('#diPickSheet').hidden = true; if (di.pend) URL.revokeObjectURL(di.pend.url); di.pend = { blob: bl, url: URL.createObjectURL(bl) }; renderDi(); });
+    } catch (err) { toast('사진을 불러오지 못했어요. 다른 사진을 골라주세요'); }
+  });
+  $('#diMood').addEventListener('click', (e) => {
+    if (e.target.closest('[data-emo]')) { const r = $('#diEmoRow'); r.hidden = !r.hidden; if (!r.hidden) { $('#diEmo').value = di.emo; $('#diEmo').focus(); } return; }
+    const b = e.target.closest('[data-mood]'); if (!b) return; const v = Number(b.dataset.mood); di.mood = di.mood === v ? 0 : v; if (di.mood) di.emo = ''; renderDi();
+  });
+  const applyEmo = () => {
+    const t = $('#diEmo').value.trim();
+    if (t && !isEmoji(t)) { toast('이모지 하나만 넣어주세요', 1800); return; }
+    di.emo = t; if (t) di.mood = 0; $('#diEmoRow').hidden = true; renderDi();
+  };
+  $('#diEmoOk').addEventListener('click', applyEmo);
+  $('#diEmo').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); applyEmo(); } });
   $('#diDel').addEventListener('click', () => {
     if (!di.armed) { di.armed = true; renderDi(); setTimeout(() => { if (di.armed) { di.armed = false; renderDi(); } }, 3000); return; }
     const x = diaryOf(di.d); if (x) { dropAsset(x.photo); delete state.diary[di.d]; }
@@ -2264,8 +2358,9 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   });
   $('#diSave').addEventListener('click', async () => {
     const text = $('#diText').value.replace(/\s+$/g, '').replace(/^\s*\n/, '');
-    if (!di.pend && !di.photo) { toast('사진을 먼저 넣어주세요'); return; }
-    if (!text.trim() && !di.mood) { toast('글이 없으면 기분을 골라주세요'); return; }
+    const nudge = (el) => { el.classList.remove('nudge'); void el.offsetWidth; el.classList.add('nudge'); setTimeout(() => el.classList.remove('nudge'), 800); };
+    if (!di.pend && !di.photo) { toast('사진을 먼저 넣어주세요', 2000); nudge($('#diPh')); return; }
+    if (!text.trim() && !di.mood && !di.emo) { toast('글이 없으면 기분을 골라주세요', 2000); nudge($('#diMood')); return; }
     const btn = $('#diSave'); btn.disabled = true;
     const old = diaryOf(di.d); let photo = di.photo;
     if (di.pend) {
@@ -2273,7 +2368,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       catch (err) { toast(photoErr(err)); btn.disabled = false; return; }
     }
     if (state.sample) { state.sample = false; state.entries = []; }
-    state.diary[di.d] = { photo, text, mood: di.mood, priv: $('#diPriv').checked };
+    state.diary[di.d] = { photo, text, mood: di.mood, emo: di.emo, priv: $('#diPriv').checked };
     if (di.pend) { URL.revokeObjectURL(di.pend.url); di.pend = null; }
     persist(); render(); $('#diSheet').hidden = true; btn.disabled = false;
     toast($('#diPriv').checked ? '일기를 비공개로 저장했어요' : '일기를 저장했어요', 1100);
@@ -2628,37 +2723,38 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   /* the day's public diary card, drawn at full size; the home story places it between the 4-week card and the stats */
   async function makeDiaryCard(d, K, BODY) {
     const dy = diaryOf(d); if (!dy || dy.priv) return null;
-    const im = dy.photo ? await loadImg(photoSrc(dy.photo)) : null, text = dy.text.trim().replace(/\s*\n+\s*/g, ' '), m = dy.mood ? MOODS[dy.mood - 1] : null;
-    const W = 1080, P = 64, CW = W - P * 2, pad = 36, PH = 200, LH = 46, HEAD = 62;
-    const tmp = document.createElement('canvas').getContext('2d'); tmp.font = '400 31px ' + BODY;
-    const lineW = (top) => CW - pad * 2 - (top < PH + 12 ? PH + 24 : 0);
-    let lines = [];
-    if (text) {
-      text.split('\n').forEach((para) => {
-        let cur = '';
-        for (const ch of para) { if (tmp.measureText(cur + ch).width > lineW(lines.length * LH) && cur) { lines.push(cur); cur = ''; } cur += ch; }
-        lines.push(cur);
-      });
+    const im = dy.photo ? await loadImg(photoSrc(dy.photo)) : null, text = dy.text.trim().replace(/\s*\n+\s*/g, ' '), m = moodOf(dy);
+    {
+      const W0 = 1080, P0 = 64, GAP = 28, cw = (W0 - P0 * 2 - GAP) / 2, H0 = 440, x0 = P0 + cw + GAP;
+      const c0 = document.createElement('canvas'); c0.width = W0; c0.height = H0; const g0 = c0.getContext('2d');
+      g0.save(); rr(g0, P0, 0, cw, H0, 40); g0.clip();
+      if (im) cover(g0, im, P0, 0, cw, H0); else { g0.fillStyle = K.accSoft; g0.fillRect(P0, 0, cw, H0); g0.textAlign = 'center'; g0.font = '120px ' + BODY; g0.fillStyle = K.ink; g0.fillText('📔', P0 + cw / 2, H0 / 2 + 40); }
+      g0.restore(); g0.strokeStyle = K.line; g0.lineWidth = 2; rr(g0, P0, 0, cw, H0, 40); g0.stroke();
+      g0.fillStyle = K.surface; rr(g0, x0, 0, cw, H0, 40); g0.fill(); g0.stroke();
+      g0.textAlign = 'left'; g0.fillStyle = K.muted; g0.font = '700 28px ' + BODY; g0.fillText('📔 ' + (d === todayStr() ? '오늘' : fmtShort(d)) + ' 일기', x0 + 34, 64);
+      if (text) {
+        if (m) { g0.textAlign = 'right'; g0.font = '46px ' + BODY; g0.fillStyle = K.ink; g0.fillText(m[0], x0 + cw - 30, 68); }
+        g0.textAlign = 'left'; g0.fillStyle = K.ink; g0.font = '400 31px ' + BODY;
+        const tw = cw - 68, LH0 = 46, maxL = Math.floor((H0 - 118 - 30) / LH0); let ls = [];
+        for (const para of text.split('\n')) { let cur = ''; for (const ch of para) { if (g0.measureText(cur + ch).width > tw && cur) { ls.push(cur); cur = ''; } cur += ch; } ls.push(cur); }
+        if (ls.length > maxL) { ls = ls.slice(0, maxL); let l = ls[maxL - 1]; while (l.length > 1 && g0.measureText(l + '…').width > tw) l = l.slice(0, -1); ls[maxL - 1] = l + '…'; }
+        ls.forEach((l, n) => g0.fillText(l, x0 + 34, 120 + 32 + n * LH0));
+      } else {
+        const cx = x0 + cw / 2, cy = H0 / 2 + 22, hasLab = !!(m && m[1]);
+        g0.textAlign = 'center'; g0.fillStyle = K.muted; g0.font = '400 32px ' + BODY; g0.fillText((d === todayStr() ? '오늘' : '이날') + '의 기분은', cx, cy - (hasLab ? 104 : 86));
+        g0.fillStyle = K.ink; g0.font = '140px ' + BODY; g0.fillText(m ? m[0] : '', cx, cy + (hasLab ? 38 : 56));
+        if (hasLab) { g0.font = '700 44px ' + BODY; g0.fillText(m[1], cx, cy + 114); }
+      }
+      { const mx = P0 + cw + GAP / 2;
+        [0.18, 0.5, 0.82].forEach((f) => {
+          const ry = Math.round(H0 * f);
+          g0.fillStyle = 'rgba(0,0,0,.12)'; [mx - 25, mx + 25].forEach((hx) => { g0.beginPath(); g0.arc(hx, ry, 11, 0, 7); g0.fill(); });
+          g0.fillStyle = K.acc; rr(g0, mx - 30, ry - 8, 60, 16, 8); g0.fill();
+          g0.fillStyle = 'rgba(0,0,0,.12)'; g0.save(); rr(g0, mx - 30, ry - 8, 60, 16, 8); g0.clip(); g0.fillRect(mx - 30, ry + 4, 60, 6); g0.restore();
+        });
+      }
+      return { cv: c0, h: H0 };
     }
-    const maxLines = Math.floor((795 - pad * 2 - HEAD) / LH);
-    if (lines.length > maxLines) { lines = lines.slice(0, maxLines); let l = lines[maxLines - 1]; while (l.length > 1 && tmp.measureText(l + '…').width > lineW((maxLines - 1) * LH)) l = l.slice(0, -1); lines[maxLines - 1] = l + '…'; }
-    const bodyH = text ? Math.max(PH, lines.length * LH) : PH, cardH = pad * 2 + HEAD + bodyH;
-    const cc = document.createElement('canvas'); cc.width = W; cc.height = cardH; const g = cc.getContext('2d');
-    g.fillStyle = K.surface; rr(g, P, 0, CW, cardH, 40); g.fill(); g.strokeStyle = K.line; g.lineWidth = 2; g.stroke();
-    const lx = P + pad, ty = pad;
-    g.textAlign = 'left'; g.fillStyle = K.muted; g.font = '700 28px ' + BODY; g.fillText('📔 ' + (d === todayStr() ? '오늘' : fmtShort(d)) + ' 일기', lx, ty + 26);
-    if (m && text) { const lab = m[0] + ' ' + m[1]; g.font = '700 26px ' + BODY; const w = g.measureText(lab).width + 28; g.fillStyle = K.accSoft; rr(g, P + CW - pad - w, ty - 2, w, 40, 20); g.fill(); g.fillStyle = K.accInk; g.fillText(lab, P + CW - pad - w + 14, ty + 27); }
-    const by = ty + HEAD;
-    if (im) { g.save(); rr(g, lx, by, PH, PH, 24); g.clip(); cover(g, im, lx, by, PH, PH); g.restore(); }
-    else { g.fillStyle = K.accSoft; rr(g, lx, by, PH, PH, 24); g.fill(); g.textAlign = 'center'; g.font = '80px ' + BODY; g.fillStyle = K.ink; g.fillText('📔', lx + PH / 2, by + PH / 2 + 28); g.textAlign = 'left'; }
-    if (text) {
-      g.fillStyle = K.ink; g.font = '400 31px ' + BODY;
-      lines.forEach((l, n) => { const top = n * LH; g.fillText(l, lx + (top < PH + 12 ? PH + 24 : 0), by + top + 32); });
-    } else {
-      g.fillStyle = K.muted; g.font = '400 32px ' + BODY; g.fillText((d === todayStr() ? '오늘' : '이날') + '의 기분은', lx + PH + 28, by + PH / 2 - 8);
-      g.fillStyle = K.ink; g.font = '700 48px ' + BODY; g.fillText(m ? m[0] + ' ' + m[1] : '', lx + PH + 28, by + PH / 2 + 50);
-    }
-    return { cv: cc, h: cardH };
   }
   async function buildCalStory(mode) {
     const dm = mode === 'diary', exm = mode === 'ex' || dm;
@@ -2729,7 +2825,6 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
           c.save(); rr(c, px2, py2, pw2, ph2, 6); c.clip();
           if (dim) cover(c, dim, px2, py2, pw2, ph2); else { c.fillStyle = K.accSoft; c.fillRect(px2, py2, pw2, ph2); c.font = '46px ' + BODY; c.fillStyle = K.ink; c.fillText('📔', x + cell / 2, py2 + ph2 / 2 + 16); }
           c.restore();
-          if (dy.mood) { c.font = '34px ' + BODY; c.fillStyle = K.ink; c.fillText(MOODS[dy.mood - 1][0], px2 + pw2 - 22, py2 + ph2 - 10); }
         }
         c.textAlign = 'left'; continue;
       }
@@ -3053,7 +3148,69 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   $('#bulkOn').addEventListener('click', () => applyBulk(true));
   $('#bulkOff').addEventListener('click', () => applyBulk(false));
   $('#bulkCancel').addEventListener('click', exitBulk);
+  /* ---------- diary calendar: long-press a day to drag it to another date or to the trash ---------- */
+  let dragBlock = 0;
+  { const grid = $('#calGrid'), trash = $('#diTrash'), menu = $('#diMenu');
+    let tm = null, g = null, sx = 0, sy = 0;
+    const hideMenu = () => { menu.hidden = true; $('#diMenuDel').classList.remove('armed'); $('#diMenuDel').textContent = '🗑 비우기'; menu.dataset.d = ''; };
+    const cellAt = (x, y) => { const el = document.elementFromPoint(x, y); return el && el.closest ? el.closest('#calGrid [data-day]') : null; };
+    const clearMarks = () => { grid.querySelectorAll('.drop').forEach((c) => c.classList.remove('drop')); trash.classList.remove('over'); };
+    const overTrash = (x, y) => { const r = trash.getBoundingClientRect(); return x >= r.left - 10 && x <= r.right + 10 && y >= r.top - 14 && y <= r.bottom + 14; };
+    const endDrag = () => { if (g) { g.ghost.remove(); g.cell.classList.remove('lifted'); } clearMarks(); trash.hidden = true; document.body.classList.remove('dragging'); g = null; };
+    const start = (cell, x, y) => {
+      const d = cell.dataset.day; hideMenu();
+      const ph = cell.querySelector('.dph'); const ghost = document.createElement('div'); ghost.className = 'di-ghost'; ghost.appendChild(ph.cloneNode(true));
+      document.body.appendChild(ghost); ghost.style.left = x + 'px'; ghost.style.top = y + 'px';
+      cell.classList.add('lifted'); trash.hidden = false; document.body.classList.add('dragging');
+      g = { d, cell, ghost, moved: false, x0: x, y0: y };
+      try { navigator.vibrate && navigator.vibrate(18); } catch (e) {}
+    };
+    grid.addEventListener('pointerdown', (e) => {
+      if (calMode !== 'diary' || bulk.active || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      const cell = e.target.closest('[data-day]'); if (!cell || !cell.querySelector('.dph.has')) return;
+      hideMenu(); sx = e.clientX; sy = e.clientY; clearTimeout(tm);
+      tm = setTimeout(() => { tm = null; start(cell, sx, sy); }, 450);
+    });
+    document.addEventListener('pointermove', (e) => {
+      if (tm) { if (Math.abs(e.clientX - sx) > 10 || Math.abs(e.clientY - sy) > 10) { clearTimeout(tm); tm = null; } return; }
+      if (!g) return;
+      if (Math.abs(e.clientX - g.x0) > 8 || Math.abs(e.clientY - g.y0) > 8) g.moved = true;
+      g.ghost.style.left = e.clientX + 'px'; g.ghost.style.top = e.clientY + 'px';
+      clearMarks();
+      if (overTrash(e.clientX, e.clientY)) { trash.classList.add('over'); return; }
+      const c = cellAt(e.clientX, e.clientY); if (c && c !== g.cell && dn(c.dataset.day) <= today()) c.classList.add('drop');
+    });
+    const finish = (e, cancel) => {
+      clearTimeout(tm); tm = null; if (!g) return;
+      const gg = g, x = e.clientX, y = e.clientY; const tc = cancel ? null : cellAt(x, y), tr = !cancel && overTrash(x, y);
+      endDrag(); dragBlock = Date.now() + 450;
+      if (cancel) return;
+      if (tr) { const o = diaryOf(gg.d); if (o) { dropAsset(o.photo); delete state.diary[gg.d]; persist(); render(); toast('일기를 비웠어요', 1100); } return; }
+      if (!gg.moved) { const r = gg.cell.getBoundingClientRect(); menu.dataset.d = gg.d; menu.hidden = false; menu.style.left = Math.min(Math.max(r.left + r.width / 2, 120), innerWidth - 120) + 'px'; menu.style.top = Math.min(r.bottom + 6, innerHeight - 70) + 'px'; return; }
+      if (tc && tc !== gg.cell) {
+        const to = tc.dataset.day; if (dn(to) > today()) { toast('아직 오지 않은 날로는 옮길 수 없어요'); return; }
+        const a = state.diary[gg.d], b = state.diary[to]; if (!a) return;
+        state.diary[to] = a; if (b) state.diary[gg.d] = b; else delete state.diary[gg.d];
+        persist(); render(); toast(b ? '두 날짜의 일기를 서로 바꿨어요' : `${to.slice(5).replace('-', '/')}로 옮겼어요`, 1400);
+      }
+    };
+    document.addEventListener('pointerup', (e) => finish(e, false));
+    document.addEventListener('pointercancel', (e) => finish(e, true));
+    document.addEventListener('touchmove', (e) => { if (g) e.preventDefault(); }, { passive: false });
+    ['gesturestart', 'gesturechange', 'gestureend'].forEach((n) => document.addEventListener(n, (e) => e.preventDefault()));
+    document.addEventListener('touchmove', (e) => { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+    grid.addEventListener('contextmenu', (e) => { if (calMode === 'diary') e.preventDefault(); });
+    $('#diMenuDel').addEventListener('click', () => {
+      const b = $('#diMenuDel'), d = menu.dataset.d;
+      if (!b.classList.contains('armed')) { b.classList.add('armed'); b.textContent = '정말 비우기'; return; }
+      const o = diaryOf(d); if (o) { dropAsset(o.photo); delete state.diary[d]; persist(); render(); toast('일기를 비웠어요', 1100); }
+      hideMenu();
+    });
+    document.addEventListener('pointerdown', (e) => { if (!menu.hidden && !e.target.closest('#diMenu')) hideMenu(); }, true);
+    document.addEventListener('click', (e) => { if (!menu.hidden && !e.target.closest('#diMenu') && Date.now() > dragBlock) hideMenu(); });
+  }
   $('#calGrid').addEventListener('click', (e) => {
+    if (Date.now() < dragBlock) return;
     const c = e.target.closest('[data-day]'); if (!c) return;
     const d = c.dataset.day;
     if (bulk.active) {
