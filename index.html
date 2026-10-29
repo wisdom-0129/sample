@@ -539,7 +539,7 @@ body.dragging { cursor: grabbing; }
 .di-row { display: flex; align-items: center; gap: 16px; }
 .di-row .di-img, .di-row .di-ph0 { float: none; margin: 0; flex: none; width: min(46%, 220px); height: auto; aspect-ratio: 1 / 1; border-radius: 18px; }
 .di-ml { flex: 1; min-width: 0; font-size: 14px; color: var(--muted); line-height: 1.5; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
-.di-e { font-size: 58px; line-height: 1.15; color: var(--ink); }
+.di-e { font-size: 40px; line-height: 1.15; color: var(--ink); }
 .di-n { font-size: 17px; font-weight: 700; color: var(--ink); }
 .di-ml strong { display: block; font-size: 20px; color: var(--ink); margin-top: 2px; }
 input.sw { -webkit-appearance: none; appearance: none; width: 48px; height: 28px; border-radius: 999px; background: var(--line); position: relative; border: 0; flex: none; transition: background .2s; }
@@ -2963,12 +2963,12 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   const canShareFiles = () => { try { return !!(navigator.canShare && navigator.canShare({ files: [new File(['x'], 'a.png', { type: 'image/png' })] })); } catch (e) { return false; } };
   const canFileOut = () => !!downloadsNs || HOSTED || canShareFiles();
   // hand a file to the phone: Claude save prompt, else the share sheet (카톡/파일), else a plain download
-  async function saveFile(name, blob, type) {
+  async function saveFile(name, blob, type, retry) {
     if (downloadsNs) {
       try { await downloadsNs.save({ filename: name, data: blob }); return 'saved'; }
       catch (e) { const c = e && e.code; if (c === 'declined') return 'declined'; if (c === 'rate_limited') { toast('잠시 후 다시 눌러주세요'); return 'declined'; } }
     }
-    try {
+    if (!retry) try {
       const f = new File([blob], name, { type: type || blob.type });
       if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f] }); return 'saved'; }
     } catch (e) { if (e && e.name === 'AbortError') return 'declined'; if (e && e.name === 'NotAllowedError') return 'again'; }
@@ -2997,12 +2997,12 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   async function doBackup() {
     if (bkBusy) return; bkBusy = true;
     try {
-      let file = bkReady; bkReady = null;
+      let file = bkReady; const bkWas = !!file; bkReady = null;
       if (!file) {
         bkLabel('만드는 중…');
         file = { name: `유지어터노트_백업_${todayStr()}.json`, blob: await buildBackup() };
       }
-      const r = await saveFile(file.name, file.blob, 'application/json');
+      const r = await saveFile(file.name, file.blob, 'application/json', !!bkWas);
       if (r === 'again') { bkReady = file; bkLabel('💾 준비됐어요 · 눌러서 저장'); toast('준비됐어요. 한 번 더 눌러 저장해 주세요'); bkBusy = false; return; }
       if (r === 'saved') { state.lastBackup = todayStr(); persist(); renderBkNote(); $('#bkNudge').hidden = true; toast('백업 파일을 넘겼어요. 카톡이나 파일 앱에 보관해 두세요'); }
       else if (r === 'fail') toast('이 화면에서는 파일을 저장할 수 없어요');
@@ -3311,9 +3311,9 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   $('#shareGo').addEventListener('click', async () => {
     if (!shareBlob) return;
     const b = $('#shareGo'); b.disabled = true;
-    const r = await saveFile(shareName, shareBlob, 'image/png');
+    const r = await saveFile(shareName, shareBlob, 'image/png', !!window._shAgain); window._shAgain = false;
     if (r === 'saved') toast('이미지를 넘겼어요. 인스타그램 스토리에서 올려주세요');
-    else if (r === 'again') toast('한 번 더 눌러주세요');
+    else if (r === 'again') { window._shAgain = true; toast('한 번 더 눌러주세요'); }
     else if (r === 'fail') { $('#shareGo').hidden = true; $('#shareHint').textContent = HINT_PRESS; }
     b.disabled = false;
   });
