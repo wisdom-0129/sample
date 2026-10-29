@@ -468,6 +468,12 @@ input[type="date"]::-webkit-date-and-time-value { text-align: left; }
 #cropSheet { z-index: 70; }
 #fontSheet { z-index: 40; }
 #diPickSheet { z-index: 65; }
+.wt-row { display: flex; gap: 8px; align-items: center; }
+.wt-row .unit { flex: 1; }
+.wt-sub { font-size: 12.5px; color: var(--muted); min-height: 0; }
+.wt-sub:empty { display: none; }
+.di-share { display: block; width: 100%; margin: 14px 0 4px; border: 0; border-radius: 14px; background: var(--accent-soft); color: var(--accent-ink); padding: 12px; font-size: 14px; font-weight: 700; }
+#shareSheet { z-index: 66; }
 .di-pick-btn { display: block; margin: 12px auto 0; border: 0; border-radius: 99px; background: var(--accent-soft); color: var(--accent-ink); padding: 9px 16px; font-size: 13px; font-weight: 700; }
 .pk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .pk-grid button { position: relative; border: 0; padding: 0; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; background: var(--surface); }
@@ -487,8 +493,11 @@ body.dragging { cursor: grabbing; }
 .di-menu button { border: 0; border-radius: 10px; background: var(--bg); color: var(--ink); padding: 8px 12px; font-size: 13px; font-weight: 700; white-space: nowrap; }
 .di-menu button.armed { background: #d96b6b; color: #fff; }
 #diSheet .di-page { max-width: none; max-height: none; height: 100%; min-height: 0; border-radius: 0; padding: 0; display: flex; flex-direction: column; animation: none; background: var(--bg); }
-.di-bar { display: grid; grid-template-columns: 52px 1fr 52px; align-items: center; padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 8px; }
+.di-bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: calc(14px + env(safe-area-inset-top, 0px)) 16px 8px; }
 .di-bar h2 { font: 600 17px/1.2 var(--font-body, inherit); color: var(--muted); text-align: center; letter-spacing: .02em; }
+.di-r { display: flex; align-items: center; gap: 10px; justify-self: end; }
+.di-x { justify-self: start; }
+.di-sh { width: 44px; height: 44px; box-shadow: 0 2px 10px rgba(0,0,0,.10); border: 0; color: var(--ink); }
 .di-x, .di-ok { width: 48px; height: 48px; border-radius: 50%; border: 0; display: grid; place-items: center; font-size: 22px; box-shadow: 0 2px 10px rgba(0,0,0,.10); }
 .di-x { background: var(--surface); color: var(--ink); }
 .di-ok { background: var(--accent); color: var(--on-accent, #fff); font-size: 26px; font-weight: 700; }
@@ -526,7 +535,7 @@ body.dragging { cursor: grabbing; }
 .di-ring:nth-of-type(1) { top: 18%; } .di-ring:nth-of-type(2) { top: 50%; margin-top: -3px; } .di-ring:nth-of-type(3) { top: 82%; }
 .di-pc, .di-mc { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; aspect-ratio: 1 / 1; overflow: hidden; min-width: 0; }
 .di-pc, .di-mc { position: relative; }
-.di-pc .di-img, .di-pc .di-ph0 { float: none; width: 100%; height: 100%; margin: 0; border-radius: 0; object-fit: cover; display: block; }
+.di-pc .di-img, .di-pc .di-ph0 { position: absolute; left: 16px; top: 16px; float: none; width: calc(100% - 32px); height: calc(100% - 32px); margin: 0; border-radius: 12px; object-fit: cover; display: block; }
 .di-pc .di-ph0 { display: grid; font-size: 56px; }
 .di-mc { padding: 14px; display: flex; flex-direction: column; }
 .di-mm { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 14px; color: var(--muted); text-align: center; }
@@ -660,6 +669,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
 .share-img { height: min(56vh, 520px); max-width: 100%; aspect-ratio: 9 / 16; border-radius: 16px; border: 1px solid var(--line); background: var(--surface); object-fit: contain; display: block; }
 .share-btn { width: min(100%, 360px); height: 50px; border-radius: 14px; border: 0; font-weight: 700; font-size: 15px; background: var(--accent); color: var(--on-accent); }
 .share-btn:disabled { opacity: .5; }
+.share-opt { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink); align-self: center; }
+.share-opt input { width: 20px; height: 20px; accent-color: var(--accent); }
 .share-hint { margin: 0; font-size: 12.5px; color: var(--muted); text-align: center; max-width: 360px; }
 
 #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 70; }
@@ -753,6 +764,11 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
         <div class="legend" id="legend"></div>
       </section>
       <section class="card" id="exCard" aria-label="이번 주 운동"></section>
+      <section class="card wt" id="wtCard" aria-label="체중">
+        <span class="cap" id="wtCap">⚖️ 오늘 체중</span>
+        <div class="wt-row"><span class="unit"><input class="txt" id="wtIn" type="number" inputmode="decimal" step="0.1" min="20" max="300" placeholder="아침 공복 체중"></span><button type="button" class="btn-soft" id="wtSave">기록</button></div>
+        <p class="wt-sub" id="wtSub"></p>
+      </section>
       <section class="card diary" id="diaryCard" aria-label="일기" hidden></section>
       <div class="nudges" id="nudges"></div>
       <section class="stats" id="stats" aria-label="통계 요약"></section>
@@ -1055,7 +1071,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
 <div class="sheet" id="detailSheet" hidden>
   <div class="scrim" data-close></div>
   <div class="panel" role="dialog" aria-label="기록 자세히">
-    <div class="panel-head"><h2 id="dTitle">기록</h2><div class="head-acts"><button class="close" type="button" data-close>닫기</button></div></div>
+    <div class="panel-head"><h2 id="dTitle">기록</h2><div class="head-acts"><button type="button" class="icon-btn" id="dShare" aria-label="식단 콜라주 공유" hidden><svg viewBox="0 0 24 24"><path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button><button class="close" type="button" data-close>닫기</button></div></div>
     <div class="d-hero" id="dHero"></div>
     <div class="d-strip" id="dStrip"></div>
     <div class="d-item" id="dItem"></div>
@@ -1074,11 +1090,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       <textarea class="txt" id="dReview" maxlength="80" placeholder="예: 생각보다 별로였음, 다음엔 반만"></textarea>
     </div>
     <div class="field">
-      <span class="flabel">체중</span>
-      <div class="two">
-        <label>먹기 전날<span class="unit"><input class="txt" id="dWb" type="number" inputmode="decimal" step="0.1" min="20" max="300"></span></label>
-        <label>먹은 다음날<span class="unit"><input class="txt" id="dWa" type="number" inputmode="decimal" step="0.1" min="20" max="300"></span></label>
-      </div>
+      <span class="flabel">체중 변화</span>
       <span class="wdiff" id="dWdiff"></span>
     </div>
     <div class="btn-row">
@@ -1101,6 +1113,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   <div class="panel" role="dialog" aria-label="스토리 공유">
     <div class="panel-head"><h2>스토리 공유</h2><button class="close" type="button" data-close>닫기</button></div>
     <div class="share-wrap">
+      <div class="big-seg" id="shareStyleRow" hidden style="width:100%"><button type="button" data-ds="A" aria-pressed="true">사진 꽉 채움</button><button type="button" data-ds="B" aria-pressed="false">둥근 사진</button></div>
+      <label class="share-opt" id="shareRailRow"><input type="checkbox" id="shareRail"> 최근 치팅 간격 넣기</label>
       <img class="share-img" id="shareImg" alt="공유할 스토리 이미지 미리보기">
       <button class="share-btn" type="button" id="shareGo">이미지 저장 · 공유하기</button>
       <p class="share-hint" id="shareHint"></p>
@@ -1134,7 +1148,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     <div class="di-bar">
       <button type="button" class="di-x" data-close aria-label="닫기">✕</button>
       <h2 id="diTitle">일기</h2>
-      <button type="button" class="di-ok" id="diSave" aria-label="저장">✓</button>
+      <div class="di-r"><button type="button" class="icon-btn di-sh" id="diShare" aria-label="스토리 이미지로 공유" hidden><svg viewBox="0 0 24 24"><path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg></button><button type="button" class="di-ok" id="diSave" aria-label="저장">✓</button></div>
     </div>
     <div class="di-scroll">
       <button type="button" class="di-ph" id="diPh">사진을 선택하세요</button>
@@ -1370,7 +1384,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
 
   let state = defaults();
   function defaults() {
-    return { cycle: DEFAULT_CYCLE, cycleSet: false, entries: [], wishes: [], workouts: {}, exEntries: [], diary: {}, sample: true, calSync: false, celebrated: '', comment: '',
+    return { cycle: DEFAULT_CYCLE, cycleSet: false, entries: [], wishes: [], workouts: {}, exEntries: [], diary: {}, wlog: {}, diaryShare: 'A', sample: true, calSync: false, celebrated: '', comment: '',
       ctrlAllow: 1, ctrlOver: 'fail', weekGoal: 4, diet: {}, dietPlan: { b: 'diet', l: 'normal', d: 'diet' }, backupAsk: '', lastBackup: '', exTypes: ['뮤직타격', 'PT', '걷기', '헬스'], skin: 'sage', font: 'basic' };
   }
   let docRef = null, assetsNs = null, downloadsNs = null, mcpNs = null;
@@ -1388,6 +1402,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       workouts: fixWorkouts(s.workouts),
       exEntries: fixExEntries(s.exEntries),
       diary: fixDiary(s.diary),
+      wlog: fixWlog(s.wlog),
+      diaryShare: s.diaryShare === 'B' ? 'B' : 'A',
       sample: !!s.sample,
       own: !!s.own,
       calSync: !!s.calSync,
@@ -1489,6 +1505,12 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   /* diary: one photo (required when saving) + optional text + mood, per day; private days stay off the home card and stories */
   const isEmoji = (t) => /^\p{Extended_Pictographic}(\uFE0F|\u200D\p{Extended_Pictographic}|[\u{1F3FB}-\u{1F3FF}])*$/u.test(t) && t.length <= 16;
   const MOODS = [['😆', '최고'], ['🙂', '좋음'], ['😐', '보통'], ['😔', '별로'], ['😭', '힘듦'], ['💬', '수다'], ['🩷', '사랑']];
+  function fixWlog(o) {
+    const out = {};
+    if (!o || typeof o !== 'object' || Array.isArray(o)) return out;
+    Object.keys(o).forEach((d) => { const v = Number(o[d]); if (/^\d{4}-\d{2}-\d{2}$/.test(d) && isFinite(v) && v >= 20 && v <= 300) out[d] = Math.round(v * 10) / 10; });
+    return out;
+  }
   function fixDiary(o) {
     const out = {};
     if (!o || typeof o !== 'object' || Array.isArray(o)) return out;
@@ -1577,6 +1599,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     for (let k = 0; k < 7; k++) { const on = !!state.workouts[ds(mon + k)]; days.push(on); if (on) n++; }
     return { n, days };
   }
+  const wPair = (e) => { const n = dn(e.d), W = state.wlog || {}; let wb = W[e.d]; if (wb == null) wb = W[ds(n - 1)]; if (wb == null) wb = e.wb; let wa = W[ds(n + 1)]; if (wa == null) wa = e.wa; return { wb, wa }; };
   function summary() {
     const E = view(), C = state.cycle, T = today(), J = judge(E);
     const carbIdx = J.map((j, i) => j.anchor ? i : -1).filter((i) => i >= 0);
@@ -1635,6 +1658,12 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     const xhero = xe ? (xph[0] || xe.items[0]) : null, xmore = xe ? xe.items.length - 1 : 0;
     $('#lastEx').innerHTML = `<span class="cap">🏋️ 운동 · ${fmtShort(xd)}</span>` + (xe ? `<div class="ex-hero">${xhero.photo ? `<div class="ph-wrap"><img class="photo-big" src="${esc(photoSrc(xhero.photo))}" alt="${esc(xhero.type)}">${xph.length > 1 ? `<span class="ph-cnt">📷 ${xph.length}</span>` : ''}</div>` : '<div class="ex-icon">💪</div>'}<div class="ex-kw">${esc(xhero.type)}</div>${xhero.memo ? `<div class="ex-memo">${esc(xhero.memo)}</div>` : ''}${xmore ? `<span class="sub">외 ${xmore}개 · ${esc(xe.items.slice(1).map((i) => i.type).join(', '))}</span>` : ''}</div>` : xw ? `<div class="ex-hero"><div class="ex-icon">💪</div><div class="ex-kw">${esc(xw.length ? xw.join(' · ') : '운동 완료')}</div></div>` : '<p class="empty-note">이 날 운동 기록이 없어요.</p>');
     $('#lastEx').hidden = !(xe || xw); $('#lastEx').parentNode.classList.toggle('solo', !(xe || xw));
+    { const wc = $('#wtCard'), wi = $('#wtIn'), wv = state.wlog[hdate];
+      wc.hidden = dn(hdate) > today();
+      $('#wtCap').textContent = `⚖️ ${hdate === todayStr() ? '오늘' : fmtShort(hdate)} 체중`;
+      if (document.activeElement !== wi) wi.value = wv != null ? wv : '';
+      const pk = Object.keys(state.wlog).filter((k) => k < hdate).sort().pop();
+      $('#wtSub').textContent = wv != null && pk ? `${pk === ds(dn(hdate) - 1) ? '어제' : fmtShort(pk)}보다 ${wv - state.wlog[pk] > 0 ? '+' : ''}${kg(wv - state.wlog[pk])}kg` : (wv == null ? '매일 아침 적으면 치팅 다음날 변화를 자동으로 계산해요' : ''); }
     { const dy = diaryOf(hdate), dc = $('#diaryCard'), m = moodOf(dy);
       dc.hidden = dy ? !!dy.priv : dn(hdate) > today();
       if (!dc.hidden && !dy) {
@@ -1718,9 +1747,9 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     if (lastAll && !state.sample) {
       if (!lastAll.rating) N.push({ t: `${emo(lastAll.foods[0])} ${esc(lastAll.foods[0])} 어땠어요?`, b: '별점 남기기', d: lastAll.d, f: 'rating' });
       const after = T - dn(lastAll.d);
-      if (after >= 1 && after <= 3 && lastAll.wa == null) N.push({ t: '⚖️ 먹은 다음날 체중을 적어볼까요?', b: '체중 적기', d: lastAll.d, f: 'weight' });
+      if (after >= 1 && after <= 3 && state.wlog[todayStr()] == null) N.push({ t: '⚖️ 오늘 체중을 적어볼까요? 치팅 후 변화를 계산해요', b: '체중 적기', wt: 1 });
     }
-    $('#nudges').innerHTML = N.map((n) => `<div class="nudge"><span>${n.t}</span><button type="button" data-entry="${n.d}" data-focus="${n.f}">${n.b}</button></div>`).join('');
+    $('#nudges').innerHTML = N.map((n) => `<div class="nudge"><span>${n.t}</span><button type="button" ${n.wt ? 'data-wtgo="1"' : `data-entry="${n.d}" data-focus="${n.f}"`}>${n.b}</button></div>`).join('');
 
     $('#stats').innerHTML =
       `<div class="stat"><strong>${S.rate == null ? '–' : S.rate + '%'}</strong><span>성공률</span></div>` +
@@ -1876,16 +1905,17 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     $('#badges').innerHTML = BL.map(([e, t, on]) => `<div class="badge${on ? '' : ' locked'}"><div class="b">${on ? e : '🔒'}</div><p>${t}</p></div>`).join('');
     $('#badgeSub').textContent = `${BL.filter((b) => b[2]).length} / ${BL.length}`;
 
-    const W2 = E.filter((e) => e.wb != null && e.wa != null).slice(-6).reverse();
+    const WE = E.map((e) => { const p = wPair(e); return Object.assign({}, e, { wb: p.wb, wa: p.wa }); }).filter((e) => e.wb != null && e.wa != null);
+    const W2 = WE.slice(-6).reverse();
     if (!W2.length) {
-      $('#weights').innerHTML = '<p class="empty-note">기록을 눌러 먹기 전날·다음날 체중을 적으면 여기에 변화가 쌓여요.</p>';
+      $('#weights').innerHTML = '<p class="empty-note">홈에서 매일 아침 체중을 적으면, 먹은 날과 다음날의 차이가 여기에 자동으로 쌓여요.</p>';
       $('#weightSub').textContent = '';
     } else {
       $('#weights').innerHTML = W2.map((e) => {
         const d = e.wa - e.wb;
         return `<div class="wrow"><span class="wd">${fmtShort(e.d)}</span><span class="wf">${emo(e.foods[0])} ${esc(e.foods.join(' '))}</span><span class="wv ${d > 0 ? 'up' : d < 0 ? 'down' : ''}">${d > 0 ? '+' : ''}${kg(d)}kg</span></div>`;
       }).join('');
-      const all = E.filter((e) => e.wb != null && e.wa != null);
+      const all = WE;
       const av = all.reduce((s, e) => s + (e.wa - e.wb), 0) / all.length;
       $('#weightSub').textContent = `평균 ${av > 0 ? '+' : ''}${kg(av)}kg`;
     }
@@ -2306,6 +2336,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     const src = di.pend ? di.pend.url : (di.photo ? photoSrc(di.photo) : '');
     $('#diPh').innerHTML = src ? `<img src="${esc(src)}" alt="">` : '사진을 선택하세요';
     $('#diMood').innerHTML = MOOD_PICK.map((v) => { const m = MOODS[v - 1]; return `<button type="button" data-mood="${v}" class="${di.mood === v ? 'on' : ''}" aria-pressed="${di.mood === v}" aria-label="${m[1]}" title="${m[1]}">${m[0]}</button>`; }).join('') + `<button type="button" data-emo="1" class="emo${di.emo ? ' on' : ''}" aria-pressed="${!!di.emo}" aria-label="이모지 직접 입력" title="직접 입력">${di.emo ? esc(di.emo) : '＋'}</button>`;
+    $('#diShare').hidden = !diaryOf(di.d);
     $('#diDel').style.visibility = diaryOf(di.d) ? 'visible' : 'hidden'; $('#diDel').textContent = di.armed ? '정말 지울까요?' : '일기 지우기';
   }
   function openDi(d) {
@@ -2373,6 +2404,17 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     persist(); render(); $('#diSheet').hidden = true; btn.disabled = false;
     toast($('#diPriv').checked ? '일기를 비공개로 저장했어요' : '일기를 저장했어요', 1100);
   });
+  $('#dShare').addEventListener('click', () => {
+    if (Object.keys(det.pend).length) { toast('새로 넣은 사진이 있어요. 저장한 뒤 공유해 주세요', 2200); return; }
+    openShare('meal');
+  });
+  $('#diShare').addEventListener('click', () => {
+    const x = diaryOf(di.d); if (!x) return;
+    const tx = $('#diText').value.replace(/\s+$/g, '').replace(/^\s*\n/, '');
+    if (di.pend || tx !== x.text || di.mood !== x.mood || di.emo !== (x.emo || '')) { toast('고친 내용이 있어요. ✓로 먼저 저장해 주세요', 2200); return; }
+    if (x.priv) { toast('비공개 일기예요. 비공개를 끄고 저장하면 공유할 수 있어요', 2400); return; }
+    openShare('diary');
+  });
   $('#diaryCard').addEventListener('click', () => openDi(homeD || todayStr()));
   function setWorkout(d, types) {
     if (types === null) delete state.workouts[d]; else state.workouts[d] = types;
@@ -2394,13 +2436,12 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     $('#dTitle').textContent = fmt(e.d) + ' 기록';
     $('#dDate').value = e.d; $('#dDate').max = todayStr();
     $('#dReview').value = e.review || '';
-    $('#dWb').value = e.wb != null ? e.wb : ''; $('#dWa').value = e.wa != null ? e.wa : '';
     armedKey = null; $('#dDelete').classList.remove('armed'); $('#dDelete').textContent = '삭제';
+    $('#dShare').hidden = false;
     renderDetail(); detStars(); detWdiff();
     $('#histSheet').hidden = true; $('#daySheet').hidden = true;
     $('#detailSheet').hidden = false;
     $('#detailSheet .panel').scrollTop = 0;
-    if (focus === 'weight') setTimeout(() => $(($('#dWb').value ? '#dWa' : '#dWb')).focus(), 250);
     if (focus === 'rating') setTimeout(() => $('#dStars button').focus(), 250);
   }
   function renderDetail() {
@@ -2437,9 +2478,9 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   }
   function detStars() { $('#dStars').innerHTML = [1, 2, 3, 4, 5].map((n) => `<button type="button" role="radio" aria-checked="${n === det.rating}" aria-label="${n}점" data-star="${n}" class="${n <= det.rating ? 'on' : ''}">★</button>`).join(''); }
   function detWdiff() {
-    const b = parseFloat($('#dWb').value), a = parseFloat($('#dWa').value), el = $('#dWdiff');
-    if (isFinite(b) && isFinite(a)) { const d = a - b; el.textContent = `먹은 후 ${d > 0 ? '+' : ''}${kg(d)}kg`; el.style.color = d > 0 ? 'var(--bad)' : d < 0 ? 'var(--ok)' : 'var(--muted)'; }
-    else el.textContent = '';
+    const el = $('#dWdiff'), pr = wPair({ d: det.d, wb: det.draft && det.draft.wb, wa: det.draft && det.draft.wa }), b = pr.wb, a = pr.wa;
+    if (b != null && a != null) { const d = a - b; el.textContent = `${kg(b)}kg → ${kg(a)}kg (${d > 0 ? '+' : ''}${kg(d)}kg)`; el.style.color = d > 0 ? 'var(--bad)' : d < 0 ? 'var(--ok)' : 'var(--muted)'; }
+    else { el.textContent = '홈에서 체중을 매일 적으면 먹은 날과 다음날의 차이가 자동으로 보여요'; el.style.color = 'var(--muted)'; }
   }
   async function saveDetail() {
     const e = state.entries.find((x) => x.d === det.d); if (!e) return null;
@@ -2461,9 +2502,6 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     dr.d = nd;
     if (det.rating) dr.rating = det.rating; else delete dr.rating;
     const rv = $('#dReview').value.trim(); if (rv) dr.review = rv; else delete dr.review;
-    const wb = parseFloat($('#dWb').value), wa = parseFloat($('#dWa').value);
-    if (isFinite(wb)) dr.wb = Math.round(wb * 10) / 10; else delete dr.wb;
-    if (isFinite(wa)) dr.wa = Math.round(wa * 10) / 10; else delete dr.wa;
     syncEntry(dr);
     state.entries[state.entries.indexOf(e)] = dr;
     state.entries.sort((a, b) => a.d < b.d ? -1 : a.d > b.d ? 1 : 0);
@@ -2527,16 +2565,16 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     c.font = '400 26px ' + BODY;
     const mealRows = []; { let row = [], rw = 0; mealItems.forEach((t) => { const w = c.measureText(t).width; if (row.length && rw + 22 + w > cardW - pad * 2) { mealRows.push(row); row = []; rw = 0; } row.push({ t, w }); rw += (row.length > 1 ? 22 : 0) + w; }); if (row.length) mealRows.push(row); }
     const RD = hasEx ? 124 : 150, ROWH = hasEx ? 32 : 40;
-    const railH = 40 + 60 + RD + 120 + 30 + 36, exH = 36 + 28 + 18 + 22 + 8 + ROWH * 4 + 30, statsH = 130;
+    const showRail = state.shareRail !== false, railH = showRail ? 40 + 60 + RD + 120 + 30 + 36 : 0, railG = showRail ? railH + 28 : 0, exH = 36 + 28 + 18 + 22 + 8 + ROWH * 4 + 30, statsH = 130;
     const fixedTop = 140 + (motto ? 56 : 0);
     const leftBase = pad + 52 + 82 + 46 + 52 + chipRows.length * 58 + (last && last.rating ? 46 : 0) + (mealRows.length ? mealRows.length * 38 + 8 : 0) - (last && T - dn(last.d) === 0 ? 46 : 0) + pad - 8;
     // the last-record photo always shows; it shrinks to fit the 1920px canvas
-    const avail = H - 80 - fixedTop - 32 - railH - 28 - exH - 28 - statsH - 50 - (hasEx ? 20 : 0);
+    const avail = H - 80 - fixedTop - 32 - railG - exH - 28 - statsH - 50 - (hasEx ? 20 : 0);
     let photoS = hasPhoto ? cardW - pad * 2 : 0;
     let cardH = Math.max(leftBase + (photoS ? photoS + 28 : 0), 560);
     if (hasEx) cardH = Math.max(cardH, XH + 24 + 340);
     if (hasEx && photoS) photoS = Math.min(cardW - pad * 2, Math.max(photoS, cardH - leftBase - 20));
-    const total = fixedTop + cardH + 32 + railH + 28 + exH + 28 + statsH + 60;
+    const total = fixedTop + cardH + 32 + railG + exH + 28 + statsH + 60;
     const HV = Math.min(4400, Math.max(H, total + EXTRA + 80));
     let y = Math.max(40, (HV - total - EXTRA) / 2);
 
@@ -2628,8 +2666,10 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     y += cardH + 32;
 
     // rail
+    const px = P + 40;
+    if (showRail) {
     c.fillStyle = K.surface; rr(c, P, y, CW, railH, 40); c.fill(); c.strokeStyle = K.line; c.lineWidth = 2; c.stroke();
-    const px = P + 40; let py = y + 40;
+    let py = y + 40;
     c.fillStyle = K.muted; c.font = '700 28px ' + BODY; c.fillText('최근 치팅(고탄수) 간격', px, py + 26);
     c.textAlign = 'right'; c.font = '400 28px ' + BODY; c.fillText(`주기 ${C}일 · 조절식 ${state.ctrlAllow}회`, P + CW - 40, py + 26);
     c.textAlign = 'left'; py += 60;
@@ -2667,7 +2707,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     c.font = '400 26px ' + BODY; let lgx = px;
     legKeys().forEach((k) => { c.fillStyle = SC[k][1]; c.beginPath(); c.arc(lgx + 10, py + 1, 10, 0, Math.PI * 2); c.fill(); c.strokeStyle = SC[k][0]; c.lineWidth = 5; c.stroke(); c.fillStyle = K.muted; c.fillText(LEG[k], lgx + 28, py + 10); lgx += 28 + c.measureText(LEG[k]).width + 32; });
     if (seq.some((q) => q.link && q.dots && q.dots.length)) { c.fillStyle = K.muted; c.beginPath(); c.arc(lgx + 6, py + 1, 6, 0, Math.PI * 2); c.fill(); c.font = '400 23px ' + BODY; c.fillText('작은 원 = 조절식', lgx + 18, py + 9); }
-    y += railH + 28;
+    }
+    y += railG;
 
     // exercise: last 4 weeks, one row per week (Mon–Sun), same dot language as the home card
     c.fillStyle = K.surface; rr(c, P, y, CW, exH, 40); c.fill(); c.strokeStyle = K.line; c.lineWidth = 2; c.stroke();
@@ -2715,7 +2756,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     c.textAlign = 'left';
     y += statsH + 44;
     c.fillStyle = K.muted; c.font = '400 26px ' + BODY; c.textAlign = 'center';
-    const td = new Date(); c.fillText(`${td.getFullYear()}.${td.getMonth() + 1}.${td.getDate()} 기준`, W / 2, y);
+    const td = new Date(); c.fillText(`${td.getFullYear()}.${td.getMonth() + 1}.${td.getDate()} 기준  ·  ${BRAND}`, W / 2, y);
     const out = document.createElement('canvas'); out.width = W; out.height = H; const o = out.getContext('2d'), k = Math.min(1, H / HV);
     o.fillStyle = K.bg; o.fillRect(0, 0, W, H); o.drawImage(cv, 0, 0, W, HV, (W - W * k) / 2, 0, W * k, HV * k);
     return new Promise((res, rej) => out.toBlob((b) => b ? res(b) : rej(new Error('encode')), 'image/png'));
@@ -2727,8 +2768,9 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     {
       const W0 = 1080, P0 = 64, GAP = 28, cw = (W0 - P0 * 2 - GAP) / 2, H0 = 440, x0 = P0 + cw + GAP;
       const c0 = document.createElement('canvas'); c0.width = W0; c0.height = H0; const g0 = c0.getContext('2d');
-      g0.save(); rr(g0, P0, 0, cw, H0, 40); g0.clip();
-      if (im) cover(g0, im, P0, 0, cw, H0); else { g0.fillStyle = K.accSoft; g0.fillRect(P0, 0, cw, H0); g0.textAlign = 'center'; g0.font = '120px ' + BODY; g0.fillStyle = K.ink; g0.fillText('📔', P0 + cw / 2, H0 / 2 + 40); }
+      g0.fillStyle = K.surface; rr(g0, P0, 0, cw, H0, 40); g0.fill();
+      const PD = 34; g0.save(); rr(g0, P0 + PD, PD, cw - PD * 2, H0 - PD * 2, 22); g0.clip();
+      if (im) cover(g0, im, P0 + PD, PD, cw - PD * 2, H0 - PD * 2); else { g0.fillStyle = K.accSoft; g0.fillRect(P0 + PD, PD, cw - PD * 2, H0 - PD * 2); g0.textAlign = 'center'; g0.font = '120px ' + BODY; g0.fillStyle = K.ink; g0.fillText('📔', P0 + cw / 2, H0 / 2 + 40); }
       g0.restore(); g0.strokeStyle = K.line; g0.lineWidth = 2; rr(g0, P0, 0, cw, H0, 40); g0.stroke();
       g0.fillStyle = K.surface; rr(g0, x0, 0, cw, H0, 40); g0.fill(); g0.stroke();
       g0.textAlign = 'left'; g0.fillStyle = K.muted; g0.font = '700 28px ' + BODY; g0.fillText('📔 ' + (d === todayStr() ? '오늘' : fmtShort(d)) + ' 일기', x0 + 34, 64);
@@ -2755,6 +2797,133 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       }
       return { cv: c0, h: H0 };
     }
+  }
+  const BRAND = 'beontteuk.lab';
+  async function buildMealStory(d) {
+    const e = state.entries.find((x) => x.d === d); if (!e) throw new Error('none');
+    const DISP = tok('--font-display') || '"Jua", sans-serif', BODY = tok('--font-body') || '"Noto Sans KR", sans-serif';
+    try { await Promise.all([document.fonts.load('400 38px ' + BODY, '점심 저녁 식단'), document.fonts.load('400 28px ' + DISP, '유지어터 노트')]); await document.fonts.ready; } catch (er) {}
+    const K = { bg: tok('--bg'), ink: tok('--ink'), muted: tok('--muted'), soft: tok('--accent-soft') };
+    const W = 1080, H = 1920, GW = 936, g = 14, LH = 58, x0 = (W - GW) / 2;
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const c = cv.getContext('2d'); c.fillStyle = K.bg; c.fillRect(0, 0, W, H);
+    const order = (a, b) => (SLOT_ORDER[a.slot] - SLOT_ORDER[b.slot]);
+    const all = e.items.slice().sort(order);
+    let ph = all.filter((i) => i.photo);
+    if (ph.length > 6) { const keep = new Set([e.cover].filter(Boolean)); ph.forEach((i) => { if (keep.size < 6) keep.add(i.id); }); ph = ph.filter((i) => keep.has(i.id)); }
+    const ims = await Promise.all(ph.map((i) => loadImg(photoSrc(i.photo))));
+    const n = ph.length, hw = (GW - g) / 2, tw3 = (GW - g * 2) / 3;
+    let rects = [], Hc = 1000, grid4 = false;
+    if (n === 0) { Hc = 760; rects = []; }
+    else if (n === 1) { Hc = 1100; rects = [[0, 0, GW, Hc]]; }
+    else if (n === 2) { grid4 = 2; Hc = hw * 2 + g; rects = [[hw + g, 0, hw, hw], [0, hw + g, hw, hw]]; }
+    else if (n === 3) { grid4 = 3; Hc = hw * 2 + g; rects = [[hw + g, 0, hw, hw], [0, hw + g, hw, hw], [hw + g, hw + g, hw, hw]]; }
+    else if (n === 4) { Hc = GW; rects = [[0, 0, hw, hw], [hw + g, 0, hw, hw], [0, hw + g, hw, hw], [hw + g, hw + g, hw, hw]]; Hc = hw * 2 + g; }
+    else if (n === 5) { Hc = 940; const t = 500, b = Hc - t - g; rects = [[0, 0, hw, t], [hw + g, 0, hw, t], [0, t + g, tw3, b], [tw3 + g, t + g, tw3, b], [(tw3 + g) * 2, t + g, tw3, b]]; }
+    else { Hc = 860; const rh = (Hc - g) / 2; rects = [0, 1, 2, 3, 4, 5].map((k) => [(k % 3) * (tw3 + g), Math.floor(k / 3) * (rh + g), tw3, rh]); }
+    const a = d.split('-').map(Number), wd = ['일', '월', '화', '수', '목', '금', '토'][new Date(Date.UTC(a[0], a[1] - 1, a[2])).getUTCDay()];
+    const dl = `${a[0]}.${p2(a[1])}.${p2(a[2])} ${wd}`;
+    c.font = '400 36px ' + BODY;
+    const lines = (n === 0 || grid4) ? [] : all.map((i) => { const t = [slotName(i.slot), (i.foods || []).join(' ')].filter(Boolean).join(' · '); let l = t || '식단'; while (l.length > 1 && c.measureText(l).width > GW - 8) l = l.slice(0, -1) + (l.endsWith('…') ? '' : '…'); return l; }).slice(0, 7);
+    const totalH = grid4 ? Hc : Hc + 70 + 40 + (lines.length ? 24 + lines.length * LH : 0);
+    let y = Math.max(120, Math.round((H - totalH) / 2) - 20);
+    if (n === 0) {
+      c.fillStyle = K.soft; rr(c, x0, y, GW, Hc, 34); c.fill();
+      const rows = all.slice(0, 6), rh = 120, top = y + (Hc - rows.length * rh) / 2;
+      c.textAlign = 'center';
+      rows.forEach((i, k) => {
+        const cy = top + k * rh + rh / 2, fo = (i.foods || []).join(' ') || '식단', sl = slotName(i.slot);
+        c.fillStyle = K.muted; c.font = '400 28px ' + BODY; if (sl) c.fillText(sl, W / 2, cy - 22);
+        c.fillStyle = K.ink; c.font = '400 46px ' + BODY; let t = fo; while (t.length > 1 && c.measureText(t).width > GW - 80) t = t.slice(0, -1) + (t.endsWith('…') ? '' : '…'); c.fillText(t, W / 2, cy + (sl ? 28 : 12));
+      });
+    }
+    if (grid4 === 3) {
+      c.fillStyle = K.soft; rr(c, x0, y, hw, hw, 34); c.fill(); c.textAlign = 'left';
+      const px = x0 + 44, rows = all.slice(0, 4), rh = rows.length > 3 ? 44 : 52;
+      c.fillStyle = K.muted; c.font = '400 28px ' + BODY; c.fillText(String(a[0]), px, y + 66);
+      c.fillStyle = K.ink; c.font = '400 92px ' + DISP; c.fillText(`${a[1]}.${p2(a[2])}`, px, y + 156);
+      c.fillStyle = K.muted; c.font = '400 30px ' + BODY; c.fillText(wd + '요일', px, y + 202);
+      rows.forEach((i, k) => {
+        const sl = slotName(i.slot), fo = (i.foods || []).join(' ') || '식단', sw = sl ? 76 : 0; let t = fo; c.font = '400 32px ' + BODY;
+        while (t.length > 1 && c.measureText(t).width > hw - 88 - sw) t = t.slice(0, -1) + (t.endsWith('…') ? '' : '…');
+        const cy = y + 262 + k * rh;
+        if (sl) { c.fillStyle = K.muted; c.font = '400 26px ' + BODY; c.fillText(sl, px, cy); }
+        c.fillStyle = K.ink; c.font = '400 32px ' + BODY; c.fillText(t, px + sw, cy);
+      });
+    }
+    if (grid4 === 2) {
+      c.fillStyle = K.soft; rr(c, x0, y, hw, hw, 34); c.fill(); rr(c, x0 + hw + g, y + hw + g, hw, hw, 34); c.fill();
+      c.textAlign = 'center'; c.fillStyle = K.muted; c.font = '400 32px ' + BODY; c.fillText(String(a[0]), x0 + hw / 2, y + hw / 2 - 78);
+      c.fillStyle = K.ink; c.font = '400 118px ' + DISP; c.fillText(`${a[1]}.${p2(a[2])}`, x0 + hw / 2, y + hw / 2 + 36);
+      c.fillStyle = K.muted; c.font = '400 34px ' + BODY; c.fillText(wd + '요일', x0 + hw / 2, y + hw / 2 + 98);
+      const rows = all.slice(0, 6), rh = 64, tx = x0 + hw + g + 44, top = y + hw + g + (hw - rows.length * rh) / 2; c.textAlign = 'left';
+      rows.forEach((i, k) => {
+        const sl = slotName(i.slot), fo = (i.foods || []).join(' ') || '식단'; let t = fo; c.font = '400 36px ' + BODY;
+        const sw = sl ? 84 : 0; while (t.length > 1 && c.measureText(t).width > hw - 88 - sw) t = t.slice(0, -1) + (t.endsWith('…') ? '' : '…');
+        const cy = top + k * rh + rh / 2 + 12;
+        if (sl) { c.fillStyle = K.muted; c.font = '400 28px ' + BODY; c.fillText(sl, tx, cy); }
+        c.fillStyle = K.ink; c.font = '400 36px ' + BODY; c.fillText(t, tx + sw, cy);
+      });
+    }
+    rects.forEach((r, k) => {
+      c.save(); rr(c, x0 + r[0], y + r[1], r[2], r[3], 34); c.clip();
+      if (ims[k]) cover(c, ims[k], x0 + r[0], y + r[1], r[2], r[3]); else { c.fillStyle = K.soft; c.fillRect(x0 + r[0], y + r[1], r[2], r[3]); }
+      c.restore();
+    });
+    if (!grid4) { y += Hc + 70; c.textAlign = 'left'; c.fillStyle = K.muted; c.font = '400 30px ' + BODY; c.fillText(dl, x0 + 4, y); }
+    y += 24; c.fillStyle = K.ink; c.font = '400 36px ' + BODY; lines.forEach((l, i) => c.fillText(l, x0 + 4, y + 40 + i * LH));
+    c.textAlign = 'center'; c.fillStyle = K.muted; c.globalAlpha = .5; c.font = '400 28px ' + DISP; c.fillText('유지어터 노트  ·  ' + BRAND, W / 2, H - 100); c.globalAlpha = 1;
+    return new Promise((res, rej) => cv.toBlob((b) => b ? res(b) : rej(new Error('encode')), 'image/png'));
+  }
+  async function buildDiaryStory(d, style) {
+    style = style || state.diaryShare || 'A';
+    const dy = diaryOf(d); if (!dy) throw new Error('none');
+    const DISP = tok('--font-display') || '"Jua", sans-serif', BODY = tok('--font-body') || '"Noto Sans KR", sans-serif';
+    try { await Promise.all([document.fonts.load('400 42px ' + BODY, '일기 오늘'), document.fonts.load('400 30px ' + DISP, '유지어터 노트')]); await document.fonts.ready; } catch (e) {}
+    const K = { bg: tok('--bg'), ink: tok('--ink'), muted: tok('--muted') };
+    const W = 1080, H = 1920, LH = 66;
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const c = cv.getContext('2d');
+    const im = dy.photo ? await loadImg(photoSrc(dy.photo)) : null, text = dy.text.trim(), m = moodOf(dy);
+    const a = d.split('-').map(Number), wd = ['일', '월', '화', '수', '목', '금', '토'][new Date(Date.UTC(a[0], a[1] - 1, a[2])).getUTCDay()];
+    const dl = `${a[0]}.${p2(a[1])}.${p2(a[2])} ${wd}`;
+    const wrap = (tw, max) => {
+      c.font = '400 42px ' + BODY; let ls = [];
+      if (text) {
+        for (const para of text.split('\n')) { let cur = ''; for (const ch of para) { if (c.measureText(cur + ch).width > tw && cur) { ls.push(cur); cur = ''; } cur += ch; } ls.push(cur); }
+        ls = ls.filter((l, i, x) => l || (i > 0 && x[i - 1]));
+        if (ls.length > max) { ls = ls.slice(0, max); let l = ls[max - 1]; while (l.length > 1 && c.measureText(l + '…').width > tw) l = l.slice(0, -1); ls[max - 1] = l + '…'; }
+      }
+      return ls;
+    };
+    if (style === 'A') {
+      // full-bleed photo, text on a soft dark fade at the bottom
+      if (im) cover(c, im, 0, 0, W, H); else { c.fillStyle = K.bg; c.fillRect(0, 0, W, H); }
+      const ls = wrap(912, 7), blockH = 56 + (ls.length ? 28 + ls.length * LH : 0), y0 = 1800 - blockH;
+      const gr = c.createLinearGradient(0, y0 - 380, 0, H); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(0,0,0,.62)');
+      c.fillStyle = gr; c.fillRect(0, y0 - 380, W, H - (y0 - 380));
+      c.save(); c.shadowColor = 'rgba(0,0,0,.35)'; c.shadowBlur = 14; c.textAlign = 'left'; c.fillStyle = '#fff';
+      c.font = '400 32px ' + BODY; c.globalAlpha = .88; c.fillText(dl, 84, y0 + 30);
+      if (m) { const w1 = c.measureText(dl).width; c.globalAlpha = 1; c.font = '38px ' + BODY; c.fillText(m[0], 84 + w1 + 18, y0 + 31); }
+      c.globalAlpha = 1; c.font = '400 42px ' + BODY;
+      ls.forEach((l, i) => c.fillText(l, 84, y0 + 56 + 28 + 34 + i * LH - 20));
+      c.restore();
+      c.textAlign = 'center'; c.fillStyle = '#fff'; c.globalAlpha = .7; c.font = '400 26px ' + BODY; c.fillText(BRAND, W / 2, H - 64); c.globalAlpha = 1;
+    } else {
+      // clean tone background, big rounded photo, quiet text below
+      c.fillStyle = K.bg; c.fillRect(0, 0, W, H);
+      const PW = 936, ls = wrap(PW - 8, 6), PH = Math.max(760, 1170 - Math.max(0, ls.length - 3) * LH), x = (W - PW) / 2;
+      const totalH = PH + 70 + 44 + (ls.length ? 30 + ls.length * LH : 0);
+      let y = Math.max(130, Math.round((H - totalH) / 2) - 20);
+      c.save(); rr(c, x, y, PW, PH, 44); c.clip();
+      if (im) cover(c, im, x, y, PW, PH); else { c.fillStyle = tok('--accent-soft'); c.fillRect(x, y, PW, PH); }
+      c.restore();
+      y += PH + 70; c.textAlign = 'left'; c.fillStyle = K.muted; c.font = '400 30px ' + BODY; c.fillText(dl, x + 4, y);
+      if (m) { const w1 = c.measureText(dl).width; c.font = '36px ' + BODY; c.fillStyle = K.ink; c.fillText(m[0], x + 4 + w1 + 16, y + 2); }
+      y += 30; c.fillStyle = K.ink; c.font = '400 42px ' + BODY; ls.forEach((l, i) => c.fillText(l, x + 4, y + 40 + i * LH));
+      c.textAlign = 'center'; c.fillStyle = K.muted; c.globalAlpha = .5; c.font = '400 28px ' + DISP; c.fillText('유지어터 노트  ·  ' + BRAND, W / 2, H - 100); c.globalAlpha = 1;
+    }
+    return new Promise((res, rej) => cv.toBlob((b) => b ? res(b) : rej(new Error('encode')), 'image/png'));
   }
   async function buildCalStory(mode) {
     const dm = mode === 'diary', exm = mode === 'ex' || dm;
@@ -2938,21 +3107,24 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     }
     y += sumH + 50;
     c.fillStyle = K.muted; c.font = '400 26px ' + BODY; c.textAlign = 'center';
-    const td = new Date(); c.fillText(`${td.getFullYear()}.${td.getMonth() + 1}.${td.getDate()} 기준`, W / 2, y);
+    const td = new Date(); c.fillText(`${td.getFullYear()}.${td.getMonth() + 1}.${td.getDate()} 기준  ·  ${BRAND}`, W / 2, y);
     return new Promise((res, rej) => cv.toBlob((b) => b ? res(b) : rej(new Error('encode')), 'image/png'));
   }
   const HINT_SAVE = '공유 창이 뜨면 Instagram을 골라 스토리에 올리세요. 사진첩에 저장한 뒤 스토리에서 골라도 돼요.';
   const HINT_PRESS = '이미지를 길게 눌러 사진첩에 저장한 뒤, 인스타그램 스토리에서 골라 올리세요.';
+  let shareKind = 'home';
   async function openShare(kind) {
     if (typeof kind !== 'string') kind = tab === 'cal' ? 'cal' : 'home';
     const btn = $('#openShare'); btn.disabled = true;
     try {
-      shareBlob = kind === 'cal' ? await buildCalStory(calMode) : await buildStory(homeD);
-      shareName = kind === 'cal' ? `유지어터노트_${calY}-${p2(calM + 1)}_${calMode === 'ex' ? '오운완달력' : calMode === 'diary' ? '일기달력' : '달력'}_${todayStr()}.png` : `유지어터노트_${homeD || todayStr()}.png`;
+      shareBlob = kind === 'cal' ? await buildCalStory(calMode) : kind === 'diary' ? await buildDiaryStory(di.d) : kind === 'meal' ? await buildMealStory(det.d) : await buildStory(homeD);
+      shareName = kind === 'meal' ? `유지어터노트_식단_${det.d}.png` : kind === 'diary' ? `유지어터노트_일기_${di.d}.png` : kind === 'cal' ? `유지어터노트_${calY}-${p2(calM + 1)}_${calMode === 'ex' ? '오운완달력' : calMode === 'diary' ? '일기달력' : '달력'}_${todayStr()}.png` : `유지어터노트_${homeD || todayStr()}.png`;
       if (shareUrl) URL.revokeObjectURL(shareUrl);
       shareUrl = URL.createObjectURL(shareBlob);
       $('#shareImg').src = shareUrl; $('#shareGo').hidden = !canFileOut();
       $('#shareHint').textContent = canFileOut() ? HINT_SAVE : HINT_PRESS;
+      $('#shareRailRow').hidden = kind !== 'home'; $('#shareStyleRow').hidden = kind !== 'diary';
+      document.querySelectorAll('[data-ds]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ds === (state.diaryShare || 'A')))); $('#shareRail').checked = state.shareRail !== false; shareKind = kind;
       $('#shareSheet').hidden = false;
     } catch (e) { toast('이미지를 만들지 못했어요. 다시 눌러주세요'); }
     btn.disabled = false;
@@ -3025,7 +3197,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
   async function applyBackup(b) {
     const st = b.state, photos = b.photos || {}, map = {};
     st.entries = st.entries.filter((e) => e && e.d).map(syncEntry);
-    st.exEntries = fixExEntries(st.exEntries); st.diary = fixDiary(st.diary);
+    st.exEntries = fixExEntries(st.exEntries); st.diary = fixDiary(st.diary); st.wlog = fixWlog(st.wlog);
     const allItems = st.entries.flatMap((e) => e.items).concat(st.exEntries.flatMap((x) => x.items)).concat(Object.values(st.diary));
     for (const i of allItems) {
       const p = i.photo; if (!p) continue;
@@ -3096,6 +3268,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
     const t = e.target;
     const close = t.closest && t.closest('[data-close]');
     if (close) { const sh = close.closest('.sheet'); if (sh) sh.hidden = true; armedKey = null; return; }
+    if (t.closest && t.closest('[data-wtgo]')) { const wc = $('#wtCard'); if (!wc.hidden) { wc.scrollIntoView({ block: 'center', behavior: 'smooth' }); setTimeout(() => $('#wtIn').focus(), 300); } return; }
     const ent = t.closest && t.closest('[data-entry]');
     if (ent) { e.stopPropagation(); openDetail(ent.dataset.entry, ent.dataset.focus); return; }
     if (t.closest && t.closest('#dayAddEx')) {
@@ -3239,7 +3412,14 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
 
   // detail
   $('#dStars').addEventListener('click', (e) => { const b = e.target.closest('[data-star]'); if (!b) return; const n = Number(b.dataset.star); det.rating = det.rating === n ? 0 : n; detStars(); });
-  $('#dWb').addEventListener('input', detWdiff); $('#dWa').addEventListener('input', detWdiff);
+  const saveWt = () => {
+    const d = homeD || todayStr(), raw = $('#wtIn').value.trim(), v = parseFloat(raw);
+    if (!raw) { if (state.wlog[d] != null) { delete state.wlog[d]; persist(); render(); toast('체중 기록을 지웠어요', 1100); } return; }
+    if (!isFinite(v) || v < 20 || v > 300) { toast('20~300 사이 숫자로 적어주세요', 1800); return; }
+    state.wlog[d] = Math.round(v * 10) / 10; persist(); $('#wtIn').blur(); render(); toast('체중을 기록했어요', 1100);
+  };
+  $('#wtSave').addEventListener('click', saveWt);
+  $('#wtIn').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); saveWt(); } });
   const detPanel = $('#detailSheet .panel');
   const selItem = () => det.draft.items.find((i) => i.id === det.sel);
   detPanel.addEventListener('input', (e) => { if (e.target.id === 'diFoods') { const it = selItem(); if (it) it.foods = splitFoods(e.target.value); } });
@@ -3308,6 +3488,8 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
 
   // share
   $('#openShare').addEventListener('click', openShare);
+  $('#shareStyleRow').addEventListener('click', async (e) => { const b = e.target.closest('[data-ds]'); if (!b || b.dataset.ds === state.diaryShare) return; state.diaryShare = b.dataset.ds; persist(); await openShare('diary'); });
+  $('#shareRail').addEventListener('change', async (e) => { state.shareRail = e.target.checked; persist(); await openShare(shareKind); });
   $('#shareGo').addEventListener('click', async () => {
     if (!shareBlob) return;
     const b = $('#shareGo'); b.disabled = true;
@@ -3383,7 +3565,7 @@ textarea.txt { height: 72px; padding: 10px 12px; resize: none; }
       state.entries.forEach((x) => (x.items || [{ photo: x.photo }]).forEach((i) => dropAsset(i.photo)));
       state.exEntries.forEach((x) => x.items.forEach((i) => dropAsset(i.photo)));
       Object.values(state.diary).forEach((x) => dropAsset(x.photo));
-      state.sample = false; state.own = true; if (/^샘플 노트예요/.test(state.comment || '')) state.comment = ''; state.entries = []; state.workouts = {}; state.exEntries = []; state.diary = {}; state.diet = {}; state.celebrated = '';
+      state.sample = false; state.own = true; if (/^샘플 노트예요/.test(state.comment || '')) state.comment = ''; state.entries = []; state.workouts = {}; state.exEntries = []; state.diary = {}; state.wlog = {}; state.diet = {}; state.celebrated = '';
       persist(); render();
       btn.classList.remove('armed'); btn.textContent = '식사·운동·식단·일기 기록 모두 지우기';
       $('#setSheet').hidden = true; toast('식사·운동·식단·일기 기록을 모두 지웠어요');
